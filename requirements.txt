@@ -1,0 +1,6 @@
+roboflow
+ultralytics
+fastapi
+uvicorn
+python-multipart
+kaggle

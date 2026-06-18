@@ -1,0 +1,30 @@
+[
+  {
+    "video_id": "self_000001",
+    "source": "self_collected",
+    "license": "private_research",
+    "path": "raw/self_collected/self_000001.mp4",
+    "fps": 60,
+    "resolution": [1920, 1080],
+    "camera_view": "forty_five_degree",
+    "shot_distance": "free_throw",
+    "made": true,
+    "quality": {
+      "full_body_visible": true,
+      "ball_visible_at_release": true,
+      "rim_visible": true,
+      "stable_camera": true,
+      "good_lighting": true
+    },
+    "events": {
+      "setup": 15,
+      "dip": 31,
+      "jump_start": 42,
+      "release": 55,
+      "follow_through": 63,
+      "landing": 78,
+      "rim_approach": 96,
+      "result": 104
+    }
+  }
+]

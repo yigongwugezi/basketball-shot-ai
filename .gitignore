@@ -1,0 +1,41 @@
+# Python/runtime
+.venv/
+.venv*/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.secret
+kaggle.json
+access_token
+
+# Large/generated datasets
+datasets/raw/
+datasets/processed/
+datasets/**/.cache/
+datasets/**/*.inspect.ndjson
+
+# Training and model outputs
+runs/
+wandb/
+mlruns/
+
+# Local media outputs
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

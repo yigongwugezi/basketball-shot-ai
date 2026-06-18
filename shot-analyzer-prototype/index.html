@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 投篮动作分析原型</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="workspace">
+        <div class="panel upload-panel">
+          <div>
+            <p class="eyebrow">Shot Analysis MVP</p>
+            <h1>投篮动作分析原型</h1>
+            <p class="lede">
+              上传一段固定机位投篮视频，后端会抽取关键帧，检测人体骨架、篮球、篮筐和球员，并生成第一版姿态指标。
+            </p>
+          </div>
+
+          <label class="dropzone" for="videoInput">
+            <input id="videoInput" type="file" accept="video/*" />
+            <span class="drop-icon">+</span>
+            <strong>选择投篮视频</strong>
+            <small>建议全身入镜、侧面或 45 度、光线充足；竖屏素材也可以先测试骨架。</small>
+          </label>
+
+          <div class="controls">
+            <button id="analyzeButton" type="button" disabled>生成分析报告</button>
+            <button id="resetButton" type="button" class="secondary" disabled>重置</button>
+          </div>
+        </div>
+
+        <div class="panel preview-panel">
+          <video id="videoPreview" controls playsinline></video>
+          <div id="emptyPreview" class="empty-preview">视频预览会显示在这里</div>
+        </div>
+      </section>
+
+      <section class="report-grid">
+        <div class="panel">
+          <div class="section-title">
+            <p class="eyebrow">Quality Gate</p>
+            <h2>拍摄质量检查</h2>
+          </div>
+          <div id="qualityList" class="quality-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">
+            <p class="eyebrow">Pipeline</p>
+            <h2>分析状态</h2>
+          </div>
+          <ol id="pipelineList" class="pipeline-list"></ol>
+        </div>
+      </section>
+
+      <section class="panel keyframes-panel">
+        <div class="section-title">
+          <p class="eyebrow">Key Frames</p>
+          <h2>投篮关键帧</h2>
+        </div>
+        <div id="framesGrid" class="frames-grid"></div>
+      </section>
+
+      <section class="report-grid">
+        <div class="panel">
+          <div class="section-title">
+            <p class="eyebrow">Metrics</p>
+            <h2>第一版姿态指标</h2>
+          </div>
+          <div id="metricsList" class="metrics-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">
+            <p class="eyebrow">Next</p>
+            <h2>下一步接入</h2>
+          </div>
+          <div class="next-list">
+            <p>1. 自动识别出手帧，替代固定比例抽帧。</p>
+            <p>2. 用连续骨架轨迹计算投篮节奏、下沉幅度和随球稳定性。</p>
+            <p>3. 当前角度是 2D 画面投影角，后续接入 3D 骨架以降低拍摄角度误差。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="imageModal" class="image-modal" aria-hidden="true">
+      <button id="imageModalClose" class="image-modal-close" type="button">关闭</button>
+      <img id="imageModalImg" alt="关键帧大图" />
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
