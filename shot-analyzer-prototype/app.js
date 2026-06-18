@@ -166,6 +166,35 @@ function frameMeta(frame) {
   return `${frame.time.toFixed(2)}s · ${frame.key} · ${detections}`;
 }
 
+function selectionSummary(frame) {
+  if (!frame.selection_method && frame.confidence == null && !frame.evidence) return "";
+  const parts = [];
+  if (frame.selection_method) parts.push(`选择方式：${frame.selection_method}`);
+  if (frame.confidence != null) parts.push(`置信度：${Number(frame.confidence).toFixed(2)}`);
+  if (typeof frame.evidence === "string") {
+    parts.push(`依据：${frame.evidence}`);
+  } else if (frame.evidence && typeof frame.evidence === "object") {
+    const evidenceParts = [];
+    if (frame.evidence.visible_keypoints != null) {
+      evidenceParts.push(`关键点 ${frame.evidence.visible_keypoints}/17`);
+    }
+    if (frame.evidence.elbow_angle != null) {
+      evidenceParts.push(`肘角 ${frame.evidence.elbow_angle}°`);
+    }
+    if (frame.evidence.wrist_y != null) {
+      evidenceParts.push(`手腕y ${frame.evidence.wrist_y}`);
+    }
+    if (frame.evidence.ball_detected != null) {
+      evidenceParts.push(frame.evidence.ball_detected ? "检测到球" : "未检测到球");
+    }
+    if (frame.evidence.ball_moving_away) {
+      evidenceParts.push("球开始远离手腕");
+    }
+    if (evidenceParts.length) parts.push(`依据：${evidenceParts.join(" ｜ ")}`);
+  }
+  return parts.join(" ｜ ");
+}
+
 function setActiveFrame(index) {
   activeFrameIndex = index;
   renderFrames(renderedFrames);
@@ -203,6 +232,7 @@ function renderFrames(frames) {
         <div>
           <strong>${active.label}</strong>
           <small>${frameMeta(active)}</small>
+          ${selectionSummary(active) ? `<small>${selectionSummary(active)}</small>` : ""}
         </div>
         <span>${poseSummary(active)}</span>
       </div>

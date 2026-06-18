@@ -1,0 +1,227 @@
+# AI_PROGRESS
+
+## 当前项目状态
+
+AI 投篮动作分析 MVP 已经跑通基础链路：
+
+- 前端上传投篮视频并请求后端分析。
+- 后端抽取关键帧，运行 YOLO pose 骨架检测。
+- 后端运行篮球、篮筐、球员检测管线。
+- 前端展示 setup、dip、release、follow_through、landing 关键帧，并支持点击放大。
+- 已有基础 2D 角度和拍摄机位可信度提示。
+
+## 本次修改
+
+本次只优化 release 出手帧识别，不新增模型、不新增数据库、不重构项目架构。
+
+release 识别从原来的“手腕 y 最小 + 肘角较大”升级为多信号打分：
+
+- 投篮侧手腕越高，越接近 release。
+- 投篮侧肘角越大，越接近 release。
+- 可见关键点越多，候选帧越可信。
+- 如果检测到 ball，则球心与投篮侧手腕越近越加分。
+- 如果下一采样帧里球与手腕距离变大，作为球开始远离手腕的辅助证据。
+- release 必须晚于 dip。
+- release 后必须还能找到 follow_through 候选帧。
+- 有效骨架帧不足时回退到 FRAME_PLAN 固定比例。
+
+## 修改文件
+
+- `backend/main.py`
+- `shot-analyzer-prototype/app.js`
+- `AI_PROGRESS.md`
+
+## 后端接口变化
+
+`/api/analyze` 的现有结构保持不变，`frames` 仍包含：
+
+- `setup`
+- `dip`
+- `release`
+- `follow_through`
+- `landing`
+
+每个 frame 新增可选字段：
+
+- `selection_method`
+- `confidence`
+- `evidence`
+
+release 帧在有效骨架帧足够时返回：
+
+- `selection_method: "pose_trajectory_score"`
+- `confidence: 0 到 1`
+- `evidence`: 包含 wrist_y、elbow_angle、visible_keypoints、ball_detected、ball_wrist_distance、ball_moving_away、score
+
+fallback 时 release 帧返回：
+
+- `selection_method: "fallback_ratio"`
+- `confidence: 0.3`
+- `evidence: "有效骨架帧不足，使用固定比例兜底"`
+
+## 前端展示变化
+
+关键帧主图信息区新增一行选择说明：
+
+- selection method
+- confidence
+- 简短 evidence
+
+如果后端没有返回这些字段，前端会保持原展示，不会报错。
+
+## 当前风险 / 已知问题
+
+- 仍然是 2D 画面投影估计，不是真实 3D 出手瞬间。
+- ball 检测来自现有检测管线，可能漏检或误检，只作为辅助信号。
+- 采样帧数量有限，release 仍可能落在真实出手前后若干帧。
+- 为了让 release 识别利用 ball 信号，采样阶段会额外运行目标检测，分析耗时可能略有增加。
+- 当前文本与部分历史文件可能存在编码显示问题，不影响本次算法字段结构。
+
+## 手动测试步骤
+
+1. 启动后端：
+
+```powershell
+python -m uvicorn backend.main:app --host 127.0.0.1 --port 8020 --reload
+```
+
+2. 打开前端：
+
+```text
+http://127.0.0.1:8020/
+```
+
+3. 上传一段投篮视频并点击分析。
+
+4. 检查 `/api/analyze` 返回的 `frames` 是否包含 5 个关键帧。
+
+5. 检查 release frame 是否包含：
+
+```json
+{
+  "selection_method": "pose_trajectory_score",
+  "confidence": 0.0,
+  "evidence": {}
+}
+```
+
+或在骨架不足时包含：
+
+```json
+{
+  "selection_method": "fallback_ratio",
+  "confidence": 0.3,
+  "evidence": "有效骨架帧不足，使用固定比例兜底"
+}
+```
+
+6. 检查前端关键帧主图信息区是否能显示 selection 和 confidence，且点击放大仍可用。
+
+## 下一步建议
+
+- 用 5 到 10 段真实投篮视频记录 release 选择结果，和人工标注帧做对比。
+- 如果 release 偏早，降低 wrist_y 权重，提高 ball_moving_away 或 elbow 权重。
+- 如果 release 偏晚，提高 wrist_y 权重，并限制 release 不能离最高腕点太远。
+- 后续可以把采样结果作为 debug 数据单独返回给开发模式，但不建议现在扩大前端结构。
+
+## 真实视频验证结果
+
+验证日期：2026-06-18
+
+后端启动方式：
+
+```powershell
+.venv310\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8020 --reload
+```
+
+说明：
+
+- 系统默认 `python` 指向 Python 3.14，未安装 `ultralytics`，直接运行 `python -m uvicorn ...` 会失败。
+- 使用项目 `.venv310` 后端可以正常启动，`/api/health` 返回模型文件存在。
+- 本次使用本地已有样例视频，不下载新数据。
+
+### 视频 1
+
+- 文件：`datasets/samples/basketball51/2p0_2p0_v165_010726_x264.mp4`
+- `/api/analyze`：成功
+- metadata：180 帧，29.97 fps
+- frames：`setup,dip,release,follow_through,landing`
+- release frame_index：119
+- release timestamp：3.971s
+- release selection_method：`pose_trajectory_score`
+- release confidence：0.72
+- release evidence：
+
+```json
+{
+  "wrist_y": 90.5,
+  "elbow_angle": 149.3,
+  "visible_keypoints": 17,
+  "ball_detected": false,
+  "ball_wrist_distance": null,
+  "ball_moving_away": false,
+  "score": 0.72
+}
+```
+
+人工观察：
+
+- 远景比赛转播，人物和球较小。
+- release 帧接近投篮出手/球离手区间。
+- 判断：基本准确，但由于画面太远，精确偏差无法严格判断。
+
+### 视频 2
+
+- 文件：`datasets/samples/basketball51/3p0_3p0_v121_004247_x264.mp4`
+- `/api/analyze`：成功
+- metadata：151 帧，25.00 fps
+- frames：`setup,dip,release,follow_through,landing`
+- release frame_index：119
+- release timestamp：4.760s
+- release selection_method：`pose_trajectory_score`
+- release confidence：0.89
+- release evidence：
+
+```json
+{
+  "wrist_y": 143.7,
+  "elbow_angle": 172.2,
+  "visible_keypoints": 12,
+  "ball_detected": true,
+  "ball_wrist_distance": 49.6,
+  "ball_moving_away": true,
+  "score": 0.89
+}
+```
+
+人工观察：
+
+- 远景比赛转播，人物和球较小。
+- release 帧落在出手后的随球阶段附近。
+- 判断：略偏晚，粗略估计偏晚约 6 帧，约 0.24 秒。
+
+### 前端验证
+
+- `http://127.0.0.1:8020/` 可以打开。
+- 初始页面控制台未发现 error/warn。
+- 当前浏览器自动化接口不支持 `setInputFiles`，系统文件选择框也没有把路径成功带回页面。
+- 因此本次未完成真实前端上传验收，不能声称“前端上传完整通过”。
+- 后端 `/api/analyze` 已用 2 个真实视频完整跑通，新增 release 字段可正常返回。
+
+人工补充验收：
+
+- 用户已在 in-app browser 中手动完成真实前端上传验收。
+- 页面能打开，能选择真实投篮视频，能生成分析报告。
+- 关键帧大图正常显示，点击放大正常。
+- `setup`、`dip`、`release`、`follow_through`、`landing` 都正常显示。
+- `selection_method`、`confidence`、`evidence` 已在关键帧信息区可见。
+- 指标区正常显示。
+
+### 当前结论
+
+- 后端 release 识别改动可运行，且不会破坏 `frames` 五阶段返回。
+- 多信号打分字段和 evidence 返回正常。
+- 第二个视频出现轻微偏晚，后续需要更多真实样例对权重做小步校准。
+- 前端真实上传展示已经由用户人工验收通过。
+- 当前仍存在问题：第二个测试视频 release 略偏晚约 6 帧，后续需要继续优化。
+- 当前建议：可以本地 commit，暂不 push。

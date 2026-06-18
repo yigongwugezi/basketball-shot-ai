@@ -331,70 +331,160 @@ def shooting_wrist_y(pose: dict[str, Any]) -> float | None:
     return kp[wrist_idx]["y"]
 
 
-def candidate_frame_indices(video_path: Path, meta: dict[str, Any]) -> dict[str, int]:
-    frame_count = int(meta["frame_count"])
-    max_index = max(frame_count - 1, 0)
-    fallback = {
-        item["key"]: min(max_index, max(0, round(max_index * float(item["ratio"]))))
-        for item in FRAME_PLAN
-    }
-    if frame_count < 12:
-        return fallback
+def shooting_wrist_point(pose: dict[str, Any]) -> tuple[float, float] | None:
+    kp = pose["keypoints"]
+    side = pose["metrics"].get("shooting_side")
+    wrist_idx = 9 if side == "left" else 10 if side == "right" else None
+    if wrist_idx is None or not visible(kp, wrist_idx):
+        return None
+    return point(kp, wrist_idx)
 
-    sample_count = min(17, frame_count)
-    sampled: list[dict[str, Any]] = []
-    for i in range(sample_count):
-        idx = round(max_index * i / max(sample_count - 1, 1))
-        frame = read_frame(video_path, idx)
-        pose = detect_pose(frame)
-        if not pose:
+
+def ball_centers(detections: list[dict[str, Any]]) -> list[tuple[float, float]]:
+    centers = []
+    for detection in detections:
+        if detection["class_name"] != "ball":
             continue
-        metrics = pose["metrics"]
-        sampled.append(
-            {
-                "index": idx,
-                "wrist_y": shooting_wrist_y(pose),
-                "elbow": metrics.get("shooting_elbow_angle"),
-                "knee": metrics.get("min_knee_angle"),
-                "visible": metrics.get("visible_keypoints", 0),
-            }
-        )
+        x1, y1, x2, y2 = detection["xyxy"]
+        centers.append(((x1 + x2) / 2, (y1 + y2) / 2))
+    return centers
 
+
+def closest_ball_distance(
+    wrist: tuple[float, float] | None,
+    detections: list[dict[str, Any]],
+) -> float | None:
+    if wrist is None:
+        return None
+    centers = ball_centers(detections)
+    if not centers:
+        return None
+    return min(math.hypot(center[0] - wrist[0], center[1] - wrist[1]) for center in centers)
+
+
+def normalize_score(value: float | None, min_value: float, max_value: float, invert: bool = False) -> float:
+    if value is None or max_value <= min_value:
+        return 0.0
+    score = (value - min_value) / (max_value - min_value)
+    score = max(0.0, min(1.0, score))
+    return 1.0 - score if invert else score
+
+
+def fallback_frame_indices(max_index: int, release_evidence: str) -> dict[str, dict[str, Any]]:
+    result: dict[str, dict[str, Any]] = {}
+    for item in FRAME_PLAN:
+        key = item["key"]
+        result[key] = {
+            "frame_index": min(max_index, max(0, round(max_index * float(item["ratio"])))),
+            "selection_method": "fallback_ratio",
+            "confidence": 0.3 if key == "release" else 0.2,
+            "evidence": release_evidence if key == "release" else "固定比例关键帧",
+        }
+    return result
+
+
+def estimate_release_from_sampled_frames(
+    sampled: list[dict[str, Any]],
+    fallback: dict[str, dict[str, Any]],
+    max_index: int,
+) -> dict[str, dict[str, Any]]:
     useful = [item for item in sampled if item["visible"] >= 8]
     if len(useful) < 3:
         return fallback
 
-    release_candidates = [item for item in useful if item["wrist_y"] is not None]
-    if release_candidates:
-        release = min(
-            release_candidates,
-            key=lambda item: (
-                item["wrist_y"],
-                -(item["elbow"] or 0),
-            ),
-        )
-        release_index = release["index"]
+    dip_pool = [
+        item
+        for item in useful
+        if item["knee"] is not None and item["index"] <= max_index * 0.72
+    ]
+    if dip_pool:
+        dip = min(dip_pool, key=lambda item: item["knee"])
+        dip_index = dip["index"]
     else:
-        release_index = fallback["release"]
+        dip_index = fallback["dip"]["frame_index"]
 
+    release_candidates = [
+        item
+        for item in useful
+        if item["index"] > dip_index and item["wrist_y"] is not None
+    ]
+    if len(release_candidates) < 2:
+        return fallback
+
+    wrist_values = [item["wrist_y"] for item in release_candidates if item["wrist_y"] is not None]
+    elbow_values = [item["elbow"] for item in release_candidates if item["elbow"] is not None]
+    distance_values = [
+        item["ball_wrist_distance"]
+        for item in release_candidates
+        if item["ball_wrist_distance"] is not None
+    ]
+    min_wrist, max_wrist = min(wrist_values), max(wrist_values)
+    min_elbow = min(elbow_values) if elbow_values else 90.0
+    max_elbow = max(elbow_values) if elbow_values else 180.0
+    min_distance = min(distance_values) if distance_values else 0.0
+    max_distance = max(distance_values) if distance_values else 1.0
+
+    scored = []
+    for position, item in enumerate(release_candidates):
+        has_follow = any(later["index"] > item["index"] for later in useful)
+        if not has_follow:
+            continue
+
+        next_item = release_candidates[position + 1] if position + 1 < len(release_candidates) else None
+        ball_moving_away = (
+            item["ball_wrist_distance"] is not None
+            and next_item is not None
+            and next_item["ball_wrist_distance"] is not None
+            and next_item["ball_wrist_distance"] > item["ball_wrist_distance"]
+        )
+        wrist_score = normalize_score(item["wrist_y"], min_wrist, max_wrist, invert=True)
+        elbow_score = normalize_score(item["elbow"], min_elbow, max_elbow)
+        visible_score = max(0.0, min(1.0, item["visible"] / 17))
+        ball_score = 0.0
+        if item["ball_wrist_distance"] is not None:
+            ball_score = normalize_score(item["ball_wrist_distance"], min_distance, max_distance, invert=True)
+            if ball_moving_away:
+                ball_score = min(1.0, ball_score + 0.2)
+
+        score = (
+            wrist_score * 0.38
+            + elbow_score * 0.27
+            + visible_score * 0.20
+            + ball_score * 0.15
+        )
+        scored.append(
+            {
+                **item,
+                "score": score,
+                "wrist_score": wrist_score,
+                "elbow_score": elbow_score,
+                "visible_score": visible_score,
+                "ball_score": ball_score,
+                "ball_moving_away": ball_moving_away,
+            }
+        )
+
+    if not scored:
+        return fallback
+
+    release = max(scored, key=lambda item: item["score"])
+    release_index = release["index"]
     before_release = [item for item in useful if item["index"] < release_index]
     after_release = [item for item in useful if item["index"] > release_index]
 
-    if before_release:
-        dip = min(before_release, key=lambda item: item["knee"] if item["knee"] is not None else 999)
-        dip_index = dip["index"]
-    else:
-        dip_index = fallback["dip"]
+    if not before_release or not after_release:
+        return fallback
+
+    dip_before_release = [
+        item for item in before_release if item["knee"] is not None
+    ]
+    if dip_before_release:
+        dip_index = min(dip_before_release, key=lambda item: item["knee"])["index"]
 
     setup_pool = [item for item in useful if item["index"] < dip_index]
-    setup_index = setup_pool[0]["index"] if setup_pool else fallback["setup"]
-
-    if after_release:
-        follow_index = after_release[0]["index"]
-        landing_index = after_release[min(len(after_release) - 1, 2)]["index"]
-    else:
-        follow_index = min(max_index, release_index + round(frame_count * 0.12))
-        landing_index = min(max_index, release_index + round(frame_count * 0.28))
+    setup_index = setup_pool[0]["index"] if setup_pool else fallback["setup"]["frame_index"]
+    follow_index = after_release[0]["index"]
+    landing_index = after_release[min(len(after_release) - 1, 2)]["index"]
 
     indices = {
         "setup": setup_index,
@@ -406,7 +496,63 @@ def candidate_frame_indices(video_path: Path, meta: dict[str, Any]) -> dict[str,
     ordered = sorted(indices.items(), key=lambda item: item[1])
     if [key for key, _ in ordered] != FRAME_KEYS:
         return fallback
-    return indices
+
+    result = {
+        key: {
+            "frame_index": index,
+            "selection_method": "pose_trajectory_score" if key == "release" else "pose_sequence",
+            "confidence": 0.5 if key != "release" else round(max(0.35, min(0.95, release["score"])), 2),
+            "evidence": "由 release 前后有效骨架帧顺序推断",
+        }
+        for key, index in indices.items()
+    }
+    result["release"]["evidence"] = {
+        "wrist_y": round(release["wrist_y"], 1) if release["wrist_y"] is not None else None,
+        "elbow_angle": release["elbow"],
+        "visible_keypoints": release["visible"],
+        "ball_detected": release["ball_wrist_distance"] is not None,
+        "ball_wrist_distance": (
+            round(release["ball_wrist_distance"], 1)
+            if release["ball_wrist_distance"] is not None
+            else None
+        ),
+        "ball_moving_away": release["ball_moving_away"],
+        "score": round(release["score"], 2),
+    }
+    return result
+
+
+def candidate_frame_indices(video_path: Path, meta: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    frame_count = int(meta["frame_count"])
+    max_index = max(frame_count - 1, 0)
+    fallback = fallback_frame_indices(max_index, "有效骨架帧不足，使用固定比例兜底")
+    if frame_count < 12:
+        return fallback
+
+    sample_count = min(25, frame_count)
+    sampled: list[dict[str, Any]] = []
+    for i in range(sample_count):
+        idx = round(max_index * i / max(sample_count - 1, 1))
+        frame = read_frame(video_path, idx)
+        pose = detect_pose(frame)
+        if not pose:
+            continue
+        detections = detect_frame(frame)
+        metrics = pose["metrics"]
+        wrist = shooting_wrist_point(pose)
+        sampled.append(
+            {
+                "index": idx,
+                "wrist_y": shooting_wrist_y(pose),
+                "wrist": wrist,
+                "elbow": metrics.get("shooting_elbow_angle"),
+                "knee": metrics.get("min_knee_angle"),
+                "visible": metrics.get("visible_keypoints", 0),
+                "ball_count": len(ball_centers(detections)),
+                "ball_wrist_distance": closest_ball_distance(wrist, detections),
+            }
+        )
+    return estimate_release_from_sampled_frames(sampled, fallback, max_index)
 
 
 def draw_detections(frame, detections: list[dict[str, Any]]):
@@ -790,7 +936,8 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
         frames: list[dict[str, Any]] = []
         frame_indices = candidate_frame_indices(temp_path, meta)
         for item in FRAME_PLAN:
-            frame_index = frame_indices[item["key"]]
+            frame_selection = frame_indices[item["key"]]
+            frame_index = frame_selection["frame_index"]
             frame = read_frame(temp_path, frame_index)
             detections = detect_frame(frame)
             pose = detect_pose(frame)
@@ -804,6 +951,9 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
                     "dataUrl": encode_jpeg(annotated),
                     "detections": detections,
                     "pose": pose,
+                    "selection_method": frame_selection.get("selection_method"),
+                    "confidence": frame_selection.get("confidence"),
+                    "evidence": frame_selection.get("evidence"),
                 }
             )
 
