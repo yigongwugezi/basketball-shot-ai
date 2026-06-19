@@ -271,3 +271,13 @@ Ball ROI scan experiment 补充：
 - ROI debug 图显示 ROI 未明显裁偏，球在很多帧内位于 ROI 中，但 detector 仍然 `0` 召回。
 - 结论：当前瓶颈是 detector 对 release 邻域小球召回不足，不是 ROI 参数。
 - 决策：不继续 ROI 参数路线，不改主线代码；下一步优先换更清晰样例或准备 release 邻域小球标注集。
+
+Release ball annotation plan 补充：
+
+- 2026-06-18 已完成第一批 release 邻域小球标注候选筛选。
+- 推荐 10 个候选：`BILI_001_A`、`BILI_001_C`、`BILI_002_A`、`BILI_003_A`、`BILI_005_A`、`BILI_006_A`、`BILI_008_A`、`BILI_010_A`、`BILI_010_B`、`BILI_010_D`。
+- 严格 `ball_release_frame` 真值优先样例：`BILI_001_A`、`BILI_003_A`、`BILI_005_A`。
+- detector 训练补充样例：`BILI_001_C`、`BILI_002_A`、`BILI_006_A`、`BILI_008_A`、`BILI_010_A`、`BILI_010_B`、`BILI_010_D`。
+- 当前素材足够做第一批约 10 clip / 约 310 帧的小标注集。
+- 决策：建议开始人工标注；暂不训练 detector；暂不改主线代码。
+- 详细计划见 `docs/release-ball-annotation-plan-2026-06-18.md`。
