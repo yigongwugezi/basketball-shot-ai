@@ -253,3 +253,12 @@ Release 定义修正补充：
 - `BILI_005_A`：系统预测 218，人工 `ball_release_frame` 约 223-224，严格口径偏早约 5-6 帧。
 - `BILI_006_A`：无法可靠判断，不作为严格真值样例。
 - 结论：暂不改算法；后续若优化严格 `ball_release_frame`，应围绕 `ball-hand separation`，而不是简单加时间惩罚。
+
+Ball release debug experiment 补充：
+
+- 2026-06-18 进行了一次只读诊断实验，尝试用现有 ball detection + shooting wrist 在 release 附近窗口推断严格 `ball_release_frame`。
+- 验证样例：`BILI_001_A`、`BILI_003_A`、`BILI_005_A`。
+- 结果：3 个样例均未得到有效 `candidate_ball_release_frame`。
+- 主要原因：ball detection 在 release 附近窗口不连续，`BILI_003_A` 和 `BILI_005_A` 窗口内完全没有检测到 ball。
+- 结论：当前瓶颈是 ball track continuity，不是 wrist keypoint。
+- 决策：不把 debug helper 合入主线，暂不改 release 算法；后续如果优化严格 `ball_release_frame`，应优先解决 ball tracking。
