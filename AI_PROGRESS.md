@@ -233,3 +233,12 @@ http://127.0.0.1:8020/
 - 统计结果：1 个准确，0 个偏早，2 个偏晚，5 个无法判断。
 - 结论：暂不改算法，先收集更清晰固定机位训练视频。
 - 详细记录见 `docs/release-validation-2026-06-18.md`。
+
+Bilibili 素材验证补充：
+
+- 2026-06-18 已完成 8 个 Bilibili 裁剪片段 release 验证。
+- `/api/analyze` 全部跑通。
+- 统计结果：3 个准确，0 个偏早，2 个偏晚，3 个无法判断。
+- 推荐 MVP 标准样例：`BILI_001_A`、`BILI_003_A`、`BILI_005_A`、`BILI_006_A`。
+- 结论：暂不改 release 算法，先围绕这些标准样例继续验证。
+- 详细记录见 `docs/bilibili-release-validation-2026-06-18.md`。
