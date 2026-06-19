@@ -242,3 +242,14 @@ Bilibili 素材验证补充：
 - 推荐 MVP 标准样例：`BILI_001_A`、`BILI_003_A`、`BILI_005_A`、`BILI_006_A`。
 - 结论：暂不改 release 算法，先围绕这些标准样例继续验证。
 - 详细记录见 `docs/bilibili-release-validation-2026-06-18.md`。
+
+Release 定义修正补充：
+
+- contact sheet 人工复核后，项目正式区分 `release_pose_frame` 和 `ball_release_frame`。
+- 当前算法输出的 release 更接近 `release_pose_frame`。
+- 严格 `ball_release_frame` 定义为球最后脱离投篮手指尖后的第一帧。
+- `BILI_001_A`：系统预测 55，人工 `ball_release_frame` 55，准确。
+- `BILI_003_A`：系统预测 513，人工 `ball_release_frame` 约 517±1，严格口径偏早约 3-5 帧。
+- `BILI_005_A`：系统预测 218，人工 `ball_release_frame` 约 223-224，严格口径偏早约 5-6 帧。
+- `BILI_006_A`：无法可靠判断，不作为严格真值样例。
+- 结论：暂不改算法；后续若优化严格 `ball_release_frame`，应围绕 `ball-hand separation`，而不是简单加时间惩罚。
