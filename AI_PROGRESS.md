@@ -262,3 +262,12 @@ Ball release debug experiment 补充：
 - 主要原因：ball detection 在 release 附近窗口不连续，`BILI_003_A` 和 `BILI_005_A` 窗口内完全没有检测到 ball。
 - 结论：当前瓶颈是 ball track continuity，不是 wrist keypoint。
 - 决策：不把 debug helper 合入主线，暂不改 release 算法；后续如果优化严格 `ball_release_frame`，应优先解决 ball tracking。
+
+Ball ROI scan experiment 补充：
+
+- 2026-06-18 完成 `BILI_003_A` / `BILI_005_A` 的本地 ROI 参数扫描。
+- 每个 clip 测试 120 个 ROI 配置。
+- 两个 clip 均为 `0/120` 非零配置。
+- ROI debug 图显示 ROI 未明显裁偏，球在很多帧内位于 ROI 中，但 detector 仍然 `0` 召回。
+- 结论：当前瓶颈是 detector 对 release 邻域小球召回不足，不是 ROI 参数。
+- 决策：不继续 ROI 参数路线，不改主线代码；下一步优先换更清晰样例或准备 release 邻域小球标注集。
