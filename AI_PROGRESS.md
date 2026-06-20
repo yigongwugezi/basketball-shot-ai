@@ -281,3 +281,15 @@ Release ball annotation plan 补充：
 - 当前素材足够做第一批约 10 clip / 约 310 帧的小标注集。
 - 决策：建议开始人工标注；暂不训练 detector；暂不改主线代码。
 - 详细计划见 `docs/release-ball-annotation-plan-2026-06-18.md`。
+
+## Release ball annotation batch 001 supplement
+
+- Completed manual release-neighborhood ball annotation for the first batch of 3 core clips on 2026-06-18.
+- Annotated clips: BILI_001_A, BILI_003_A, BILI_005_A.
+- Total: 93 frames, including 71 frames with a target shooter ball box and 22 frames without a target ball.
+- Strict `ball_release_frame` recorded:
+  - BILI_001_A = 55, high
+  - BILI_003_A = 517, medium
+  - BILI_005_A = 224, high
+- Annotation data saved to `datasets/annotations/release_ball_batch_001/labels.csv`.
+- Decision: keep this as a small annotation set first; do not train the detector yet; do not change the mainline algorithm.

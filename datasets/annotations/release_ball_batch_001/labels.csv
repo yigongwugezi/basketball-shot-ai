@@ -1,0 +1,94 @@
+clip_id,frame_index,image_file,ball_visible,ball_x1,ball_y1,ball_x2,ball_y2,ball_center_x,ball_center_y,ball_visibility_quality,occlusion,is_release_pose_frame,is_ball_release_frame,label_confidence,notes
+BILI_001_A,40,frames/BILI_001_A_frame_0040.jpg,yes,155,310,222,374,188,342,usable,partial,no,no,,
+BILI_001_A,41,frames/BILI_001_A_frame_0041.jpg,yes,131,314,188,379,159,346,usable,partial,no,no,,
+BILI_001_A,42,frames/BILI_001_A_frame_0042.jpg,yes,103,311,161,380,132,345,usable,partial,no,no,,
+BILI_001_A,43,frames/BILI_001_A_frame_0043.jpg,yes,79,289,133,357,106,323,usable,partial,no,no,,
+BILI_001_A,44,frames/BILI_001_A_frame_0044.jpg,yes,80,289,135,360,107,324,usable,partial,no,no,,
+BILI_001_A,45,frames/BILI_001_A_frame_0045.jpg,yes,70,251,127,327,98,289,usable,partial,no,no,,
+BILI_001_A,46,frames/BILI_001_A_frame_0046.jpg,yes,67,190,130,276,98,233,usable,partial,no,no,,
+BILI_001_A,47,frames/BILI_001_A_frame_0047.jpg,yes,91,155,149,221,120,188,usable,partial,no,no,,
+BILI_001_A,48,frames/BILI_001_A_frame_0048.jpg,yes,89,151,152,221,120,186,usable,partial,no,no,,
+BILI_001_A,49,frames/BILI_001_A_frame_0049.jpg,yes,122,124,182,191,152,157,usable,partial,no,no,,
+BILI_001_A,50,frames/BILI_001_A_frame_0050.jpg,yes,139,109,199,170,169,139,usable,partial,no,no,,
+BILI_001_A,51,frames/BILI_001_A_frame_0051.jpg,yes,141,85,202,152,171,118,usable,partial,no,no,,
+BILI_001_A,52,frames/BILI_001_A_frame_0052.jpg,yes,126,53,188,125,157,89,usable,partial,no,no,,
+BILI_001_A,53,frames/BILI_001_A_frame_0053.jpg,yes,93,12,158,82,125,47,usable,partial,no,no,,
+BILI_001_A,54,frames/BILI_001_A_frame_0054.jpg,yes,91,13,156,78,123,45,usable,partial,no,no,,
+BILI_001_A,55,frames/BILI_001_A_frame_0055.jpg,yes,46,0,100,22,73,11,poor,heavy,yes,yes,high,first clear frame after ball leaves fingertips; release_pose_frame matches ball_release_frame
+BILI_001_A,56,frames/BILI_001_A_frame_0056.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,57,frames/BILI_001_A_frame_0057.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,58,frames/BILI_001_A_frame_0058.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,59,frames/BILI_001_A_frame_0059.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,60,frames/BILI_001_A_frame_0060.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,61,frames/BILI_001_A_frame_0061.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,62,frames/BILI_001_A_frame_0062.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,63,frames/BILI_001_A_frame_0063.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,64,frames/BILI_001_A_frame_0064.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,65,frames/BILI_001_A_frame_0065.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,66,frames/BILI_001_A_frame_0066.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,67,frames/BILI_001_A_frame_0067.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,68,frames/BILI_001_A_frame_0068.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,69,frames/BILI_001_A_frame_0069.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_001_A,70,frames/BILI_001_A_frame_0070.jpg,no,,,,,,,invisible,,no,no,,no target shooter ball; background ball ignored if present
+BILI_003_A,498,frames/BILI_003_A_frame_0498.jpg,yes,156,41,256,158,206,99,usable,partial,no,no,,
+BILI_003_A,499,frames/BILI_003_A_frame_0499.jpg,yes,154,39,258,152,206,95,usable,partial,no,no,,
+BILI_003_A,500,frames/BILI_003_A_frame_0500.jpg,yes,158,39,253,157,205,98,usable,partial,no,no,,
+BILI_003_A,501,frames/BILI_003_A_frame_0501.jpg,yes,162,24,261,134,211,79,usable,partial,no,no,,
+BILI_003_A,502,frames/BILI_003_A_frame_0502.jpg,yes,163,32,262,128,212,80,usable,partial,no,no,,
+BILI_003_A,503,frames/BILI_003_A_frame_0503.jpg,yes,157,24,268,132,212,78,usable,partial,no,no,,
+BILI_003_A,504,frames/BILI_003_A_frame_0504.jpg,yes,170,13,268,117,219,65,usable,partial,no,no,,
+BILI_003_A,505,frames/BILI_003_A_frame_0505.jpg,yes,170,11,268,128,219,69,usable,partial,no,no,,
+BILI_003_A,506,frames/BILI_003_A_frame_0506.jpg,yes,166,11,271,117,218,64,usable,partial,no,no,,
+BILI_003_A,507,frames/BILI_003_A_frame_0507.jpg,yes,168,15,270,116,219,65,usable,partial,no,no,,
+BILI_003_A,508,frames/BILI_003_A_frame_0508.jpg,yes,166,13,271,122,218,67,usable,partial,no,no,,
+BILI_003_A,509,frames/BILI_003_A_frame_0509.jpg,yes,179,0,283,110,231,55,usable,partial,no,no,,
+BILI_003_A,510,frames/BILI_003_A_frame_0510.jpg,yes,179,1,280,103,229,52,usable,partial,no,no,,
+BILI_003_A,511,frames/BILI_003_A_frame_0511.jpg,yes,179,2,280,106,229,54,usable,partial,no,no,,
+BILI_003_A,512,frames/BILI_003_A_frame_0512.jpg,yes,190,1,290,82,240,41,usable,partial,no,no,,
+BILI_003_A,513,frames/BILI_003_A_frame_0513.jpg,yes,189,1,293,90,241,45,usable,partial,yes,no,,
+BILI_003_A,514,frames/BILI_003_A_frame_0514.jpg,yes,189,1,292,81,240,41,usable,partial,no,no,,
+BILI_003_A,515,frames/BILI_003_A_frame_0515.jpg,yes,200,2,306,66,253,34,usable,heavy,no,no,,
+BILI_003_A,516,frames/BILI_003_A_frame_0516.jpg,yes,200,0,306,66,253,33,usable,heavy,no,no,,
+BILI_003_A,517,frames/BILI_003_A_frame_0517.jpg,yes,216,1,319,48,267,24,usable,heavy,no,yes,medium,516 unclear / possible fingertip contact; 517 first likely separated frame; slow-motion near-duplicate frames
+BILI_003_A,518,frames/BILI_003_A_frame_0518.jpg,yes,216,1,322,46,269,23,usable,heavy,no,no,,
+BILI_003_A,519,frames/BILI_003_A_frame_0519.jpg,yes,216,1,319,48,267,24,usable,heavy,no,no,,
+BILI_003_A,520,frames/BILI_003_A_frame_0520.jpg,yes,216,1,321,44,268,22,usable,heavy,no,no,,
+BILI_003_A,521,frames/BILI_003_A_frame_0521.jpg,yes,216,1,318,46,267,23,usable,heavy,no,no,,
+BILI_003_A,522,frames/BILI_003_A_frame_0522.jpg,yes,218,0,317,49,267,24,usable,heavy,no,no,,
+BILI_003_A,523,frames/BILI_003_A_frame_0523.jpg,yes,238,0,324,37,281,18,usable,heavy,no,no,,
+BILI_003_A,524,frames/BILI_003_A_frame_0524.jpg,yes,238,1,328,35,283,18,usable,heavy,no,no,,
+BILI_003_A,525,frames/BILI_003_A_frame_0525.jpg,yes,238,1,326,37,282,19,usable,heavy,no,no,,
+BILI_003_A,526,frames/BILI_003_A_frame_0526.jpg,yes,265,1,325,12,295,6,usable,heavy,no,no,,
+BILI_003_A,527,frames/BILI_003_A_frame_0527.jpg,no,,,,,,,invisible,,no,no,,
+BILI_003_A,528,frames/BILI_003_A_frame_0528.jpg,no,,,,,,,invisible,,no,no,,
+BILI_005_A,203,frames/BILI_005_A_frame_0203.jpg,yes,201,126,282,198,241,162,usable,partial,no,no,,
+BILI_005_A,204,frames/BILI_005_A_frame_0204.jpg,yes,203,121,279,196,241,158,usable,partial,no,no,,
+BILI_005_A,205,frames/BILI_005_A_frame_0205.jpg,yes,199,130,280,198,239,164,usable,partial,no,no,,
+BILI_005_A,206,frames/BILI_005_A_frame_0206.jpg,yes,198,126,279,198,238,162,usable,partial,no,no,,
+BILI_005_A,207,frames/BILI_005_A_frame_0207.jpg,yes,200,130,280,199,240,164,usable,partial,no,no,,
+BILI_005_A,208,frames/BILI_005_A_frame_0208.jpg,yes,208,103,284,175,246,139,usable,partial,no,no,,
+BILI_005_A,209,frames/BILI_005_A_frame_0209.jpg,yes,209,102,284,183,246,142,usable,partial,no,no,,
+BILI_005_A,210,frames/BILI_005_A_frame_0210.jpg,yes,200,101,289,178,244,139,usable,partial,no,no,,
+BILI_005_A,211,frames/BILI_005_A_frame_0211.jpg,yes,206,105,284,181,245,143,usable,partial,no,no,,
+BILI_005_A,212,frames/BILI_005_A_frame_0212.jpg,yes,205,104,285,179,245,141,usable,partial,no,no,,
+BILI_005_A,213,frames/BILI_005_A_frame_0213.jpg,yes,227,60,296,140,261,100,usable,partial,no,no,,
+BILI_005_A,214,frames/BILI_005_A_frame_0214.jpg,yes,217,65,301,149,259,107,usable,partial,no,no,,
+BILI_005_A,215,frames/BILI_005_A_frame_0215.jpg,yes,221,64,296,150,258,107,usable,partial,no,no,,
+BILI_005_A,216,frames/BILI_005_A_frame_0216.jpg,yes,222,60,297,151,259,105,usable,partial,no,no,,
+BILI_005_A,217,frames/BILI_005_A_frame_0217.jpg,yes,221,61,297,150,259,105,usable,partial,no,no,,
+BILI_005_A,218,frames/BILI_005_A_frame_0218.jpg,yes,222,60,296,151,259,105,usable,partial,yes,no,,
+BILI_005_A,219,frames/BILI_005_A_frame_0219.jpg,yes,246,10,324,93,285,51,usable,partial,no,no,,
+BILI_005_A,220,frames/BILI_005_A_frame_0220.jpg,yes,238,7,323,95,280,51,usable,partial,no,no,,
+BILI_005_A,221,frames/BILI_005_A_frame_0221.jpg,yes,248,9,321,97,284,53,usable,partial,no,no,,
+BILI_005_A,222,frames/BILI_005_A_frame_0222.jpg,yes,245,12,323,97,284,54,usable,partial,no,no,,
+BILI_005_A,223,frames/BILI_005_A_frame_0223.jpg,yes,249,6,320,100,284,53,usable,partial,no,no,,
+BILI_005_A,224,frames/BILI_005_A_frame_0224.jpg,yes,277,0,363,39,320,19,poor,heavy,no,yes,high,frame 223 ball still in hand; frame 224 first clear frame after ball leaves hand/fingertips
+BILI_005_A,225,frames/BILI_005_A_frame_0225.jpg,yes,281,0,362,35,321,17,poor,heavy,no,no,,
+BILI_005_A,226,frames/BILI_005_A_frame_0226.jpg,yes,283,1,360,37,321,19,poor,heavy,no,no,,
+BILI_005_A,227,frames/BILI_005_A_frame_0227.jpg,yes,281,0,366,40,323,20,poor,heavy,no,no,,
+BILI_005_A,228,frames/BILI_005_A_frame_0228.jpg,yes,282,3,363,37,322,20,poor,heavy,no,no,,
+BILI_005_A,229,frames/BILI_005_A_frame_0229.jpg,no,,,,,,,invisible,,no,no,,
+BILI_005_A,230,frames/BILI_005_A_frame_0230.jpg,no,,,,,,,invisible,,no,no,,
+BILI_005_A,231,frames/BILI_005_A_frame_0231.jpg,no,,,,,,,invisible,,no,no,,
+BILI_005_A,232,frames/BILI_005_A_frame_0232.jpg,no,,,,,,,invisible,,no,no,,
+BILI_005_A,233,frames/BILI_005_A_frame_0233.jpg,no,,,,,,,invisible,,no,no,,
