@@ -293,3 +293,15 @@ Release ball annotation plan 补充：
   - BILI_005_A = 224, high
 - Annotation data saved to `datasets/annotations/release_ball_batch_001/labels.csv`.
 - Decision: keep this as a small annotation set first; do not train the detector yet; do not change the mainline algorithm.
+## Release ball detector eval batch 001 supplement
+
+- Completed an offline failure analysis on `release_ball_batch_001` using the current detector logic.
+- Reused `backend.main.detect_frame()` from the production code path.
+- Recall on the 71 manual target-shooter ball frames was 0.
+- The three strict release frames were all missed:
+  - BILI_001_A = 55
+  - BILI_003_A = 517
+  - BILI_005_A = 224
+- Among the 22 `ball_visible=no` frames, 4 still produced detections, which look more like background balls or false positives.
+- Conclusion: the blocker is detector recall on small balls near release, not release scoring, wrist keypoints, ROI tuning, or tracking.
+- Decision: do not change `backend/main.py`; do not keep tuning release weights; next step is to annotate the remaining 7 clips or prepare detector fine-tuning.
