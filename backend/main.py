@@ -815,6 +815,82 @@ def build_release_ball_evidence(
     return evidence
 
 
+def build_release_fusion_diagnostic(
+    pose_release_frame_index: int | None,
+    release_ball_evidence: dict[str, Any] | None,
+) -> dict[str, Any]:
+    evidence_status = (
+        release_ball_evidence.get("status")
+        if isinstance(release_ball_evidence, dict)
+        else None
+    )
+    best_frame = (
+        release_ball_evidence.get("best_frame")
+        if isinstance(release_ball_evidence, dict)
+        else None
+    )
+    detector_release_frame_index = (
+        int(best_frame["frame_index"])
+        if isinstance(best_frame, dict) and best_frame.get("frame_index") is not None
+        else None
+    )
+    risk_flags: list[str] = []
+
+    if pose_release_frame_index is None:
+        risk_flags.append("missing_pose_release_frame")
+    if evidence_status != "ok":
+        risk_flags.append("detector_unavailable")
+    elif detector_release_frame_index is None:
+        risk_flags.append("missing_detector_frame")
+
+    fusion = {
+        "status": "ok",
+        "final_source": "pose_release",
+        "pose_release_frame_index": pose_release_frame_index,
+        "detector_release_frame_index": detector_release_frame_index,
+        "frame_delta": None,
+        "agreement_level": "unknown",
+        "reason": "",
+        "risk_flags": risk_flags,
+    }
+
+    if pose_release_frame_index is None:
+        fusion["status"] = "insufficient_data"
+        fusion["reason"] = "pose release frame is missing; keeping existing release behavior"
+        return fusion
+    if evidence_status != "ok":
+        fusion["status"] = "detector_unavailable"
+        fusion["reason"] = (
+            f"detector unavailable ({evidence_status or 'unknown'}); keeping pose-based release"
+        )
+        return fusion
+    if detector_release_frame_index is None:
+        fusion["status"] = "insufficient_data"
+        fusion["reason"] = "detector returned no best frame; keeping pose-based release"
+        return fusion
+
+    frame_delta = detector_release_frame_index - pose_release_frame_index
+    absolute_delta = abs(frame_delta)
+    fusion["frame_delta"] = frame_delta
+    if frame_delta == 0:
+        fusion["agreement_level"] = "exact_agreement"
+        fusion["reason"] = "detector agrees with pose release frame"
+    elif absolute_delta <= 1:
+        fusion["agreement_level"] = "near_agreement_1"
+        fusion["reason"] = "detector is near pose release frame within 1 frame"
+    elif absolute_delta <= 3:
+        fusion["agreement_level"] = "near_agreement_3"
+        fusion["reason"] = "detector is near pose release frame within 3 frames"
+    else:
+        fusion["agreement_level"] = "disagreement"
+        fusion["reason"] = (
+            f"detector differs from pose release frame by {absolute_delta} frames; "
+            "keeping pose-based release for safety"
+        )
+        fusion["risk_flags"].append("detector_pose_disagreement")
+    return fusion
+
+
 def quality_checks(meta: dict[str, Any]) -> list[dict[str, str]]:
     duration = float(meta["duration"])
     width = int(meta["width"])
@@ -1126,13 +1202,18 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
         if release_ball_detector_enabled():
             release = next((frame for frame in frames if frame["key"] == "release"), None)
             if release:
-                response["release_ball_evidence"] = build_release_ball_evidence(
+                release_ball_evidence = build_release_ball_evidence(
                     temp_path,
                     meta,
                     int(release["frame_index"]),
                 )
             else:
-                response["release_ball_evidence"] = base_release_ball_evidence("no_release_frame")
+                release_ball_evidence = base_release_ball_evidence("no_release_frame")
+            response["release_ball_evidence"] = release_ball_evidence
+            response["release_fusion"] = build_release_fusion_diagnostic(
+                int(release["frame_index"]) if release else None,
+                release_ball_evidence,
+            )
         return response
     finally:
         temp_path.unlink(missing_ok=True)
