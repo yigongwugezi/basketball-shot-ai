@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import math
+import os
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -84,6 +85,11 @@ app.add_middleware(
 custom_model: YOLO | None = None
 coco_model: YOLO | None = None
 pose_model: YOLO | None = None
+release_ball_model: YOLO | None = None
+release_ball_model_path: Path | None = None
+
+RELEASE_BALL_WINDOW_RADIUS = 3
+RELEASE_BALL_CONFIDENCE = 0.25
 
 
 def get_custom_model() -> YOLO:
@@ -111,6 +117,38 @@ def get_pose_model() -> YOLO:
             raise HTTPException(status_code=500, detail=f"Pose model not found: {POSE_MODEL_PATH}")
         pose_model = YOLO(str(POSE_MODEL_PATH))
     return pose_model
+
+
+def env_truthy(name: str) -> bool:
+    value = os.getenv(name, "")
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def release_ball_detector_enabled() -> bool:
+    return env_truthy("ENABLE_RELEASE_BALL_DETECTOR")
+
+
+def configured_release_ball_model_path() -> Path | None:
+    raw = os.getenv("RELEASE_BALL_MODEL_PATH", "").strip()
+    if not raw:
+        return None
+    return Path(raw).expanduser()
+
+
+def get_release_ball_model() -> tuple[YOLO | None, Path | None, str | None]:
+    global release_ball_model
+    global release_ball_model_path
+
+    model_path = configured_release_ball_model_path()
+    if model_path is None:
+        return None, None, "disabled_by_missing_model"
+    if not model_path.exists():
+        return None, model_path, "model_missing"
+
+    if release_ball_model is None or release_ball_model_path != model_path:
+        release_ball_model = YOLO(str(model_path))
+        release_ball_model_path = model_path
+    return release_ball_model, model_path, None
 
 
 def encode_jpeg(frame) -> str:
@@ -657,6 +695,121 @@ def detect_frame(frame) -> list[dict[str, Any]]:
     return detections
 
 
+def best_release_ball_detection(frame) -> dict[str, Any]:
+    model, model_path, missing_status = get_release_ball_model()
+    if model is None:
+        return {
+            "has_detection": False,
+            "confidence": 0.0,
+            "bbox": None,
+            "status": missing_status or "model_missing",
+            "model_path": str(model_path) if model_path else None,
+        }
+
+    results = model.predict(
+        frame,
+        imgsz=640,
+        conf=RELEASE_BALL_CONFIDENCE,
+        verbose=False,
+        device="cpu",
+    )
+    best_box = None
+    best_conf = 0.0
+    if results and results[0].boxes is not None:
+        for box in results[0].boxes:
+            class_id = int(box.cls[0].item())
+            if class_id != 0:
+                continue
+            confidence = float(box.conf[0].item())
+            if confidence > best_conf:
+                best_conf = confidence
+                best_box = [float(v) for v in box.xyxy[0].tolist()]
+
+    return {
+        "has_detection": best_box is not None,
+        "confidence": round(best_conf, 4) if best_box is not None else 0.0,
+        "bbox": [round(v, 2) for v in best_box] if best_box is not None else None,
+        "status": "ok" if best_box is not None else "no_detection",
+        "model_path": str(model_path) if model_path else None,
+    }
+
+
+def build_release_ball_evidence(
+    video_path: Path,
+    meta: dict[str, Any],
+    release_frame_index: int,
+) -> dict[str, Any]:
+    evidence: dict[str, Any] = {
+        "enabled": True,
+        "status": "ok",
+        "detector_type": "release_ball_yolo",
+        "model_path": None,
+        "window_radius": RELEASE_BALL_WINDOW_RADIUS,
+        "release_frame_index": release_frame_index,
+        "frames": [],
+        "best_frame": None,
+    }
+
+    try:
+        model, model_path, missing_status = get_release_ball_model()
+    except Exception as exc:
+        evidence["status"] = "error"
+        evidence["error"] = str(exc)
+        return evidence
+
+    evidence["model_path"] = str(model_path) if model_path else None
+    if model is None:
+        evidence["status"] = missing_status or "model_missing"
+        return evidence
+
+    max_index = max(0, int(meta["frame_count"]) - 1)
+    start = max(0, release_frame_index - RELEASE_BALL_WINDOW_RADIUS)
+    end = min(max_index, release_frame_index + RELEASE_BALL_WINDOW_RADIUS)
+    best_frame = None
+
+    for frame_index in range(start, end + 1):
+        item = {
+            "frame_index": frame_index,
+            "distance_to_release": frame_index - release_frame_index,
+            "confidence": 0.0,
+            "bbox": None,
+            "has_detection": False,
+            "status": "no_detection",
+        }
+        try:
+            frame = read_frame(video_path, frame_index)
+        except Exception as exc:
+            item["status"] = "read_failed"
+            item["error"] = str(exc)
+            evidence["frames"].append(item)
+            continue
+
+        try:
+            detected = best_release_ball_detection(frame)
+        except Exception as exc:
+            item["status"] = "error"
+            item["error"] = str(exc)
+            evidence["frames"].append(item)
+            continue
+
+        item.update(
+            {
+                "confidence": detected["confidence"],
+                "bbox": detected["bbox"],
+                "has_detection": detected["has_detection"],
+                "status": detected["status"],
+            }
+        )
+        evidence["frames"].append(item)
+
+        if item["has_detection"]:
+            if best_frame is None or item["confidence"] > best_frame["confidence"]:
+                best_frame = dict(item)
+
+    evidence["best_frame"] = best_frame
+    return evidence
+
+
 def quality_checks(meta: dict[str, Any]) -> list[dict[str, str]]:
     duration = float(meta["duration"])
     width = int(meta["width"])
@@ -958,13 +1111,22 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
             )
 
         camera = estimate_camera_view(frames)
-        return {
+        response = {
             "metadata": meta,
             "camera": camera,
             "quality": quality_checks_v2(meta, camera),
             "frames": frames,
             "metrics": summarize_metrics_v2(frames, camera),
         }
+        if release_ball_detector_enabled():
+            release = next((frame for frame in frames if frame["key"] == "release"), None)
+            if release:
+                response["release_ball_evidence"] = build_release_ball_evidence(
+                    temp_path,
+                    meta,
+                    int(release["frame_index"]),
+                )
+        return response
     finally:
         temp_path.unlink(missing_ok=True)
 
