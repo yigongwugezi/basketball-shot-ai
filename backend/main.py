@@ -753,7 +753,7 @@ def build_release_ball_evidence(
     meta: dict[str, Any],
     release_frame_index: int,
 ) -> dict[str, Any]:
-    evidence = base_release_ball_evidence("ok", release_frame_index)
+    evidence = base_release_ball_evidence("no_detection", release_frame_index)
 
     try:
         model, model_path, missing_status = get_release_ball_model()
@@ -812,6 +812,7 @@ def build_release_ball_evidence(
                 best_frame = dict(item)
 
     evidence["best_frame"] = best_frame
+    evidence["status"] = "ok" if best_frame is not None else "no_detection"
     return evidence
 
 
@@ -838,8 +839,11 @@ def build_release_fusion_diagnostic(
 
     if pose_release_frame_index is None:
         risk_flags.append("missing_pose_release_frame")
-    if evidence_status != "ok":
+    if evidence_status in {"model_missing", "disabled_by_missing_model", "error"}:
         risk_flags.append("detector_unavailable")
+    elif evidence_status == "no_detection":
+        risk_flags.append("detector_no_detection")
+        risk_flags.append("missing_detector_frame")
     elif detector_release_frame_index is None:
         risk_flags.append("missing_detector_frame")
 
@@ -858,11 +862,15 @@ def build_release_fusion_diagnostic(
         fusion["status"] = "insufficient_data"
         fusion["reason"] = "pose release frame is missing; keeping existing release behavior"
         return fusion
-    if evidence_status != "ok":
+    if evidence_status in {"model_missing", "disabled_by_missing_model", "error"}:
         fusion["status"] = "detector_unavailable"
         fusion["reason"] = (
             f"detector unavailable ({evidence_status or 'unknown'}); keeping pose-based release"
         )
+        return fusion
+    if evidence_status == "no_detection":
+        fusion["status"] = "insufficient_data"
+        fusion["reason"] = "detector found no release-ball detection in the release window; keeping pose-based release"
         return fusion
     if detector_release_frame_index is None:
         fusion["status"] = "insufficient_data"
