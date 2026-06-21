@@ -262,6 +262,84 @@ video {
   align-items: stretch;
 }
 
+.release-ball-evidence {
+  margin-top: 14px;
+}
+
+.release-ball-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+  padding: 14px;
+}
+
+.release-ball-card.ok {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.release-ball-card.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.release-ball-card.danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.release-ball-card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
+.release-ball-card-head strong,
+.release-ball-card-head small {
+  display: block;
+}
+
+.release-ball-card-head small,
+.release-ball-item span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.release-ball-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.release-ball-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 10px 12px;
+}
+
+.release-ball-item span,
+.release-ball-item strong {
+  display: block;
+}
+
+.release-ball-item span {
+  font-size: 12px;
+}
+
+.release-ball-item strong {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.release-ball-item-wide {
+  grid-column: span 2;
+}
+
 .frame-viewer {
   display: grid;
   overflow: hidden;
@@ -420,6 +498,15 @@ video {
 
   .main-frame-info span {
     text-align: left;
+  }
+
+  .release-ball-card-head,
+  .release-ball-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .release-ball-item-wide {
+    grid-column: span 1;
   }
 
   h1 {

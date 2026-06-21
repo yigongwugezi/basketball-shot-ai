@@ -6,6 +6,7 @@ const emptyPreview = document.getElementById("emptyPreview");
 const qualityList = document.getElementById("qualityList");
 const pipelineList = document.getElementById("pipelineList");
 const framesGrid = document.getElementById("framesGrid");
+const releaseBallEvidence = document.getElementById("releaseBallEvidence");
 const metricsList = document.getElementById("metricsList");
 const imageModal = document.getElementById("imageModal");
 const imageModalImg = document.getElementById("imageModalImg");
@@ -195,6 +196,116 @@ function selectionSummary(frame) {
   return parts.join(" ｜ ");
 }
 
+function clearReleaseBallEvidence() {
+  if (!releaseBallEvidence) return;
+  releaseBallEvidence.hidden = true;
+  releaseBallEvidence.innerHTML = "";
+}
+
+function releaseBallStatusMeta(status) {
+  if (status === "ok") {
+    return { state: "ok", label: "检测成功" };
+  }
+  if (status === "model_missing" || status === "disabled_by_missing_model") {
+    return { state: "warn", label: "模型缺失" };
+  }
+  if (status === "error") {
+    return { state: "danger", label: "检测异常" };
+  }
+  return { state: "warn", label: status || "未启用" };
+}
+
+function formatReleaseBallBBox(bbox) {
+  if (!Array.isArray(bbox) || bbox.length !== 4) return "无";
+  return `[${bbox.map((value) => Math.round(Number(value) || 0)).join(", ")}]`;
+}
+
+function renderReleaseBallEvidence(evidence) {
+  if (!releaseBallEvidence) return;
+  if (!evidence) {
+    clearReleaseBallEvidence();
+    return;
+  }
+
+  const frames = Array.isArray(evidence.frames) ? evidence.frames : [];
+  const detectedFrames = frames.filter((frame) => frame?.has_detection);
+  const bestFrame =
+    evidence.best_frame && typeof evidence.best_frame === "object" ? evidence.best_frame : null;
+  const highestConfidence = frames.reduce((max, frame) => {
+    const value = Number(frame?.confidence);
+    return Number.isFinite(value) ? Math.max(max, value) : max;
+  }, 0);
+  const statusMeta = releaseBallStatusMeta(evidence.status);
+
+  let message = "辅助展示 release ball detector 在 release 邻域的检测结果。";
+  if (evidence.status === "model_missing" || evidence.status === "disabled_by_missing_model") {
+    message = "模型缺失 / detector 未启用成功，页面已自动保持旧分析结果。";
+  } else if (evidence.status === "error") {
+    message = "Detector 运行异常，页面已自动回退到原有分析结果。";
+  } else if (!bestFrame) {
+    message = "未检测到 release ball。";
+  }
+
+  releaseBallEvidence.hidden = false;
+  releaseBallEvidence.innerHTML = `
+    <div class="release-ball-card ${statusMeta.state}">
+      <div class="release-ball-card-head">
+        <div>
+          <strong>Release Ball Detector Evidence</strong>
+          <small>${message}</small>
+        </div>
+        ${statusLabel(statusMeta.state, statusMeta.label)}
+      </div>
+      <div class="release-ball-grid">
+        <div class="release-ball-item">
+          <span>status</span>
+          <strong>${evidence.status || "unknown"}</strong>
+        </div>
+        <div class="release-ball-item">
+          <span>detector_type</span>
+          <strong>${evidence.detector_type || "release_ball_yolo"}</strong>
+        </div>
+        <div class="release-ball-item">
+          <span>release_frame_index</span>
+          <strong>${evidence.release_frame_index ?? "-"}</strong>
+        </div>
+        <div class="release-ball-item">
+          <span>window_radius</span>
+          <strong>${evidence.window_radius ?? "-"}</strong>
+        </div>
+        <div class="release-ball-item">
+          <span>frames 总数</span>
+          <strong>${frames.length}</strong>
+        </div>
+        <div class="release-ball-item">
+          <span>命中帧数</span>
+          <strong>${detectedFrames.length}</strong>
+        </div>
+        <div class="release-ball-item">
+          <span>最高 confidence</span>
+          <strong>${highestConfidence.toFixed(3)}</strong>
+        </div>
+        <div class="release-ball-item">
+          <span>best_frame.frame_index</span>
+          <strong>${bestFrame?.frame_index ?? "未检测到 release ball"}</strong>
+        </div>
+        <div class="release-ball-item">
+          <span>best_frame.distance_to_release</span>
+          <strong>${bestFrame?.distance_to_release ?? "-"}</strong>
+        </div>
+        <div class="release-ball-item">
+          <span>best_frame.confidence</span>
+          <strong>${bestFrame ? Number(bestFrame.confidence || 0).toFixed(3) : "-"}</strong>
+        </div>
+        <div class="release-ball-item release-ball-item-wide">
+          <span>best_frame.bbox</span>
+          <strong>${bestFrame ? formatReleaseBallBBox(bestFrame.bbox) : "无"}</strong>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function setActiveFrame(index) {
   activeFrameIndex = index;
   renderFrames(renderedFrames);
@@ -329,6 +440,7 @@ analyzeButton.addEventListener("click", async () => {
     activeFrameIndex = report.frames.findIndex((frame) => frame.key === "release");
     if (activeFrameIndex < 0) activeFrameIndex = 0;
     renderFrames(report.frames);
+    renderReleaseBallEvidence(report.release_ball_evidence);
     setPipeline(4);
     renderMetrics(report.metrics);
     setPipeline(5);
@@ -338,6 +450,7 @@ analyzeButton.addEventListener("click", async () => {
     setPipeline(3);
     activeFrameIndex = 0;
     renderFrames(frames);
+    clearReleaseBallEvidence();
     setPipeline(4);
     renderMetrics(getPlaceholderMetrics(videoPreview));
     setPipeline(5);
@@ -361,6 +474,7 @@ resetButton.addEventListener("click", () => {
   resetButton.disabled = true;
   qualityList.innerHTML = "";
   framesGrid.innerHTML = "";
+  clearReleaseBallEvidence();
   metricsList.innerHTML = "";
   renderedFrames = [];
   activeFrameIndex = 0;

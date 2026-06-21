@@ -151,6 +151,20 @@ def get_release_ball_model() -> tuple[YOLO | None, Path | None, str | None]:
     return release_ball_model, model_path, None
 
 
+def base_release_ball_evidence(status: str, release_frame_index: int | None = None) -> dict[str, Any]:
+    model_path = configured_release_ball_model_path()
+    return {
+        "enabled": True,
+        "status": status,
+        "detector_type": "release_ball_yolo",
+        "model_path": str(model_path) if model_path else None,
+        "window_radius": RELEASE_BALL_WINDOW_RADIUS,
+        "release_frame_index": release_frame_index,
+        "frames": [],
+        "best_frame": None,
+    }
+
+
 def encode_jpeg(frame) -> str:
     ok, buffer = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 86])
     if not ok:
@@ -739,16 +753,7 @@ def build_release_ball_evidence(
     meta: dict[str, Any],
     release_frame_index: int,
 ) -> dict[str, Any]:
-    evidence: dict[str, Any] = {
-        "enabled": True,
-        "status": "ok",
-        "detector_type": "release_ball_yolo",
-        "model_path": None,
-        "window_radius": RELEASE_BALL_WINDOW_RADIUS,
-        "release_frame_index": release_frame_index,
-        "frames": [],
-        "best_frame": None,
-    }
+    evidence = base_release_ball_evidence("ok", release_frame_index)
 
     try:
         model, model_path, missing_status = get_release_ball_model()
@@ -1126,6 +1131,8 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
                     meta,
                     int(release["frame_index"]),
                 )
+            else:
+                response["release_ball_evidence"] = base_release_ball_evidence("no_release_frame")
         return response
     finally:
         temp_path.unlink(missing_ok=True)
