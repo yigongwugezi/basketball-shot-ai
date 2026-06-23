@@ -12,6 +12,12 @@ v1 detector 继续作为 prototype evidence。`release_fusion` diagnostic 已完
 
 所有样本进入 manifest。所有样本必须标记 `source`、`label_source`、`review_status`、`trusted_status`。数据按 `trusted / quarantine / rejected` 分层。`train / val / test` 必须按 `source_video_id` 隔离，`test` 不参与训练和调参。外部数据不能直接进 trusted。训练样本不能拿来做产品级泛化证明，后续结论必须基于独立 test。
 
+## Legacy datasets 目录处理决策
+
+仓库中的 `datasets/` 目录包含历史实验、网上收集和未完全审核的素材。用户已经检查并认为其中不少素材与当前投篮动作分析主线不够匹配，例如全场比赛、非赛场画面、只有篮球但无投篮动作上下文等。当前阶段不删除该目录，避免误删历史资料；同时也不把 `datasets/` 作为四类多目标检测数据集的主输入来源。`datasets/` 下历史素材默认视为 `legacy / unreviewed / quarantine`，这些素材不得进入 v2 `trusted train/test`，也不得用于产品级效果结论。
+
+后续如确需使用，必须先经过 `source inventory`、人工审核、`source/license` 记录和 `trusted_status` 分层。结项或后期清理时，再统一决定是否归档、迁移或删除。当前主线优先使用 `E:\BasketballShotAI` 下的 `raw`、`clips`、`candidate_sources` 等经过盘点和筛选的素材。
+
 ## 4. LocateAnything 决策
 
 当前学生研究、比赛阶段可将 LocateAnything 用作 research-only 辅助预标注工具，也可用于临时实验、流程验证和人工审核提速。其输出必须标记 `label_source=locateanything_auto`。`trusted_status` 必须是 `quarantine` 或 `research_only`，并明确 `commercial_use=no`。它不进入 v2 trusted train，不作为未来商业产品训练数据，也不作为产品级评估结论依据。未来商业化时，应剔除、重标或用合规链路替换。这里不是因为学生项目降低标准，而是有意识地把研究阶段工具和正式产品数据链路隔离。
