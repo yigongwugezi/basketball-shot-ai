@@ -266,6 +266,10 @@ video {
   margin-top: 14px;
 }
 
+.release-fusion-evidence {
+  margin-top: 14px;
+}
+
 .release-ball-card {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -338,6 +342,64 @@ video {
 
 .release-ball-item-wide {
   grid-column: span 2;
+}
+
+.release-fusion-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+  padding: 14px;
+}
+
+.release-fusion-card.ok {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.release-fusion-card.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.release-fusion-card.danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.release-fusion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.release-fusion-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 10px 12px;
+}
+
+.release-fusion-item span,
+.release-fusion-item strong {
+  display: block;
+}
+
+.release-fusion-item span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.release-fusion-item strong {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.release-fusion-item-wide {
+  grid-column: span 3;
 }
 
 .frame-viewer {
@@ -501,11 +563,16 @@ video {
   }
 
   .release-ball-card-head,
-  .release-ball-grid {
+  .release-ball-grid,
+  .release-fusion-grid {
     grid-template-columns: 1fr;
   }
 
   .release-ball-item-wide {
+    grid-column: span 1;
+  }
+
+  .release-fusion-item-wide {
     grid-column: span 1;
   }
 

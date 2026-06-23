@@ -7,6 +7,7 @@ const qualityList = document.getElementById("qualityList");
 const pipelineList = document.getElementById("pipelineList");
 const framesGrid = document.getElementById("framesGrid");
 const releaseBallEvidence = document.getElementById("releaseBallEvidence");
+const releaseFusionEvidence = document.getElementById("releaseFusionEvidence");
 const metricsList = document.getElementById("metricsList");
 const imageModal = document.getElementById("imageModal");
 const imageModalImg = document.getElementById("imageModalImg");
@@ -202,6 +203,12 @@ function clearReleaseBallEvidence() {
   releaseBallEvidence.innerHTML = "";
 }
 
+function clearReleaseFusionEvidence() {
+  if (!releaseFusionEvidence) return;
+  releaseFusionEvidence.hidden = true;
+  releaseFusionEvidence.innerHTML = "";
+}
+
 function releaseBallStatusMeta(status) {
   if (status === "ok") {
     return { state: "ok", label: "检测成功" };
@@ -301,6 +308,47 @@ function renderReleaseBallEvidence(evidence) {
           <span>best_frame.bbox</span>
           <strong>${bestFrame ? formatReleaseBallBBox(bestFrame.bbox) : "无"}</strong>
         </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderReleaseFusionEvidence(releaseFusion) {
+  if (!releaseFusionEvidence) return;
+  if (!releaseFusion) {
+    clearReleaseFusionEvidence();
+    return;
+  }
+
+  const status = releaseFusion.status || "unknown";
+  const state = status === "ok" ? "ok" : status === "warning" || status === "uncertain" ? "warn" : "danger";
+  const riskFlags = Array.isArray(releaseFusion.risk_flags) ? releaseFusion.risk_flags : [];
+  const finalSource = releaseFusion.final_source || "-";
+  const poseIndex = releaseFusion.pose_release_frame_index == null ? "-" : releaseFusion.pose_release_frame_index;
+  const detectorIndex = releaseFusion.detector_release_frame_index == null ? "-" : releaseFusion.detector_release_frame_index;
+  const frameDelta = releaseFusion.frame_delta == null ? "-" : releaseFusion.frame_delta;
+  const agreementLevel = releaseFusion.agreement_level || "-";
+  const reason = releaseFusion.reason || "未提供融合诊断说明";
+
+  releaseFusionEvidence.hidden = false;
+  releaseFusionEvidence.innerHTML = `
+    <div class="release-fusion-card ${state}">
+      <div class="release-ball-card-head">
+        <div>
+          <strong>Release Fusion Diagnostic</strong>
+          <small>展示后端顶层 release_fusion 结果，用于对比 pose 与 detector 的出手帧一致性。</small>
+        </div>
+        ${statusLabel(state, state === "ok" ? "一致" : state === "warn" ? "待确认" : "风险")}
+      </div>
+      <div class="release-fusion-grid">
+        <div class="release-fusion-item"><span>status</span><strong>${status}</strong></div>
+        <div class="release-fusion-item"><span>final_source</span><strong>${finalSource}</strong></div>
+        <div class="release-fusion-item"><span>agreement_level</span><strong>${agreementLevel}</strong></div>
+        <div class="release-fusion-item"><span>pose_release_frame_index</span><strong>${poseIndex}</strong></div>
+        <div class="release-fusion-item"><span>detector_release_frame_index</span><strong>${detectorIndex}</strong></div>
+        <div class="release-fusion-item"><span>frame_delta</span><strong>${frameDelta}</strong></div>
+        <div class="release-fusion-item release-fusion-item-wide"><span>reason</span><strong>${reason}</strong></div>
+        <div class="release-fusion-item release-fusion-item-wide"><span>risk_flags</span><strong>${riskFlags.length ? riskFlags.join("，") : "无"}</strong></div>
       </div>
     </div>
   `;
@@ -441,6 +489,7 @@ analyzeButton.addEventListener("click", async () => {
     if (activeFrameIndex < 0) activeFrameIndex = 0;
     renderFrames(report.frames);
     renderReleaseBallEvidence(report.release_ball_evidence);
+    renderReleaseFusionEvidence(report.release_fusion);
     setPipeline(4);
     renderMetrics(report.metrics);
     setPipeline(5);
@@ -451,6 +500,7 @@ analyzeButton.addEventListener("click", async () => {
     activeFrameIndex = 0;
     renderFrames(frames);
     clearReleaseBallEvidence();
+    clearReleaseFusionEvidence();
     setPipeline(4);
     renderMetrics(getPlaceholderMetrics(videoPreview));
     setPipeline(5);
@@ -475,6 +525,7 @@ resetButton.addEventListener("click", () => {
   qualityList.innerHTML = "";
   framesGrid.innerHTML = "";
   clearReleaseBallEvidence();
+  clearReleaseFusionEvidence();
   metricsList.innerHTML = "";
   renderedFrames = [];
   activeFrameIndex = 0;
