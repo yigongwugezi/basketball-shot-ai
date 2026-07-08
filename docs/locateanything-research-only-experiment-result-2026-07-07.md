@@ -6,7 +6,7 @@
 
 测试视频：
 
-`E:\BasketballShotAI\raw\bilibili\自用库里完整罚球慢动作赏析投篮手侧后方视角\1-自用库里完整罚球慢动作赏析投篮手侧后方视角-480P 标清-AVC.mp4`
+`E:\BasketballShotAI\raw\confirmed_videos\012_1-自用库里完整罚球慢动作赏析投篮手侧后方视角-480P 标清-AVC.mp4`
 
 临时抽帧目录：
 
