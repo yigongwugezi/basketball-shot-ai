@@ -1,0 +1,54 @@
+{
+  "tracking_pose": [
+    {
+      "id": "single_bili_010_a",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/BILI_010_A_BV1hK6WYtEDP.mp4",
+      "start": 0,
+      "end": 60,
+      "reference_release": 36,
+      "scene": "single_person"
+    },
+    {
+      "id": "broadcast_bili_004_a",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/BILI_004_A_BV1og4y1o7Ni.mp4",
+      "start": 160,
+      "end": 220,
+      "reference_release": 190,
+      "scene": "broadcast_multi_person"
+    },
+    {
+      "id": "user_multi_img_7216",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/IMG_7216.MOV",
+      "start": 105,
+      "end": 165,
+      "reference_release": 136,
+      "scene": "user_multi_person"
+    }
+  ],
+  "strict_release": [
+    {
+      "id": "bili_002_detector_disagreement",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/BILI_002_A_BV16u411e7Bn.mp4",
+      "start": 15,
+      "end": 55,
+      "pose_release": 34,
+      "historical_ball_release": 44
+    },
+    {
+      "id": "img_7216_near_agreement",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/IMG_7216.MOV",
+      "start": 120,
+      "end": 150,
+      "pose_release": 136,
+      "historical_ball_release": 138
+    },
+    {
+      "id": "bili_010_b_detector_disagreement",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/BILI_010_B_BV1hK6WYtEDP.mp4",
+      "start": 10,
+      "end": 45,
+      "pose_release": 30,
+      "historical_ball_release": 22
+    }
+  ]
+}
