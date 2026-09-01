@@ -27,10 +27,10 @@ The current stack should not be broadly replaced. The sprint supports three targ
 | Pose | YOLO11 pose via largest-person baseline | yes | same 3 clips | 100% clip coverage; 10.5-15.8 visible points | 37.1-53.4 ms/frame including selection | current real-time body baseline | only 17 body points; wrong-person risk | KEEP |
 | Pose | RTMPose | yes | every third frame, 63 frames | 100% coverage; 15.4-17 visible points | 665.7-875.1 ms/frame | independent pose challenger | 13-24x slower than YOLO; no clear proxy gain | DEFER |
 | Pose | RTMW | yes | every third frame, 63 frames | 129.4-133 visible points; lower temporal step than RTMPose on all clips | 919.1-1176.9 ms/frame | whole-body/hand/foot evidence | CPU slow; single clip event proxy was +21 frames | ADD offline ROI only |
-| Ball detection | YOLO11 COCO sports ball | yes | 216 reviewed frames | recall@IoU50 3.7%; small-ball recall 0%; 71 FP | 36.6 ms/frame | no custom training | unusable recall on this set | REJECT |
-| Ball detection | release-ball v1 | yes | same 216 frames | recall 43.5%; small-ball recall 37.5%; 7 FP | 36.5 ms/frame | best current precision/runtime tradeoff | misses over half; training-related research set | KEEP prototype baseline |
-| Ball detection | ball/rim/player smoke model | yes | same 216 frames | recall 0%; 0 FP | 34.1 ms/frame | multi-class interface | threshold/model does not transfer to this set | REJECT for release ball |
-| Ball detection | RF-DETR Nano COCO | yes | same 216 frames | recall 49.1%; small-ball recall 37.5%; 90 FP | 114.7 ms/frame | highest measured recall | 3.1x slower than v1 and high FP; not fine-tuned | ADD challenger, do not replace yet |
+| Ball detection | YOLO11 COCO sports ball | yes | 216 reviewed frames | recall@IoU50 3.7%; small-ball recall 0%; 71 unmatched detections | 36.6 ms/frame | no custom training | unusable recall on this set | REJECT |
+| Ball detection | release-ball v1 | yes | same 216 frames | recall 43.5%; small-ball recall 37.5%; 7 unmatched detections | 36.5 ms/frame | best current recall/runtime/unmatched-detection tradeoff | misses over half; training-related research set | KEEP prototype baseline |
+| Ball detection | ball/rim/player smoke model | yes | same 216 frames | recall 0%; 0 unmatched detections | 34.1 ms/frame | multi-class interface | threshold/model does not transfer to this set | REJECT for release ball |
+| Ball detection | RF-DETR Nano COCO | yes | same 216 frames | recall 49.1%; small-ball recall 37.5%; 90 unmatched detections | 114.7 ms/frame | highest measured recall | 3.1x slower than v1 and many unmatched detections; not fine-tuned | ADD challenger, do not replace yet |
 | Ball tracking | detector center sequence | yes | two strict-release clips | detector coverage 75.6% / 93.5% | detector about 31-32 ms/frame | observable anchor evidence | gaps and wrong detections remain | KEEP anchor/fallback |
 | Ball tracking | detector + OpenCV LK | yes | same clips | coverage 100% / 96.7%; drift proxy 16.97 / 5.51 ball diameters | 0.66 / 5.97 ms/frame tracker-only | very cheap control | severe drift; visibility is over-optimistic | KEEP control, not winner |
 | Ball tracking | detector + CoTracker3 | yes | same clips | visible coverage 34.1% / 54.8%; drift proxy 17.16 / 0.18 | 515.2 / 481.6 ms/frame | excellent alignment on clean IMG_7216 initialization | catastrophic BILI_002 drift; CPU slow | ADD experimental with re-anchor gate |
@@ -50,7 +50,7 @@ RTMW is the only challenger that adds a genuinely new evidence type: 133 whole-b
 
 ## Detector interpretation
 
-RF-DETR Nano achieved the highest research-set recall, 49.1%, but generated 90 false positives compared with release-ball v1's 7. This makes RF-DETR the next fine-tuning/independent-test candidate, not an immediate winner. The current v1 model remains prototype evidence only and the 216-frame result is not independent because it comes from the existing reviewed workflow.
+RF-DETR Nano achieved the highest research-set recall, 49.1%, but generated 90 unmatched detections compared with release-ball v1's 7. These are not a formal false-positive rate because the research set is not a complete independent negative test. This makes RF-DETR the next fine-tuning/independent-test candidate, not an immediate winner. The current v1 model remains prototype evidence only and the 216-frame result is not independent because it comes from the existing reviewed workflow.
 
 ## Strict release interpretation
 

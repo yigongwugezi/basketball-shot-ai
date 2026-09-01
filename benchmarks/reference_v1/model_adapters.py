@@ -110,6 +110,55 @@ class YoloBallAdapter:
         return detections, runtime_ms
 
 
+class SahiBallAdapter:
+    def __init__(
+        self,
+        model_path: Path,
+        confidence: float,
+        slice_size: int = 320,
+        overlap_ratio: float = 0.20,
+    ) -> None:
+        from sahi import AutoDetectionModel
+
+        self.model = AutoDetectionModel.from_pretrained(
+            model_type="ultralytics",
+            model_path=str(model_path),
+            confidence_threshold=confidence,
+            device="cpu",
+        )
+        self.slice_size = slice_size
+        self.overlap_ratio = overlap_ratio
+
+    def infer(self, frame: np.ndarray) -> tuple[list[dict[str, Any]], float]:
+        from sahi.predict import get_sliced_prediction
+
+        started = time.perf_counter()
+        result = get_sliced_prediction(
+            frame,
+            self.model,
+            slice_height=self.slice_size,
+            slice_width=self.slice_size,
+            overlap_height_ratio=self.overlap_ratio,
+            overlap_width_ratio=self.overlap_ratio,
+            perform_standard_pred=True,
+            postprocess_type="GREEDYNMM",
+            postprocess_match_metric="IOS",
+            postprocess_match_threshold=0.50,
+            verbose=0,
+        )
+        runtime_ms = (time.perf_counter() - started) * 1000
+        detections = []
+        for prediction in result.object_prediction_list:
+            detections.append(
+                {
+                    "bbox": [float(value) for value in prediction.bbox.to_xyxy()],
+                    "confidence": float(prediction.score.value),
+                    "class_id": int(prediction.category.id),
+                }
+            )
+        return detections, runtime_ms
+
+
 class RFDetrBallAdapter:
     def __init__(self, model_path: Path, confidence: float) -> None:
         from rfdetr import RFDETRNano
@@ -276,3 +325,23 @@ class CoTracker3Adapter:
             {"x": float(point[0]), "y": float(point[1]), "visible": bool(is_visible)}
             for point, is_visible in zip(xy, visible)
         ], runtime_ms
+
+    def track_reanchored(
+        self,
+        frames: list[np.ndarray],
+        detector_rows: list[dict[str, Any]],
+        initial_frame: int,
+        initial_point: tuple[float, float],
+    ) -> tuple[list[dict[str, Any]], float]:
+        from validation_closure import reanchor_track
+
+        tracked, runtime_ms = self.track(frames, initial_frame, initial_point)
+        frame_indices = [int(row["frame_index"]) for row in detector_rows]
+        tracker_rows = [
+            {
+                "frame_index": frame_indices[index] if index < len(frame_indices) else index,
+                **row,
+            }
+            for index, row in enumerate(tracked)
+        ]
+        return reanchor_track(tracker_rows, detector_rows), runtime_ms

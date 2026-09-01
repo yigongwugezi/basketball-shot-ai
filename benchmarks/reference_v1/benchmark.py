@@ -18,6 +18,7 @@ from model_adapters import (
     CoTracker3Adapter,
     RFDetrBallAdapter,
     RtmlibPoseAdapter,
+    SahiBallAdapter,
     YoloBallAdapter,
     YoloPoseAdapter,
     bbox_iou,
@@ -270,7 +271,7 @@ def run_ball(harness: Harness, limit: int | None) -> None:
                 matched = 0
                 small_matched = 0
                 small_total = 0
-                false_positives = 0
+                unmatched_detections = 0
                 for row in rows:
                     image = cv2.imread(row["image_path"])
                     if image is None:
@@ -286,7 +287,7 @@ def run_ball(harness: Harness, limit: int | None) -> None:
                     is_small = area_ratio < 0.003
                     small_total += int(is_small)
                     small_matched += int(is_small and is_match)
-                    false_positives += max(0, len(detections) - int(is_match))
+                    unmatched_detections += max(0, len(detections) - int(is_match))
                     details.append(
                         {
                             "sample_id": row["sample_id"],
@@ -303,7 +304,7 @@ def run_ball(harness: Harness, limit: int | None) -> None:
                         "evaluated": evaluated,
                         "positive_recall_iou_50": matched / evaluated if evaluated else 0,
                         "small_ball_recall_iou_50": small_matched / small_total if small_total else None,
-                        "false_positives": false_positives,
+                        "unmatched_detections": unmatched_detections,
                         "mean_runtime_ms": statistics.mean(runtimes) if runtimes else None,
                         "benchmark_status": "research_only_not_independent_product_test",
                     },
@@ -315,6 +316,9 @@ def run_ball(harness: Harness, limit: int | None) -> None:
             detail.mkdir(parents=True, exist_ok=True)
             _write_rows(detail / "detections.csv", data["rows"])
             metrics = data["metrics"]
+            if "false_positives" in metrics and "unmatched_detections" not in metrics:
+                metrics["unmatched_detections"] = metrics.pop("false_positives")
+            metrics["terminology_note"] = "unmatched detections are not formal false positives"
             harness.results.append(
                 Result(
                     "ball_detection",
@@ -330,6 +334,98 @@ def run_ball(harness: Harness, limit: int | None) -> None:
             )
         except Exception as exc:
             harness.fail("ball_detection", candidate, "review230", exc)
+
+
+def run_sahi(harness: Harness, limit: int | None) -> None:
+    rows = list(csv.DictReader(REVIEW_LABELS.open(encoding="utf-8-sig")))
+    rows = [row for row in rows if row["review_status"] != "skipped"]
+    if limit:
+        rows = rows[:limit]
+    candidates = {
+        "native_640": lambda: YoloBallAdapter(RELEASE_MODEL, None, 0.15),
+        "sahi_320_overlap_020": lambda: SahiBallAdapter(RELEASE_MODEL, 0.15, 320, 0.20),
+        "sahi_480_overlap_020": lambda: SahiBallAdapter(RELEASE_MODEL, 0.15, 480, 0.20),
+    }
+    for candidate, make_adapter in candidates.items():
+        try:
+            def execute() -> dict[str, Any]:
+                adapter = make_adapter()
+                details = []
+                runtimes = []
+                matched = small_matched = small_total = 0
+                unmatched_detections = duplicate_detections = 0
+                center_errors = []
+                for row in rows:
+                    image = cv2.imread(row["image_path"])
+                    if image is None:
+                        continue
+                    gt = [float(row[key]) for key in ("x1", "y1", "x2", "y2")]
+                    detections, runtime_ms = adapter.infer(image)
+                    runtimes.append(runtime_ms)
+                    ious = [bbox_iou(gt, item["bbox"]) for item in detections]
+                    matching = [index for index, value in enumerate(ious) if value >= 0.5]
+                    is_match = bool(matching)
+                    matched += int(is_match)
+                    unmatched_detections += max(0, len(detections) - int(is_match))
+                    duplicate_detections += max(0, len(matching) - 1)
+                    area_ratio = ((gt[2] - gt[0]) * (gt[3] - gt[1])) / (
+                        image.shape[0] * image.shape[1]
+                    )
+                    is_small = area_ratio < 0.003
+                    small_total += int(is_small)
+                    small_matched += int(is_small and is_match)
+                    if is_match:
+                        best = detections[max(range(len(ious)), key=ious.__getitem__)]["bbox"]
+                        gt_center = ((gt[0] + gt[2]) / 2, (gt[1] + gt[3]) / 2)
+                        predicted_center = ((best[0] + best[2]) / 2, (best[1] + best[3]) / 2)
+                        center_errors.append(math.dist(gt_center, predicted_center))
+                    details.append(
+                        {
+                            "sample_id": row["sample_id"],
+                            "best_iou": max(ious, default=0.0),
+                            "matched_iou_50": is_match,
+                            "detections": len(detections),
+                            "duplicate_detections": max(0, len(matching) - 1),
+                            "small_ball": is_small,
+                            "runtime_ms": runtime_ms,
+                        }
+                    )
+                evaluated = len(details)
+                return {
+                    "metrics": {
+                        "evaluated": evaluated,
+                        "recall_iou_50": matched / evaluated if evaluated else 0,
+                        "small_ball_recall_iou_50": small_matched / small_total if small_total else None,
+                        "matched_center_error_px": statistics.mean(center_errors) if center_errors else None,
+                        "unmatched_detections": unmatched_detections,
+                        "duplicate_detections": duplicate_detections,
+                        "mean_runtime_ms": statistics.mean(runtimes) if runtimes else None,
+                        "benchmark_status": "research_only_not_independent_product_test",
+                        "terminology_note": "unmatched detections are not formal false positives",
+                    },
+                    "rows": details,
+                }
+
+            data = harness.cached("sahi", candidate, f"review230_{limit or 'all'}", execute)
+            detail = harness.output_root / "sahi" / candidate
+            detail.mkdir(parents=True, exist_ok=True)
+            _write_rows(detail / "detections.csv", data["rows"])
+            metrics = data["metrics"]
+            harness.results.append(
+                Result(
+                    "small_ball_slicing",
+                    candidate,
+                    True,
+                    f"{metrics['evaluated']} reviewed research-only positive frames",
+                    json.dumps(metrics, ensure_ascii=False),
+                    metrics["mean_runtime_ms"],
+                    "same release-ball weights, confidence and IoU rule",
+                    "not an independent negative test; unmatched detections are diagnostic only",
+                    "COMPARE",
+                )
+            )
+        except Exception as exc:
+            harness.fail("small_ball_slicing", candidate, "review230", exc)
 
 
 def run_point_tracking(harness: Harness, config: dict[str, Any]) -> None:
@@ -719,7 +815,7 @@ def _write_contact_sheet(path: Path, frames: list[np.ndarray], indices: list[int
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Basketball Shot AI Reference V1 benchmark harness")
-    parser.add_argument("module", choices=["all", "tracking_pose", "ball", "point", "cotracker", "grounded_sam2", "phase", "strict"])
+    parser.add_argument("module", choices=["all", "tracking_pose", "ball", "sahi", "point", "cotracker", "grounded_sam2", "phase", "strict"])
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--no-cache", action="store_true")
@@ -732,6 +828,8 @@ def main() -> None:
         run_tracking_pose(harness, config, args.include_rtmlib)
     if args.module in {"all", "ball"}:
         run_ball(harness, args.ball_limit)
+    if args.module in {"all", "sahi"}:
+        run_sahi(harness, args.ball_limit)
     if args.module in {"all", "point"}:
         run_point_tracking(harness, config)
     if args.module in {"all", "cotracker"}:
