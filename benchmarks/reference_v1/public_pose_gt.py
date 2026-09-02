@@ -268,9 +268,11 @@ def write_review(output: Path, package: dict[str, Any]) -> None:
         cards.append(f'<article><img loading="lazy" src="{html.escape(rel)}"><h3>{html.escape(sample["id"])}</h3><p>{html.escape(sample["action"])} · visible {visible} · occluded/unknown-labelable {occluded}<br>{html.escape(tags)}</p></article>')
     roles = ", ".join(entry.get("recommended_roles", []))
     source_links = " · ".join(f'<a href="{html.escape(url)}">source</a>' for url in package["source_urls"])
+    decision = package.get("user_dataset_review", "PENDING")
+    status = package.get("review_status", "REVIEW_READY")
     page = f"""<!doctype html><html><head><meta charset="utf-8"><title>{html.escape(package['dataset_name'])} GT review</title>
 <style>body{{font:14px system-ui;background:#111;color:#eee;margin:24px}}.gate{{padding:14px;background:#392f12;border:1px solid #d7aa2c}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}}article{{background:#1d1d1d;padding:10px}}img{{width:100%;height:280px;object-fit:contain;background:#000}}h1,h3{{margin:.4em 0}}p{{color:#bbb}}</style></head><body>
-<h1>{html.escape(package['dataset_name'])} — real GT visual review</h1><div class="gate"><b>REVIEW_READY / USER_DATASET_REVIEW=PENDING</b><br>This page is evidence for user acceptance or rejection. It does not accept the dataset automatically.</div>
+<h1>{html.escape(package['dataset_name'])} — real GT visual review</h1><div class="gate"><b>{html.escape(status)} / USER_DATASET_REVIEW={html.escape(decision)}</b><br>The recorded user decision controls benchmark export; source labels remain unchanged.</div>
 <p><b>Domain:</b> {html.escape(entry['relevance'])}<br><b>GT:</b> {html.escape(package['ground_truth_type'])} · {html.escape(entry['keypoints'])}<br><b>RGB/video:</b> {entry.get('rgb_available')} / {entry.get('video_available')} · <b>review samples:</b> {len(package['samples'])}<br><b>License:</b> {html.escape(package['license_class'])} — {html.escape(package['license_summary'])}<br><b>Downloaded scope:</b> {html.escape(entry.get('downloaded_size', str(downloaded) + ' bytes'))}<br><b>Why useful:</b> {html.escape(entry['usage_recommendation'])}<br><b>Known mismatch:</b> {html.escape(entry.get('known_mismatch', 'not recorded'))}<br><b>Recommended role:</b> {html.escape(roles)}<br><b>Provenance:</b> {source_links}</p>
 <p><b>Legend:</b> left joints = green; right joints = blue; filled = source-visible; hollow = occluded or visibility-unspecified. Yellow lines are GT limbs. GT is shown without model predictions.</p><div class="grid">{''.join(cards)}</div></body></html>"""
     (output / "index.html").write_text(page, encoding="utf-8")
@@ -296,6 +298,19 @@ def record_decision(review_root: Path, dataset_id: str, decision: str) -> None:
     value = load_decisions(review_root)
     value["datasets"][dataset_id] = decision
     write_json(decisions_path(review_root), value)
+    package_path = review_root / dataset_id / "normalized_gt.candidate.json"
+    if package_path.exists():
+        package = read_json(package_path)
+        package["user_dataset_review"] = decision
+        package["review_status"] = {
+            "ACCEPTED": "USER_ACCEPTED",
+            "REJECTED": "USER_REJECTED",
+            "PENDING": "REVIEW_READY",
+        }[decision]
+        if package.get("dataset_id") and package.get("dataset_name"):
+            write_review(package_path.parent, package)
+        else:
+            write_json(package_path, package)
 
 
 def export_existing_schema(review_root: Path, benchmark_root: Path, dataset_id: str) -> tuple[Path, Path]:
@@ -367,8 +382,13 @@ def evaluate_public_predictions(package: dict[str, Any], predictions: dict[str, 
 def verify_package(package: dict[str, Any]) -> None:
     if package["ground_truth_type"] not in TRUSTED_GT_TYPES:
         raise ValueError("Only trusted ground truth types are valid")
-    if package["review_status"] != "REVIEW_READY" or package["user_dataset_review"] != "PENDING":
-        raise ValueError("Newly prepared data must stop at REVIEW_READY/PENDING")
+    expected_status = {
+        "PENDING": "REVIEW_READY",
+        "ACCEPTED": "USER_ACCEPTED",
+        "REJECTED": "USER_REJECTED",
+    }.get(package.get("user_dataset_review"))
+    if package.get("review_status") != expected_status:
+        raise ValueError("Review status and user decision are inconsistent")
     for sample in package["samples"]:
         if set(sample["mapped_joints"]) != set(CORE_JOINTS):
             raise ValueError(f"Incomplete mapped joint set: {sample['id']}")
@@ -380,7 +400,7 @@ def verify_package(package: dict[str, Any]) -> None:
 
 
 def write_review_index(review_root: Path, packages: list[dict[str, Any]]) -> None:
-    links = "".join(f'<li><a href="{p["dataset_id"]}/index.html">{html.escape(p["dataset_name"])}</a> — {len(p["samples"])} samples — REVIEW_READY / PENDING</li>' for p in packages)
+    links = "".join(f'<li><a href="{p["dataset_id"]}/index.html">{html.escape(p["dataset_name"])}</a> — {len(p["samples"])} samples — {html.escape(p["review_status"])} / {html.escape(p["user_dataset_review"])}</li>' for p in packages)
     page = f"<!doctype html><html><meta charset=utf-8><title>Public pose GT review</title><style>body{{font:16px system-ui;max-width:900px;margin:40px auto;background:#111;color:#eee}}a{{color:#65bfff}}li{{margin:14px}}</style><body><h1>Public Pose GT Review</h1><p>These are candidate datasets. Visual review is required before benchmark acceptance.</p><ul>{links}</ul></body></html>"
     (review_root / "index.html").write_text(page, encoding="utf-8")
     load_decisions(review_root)

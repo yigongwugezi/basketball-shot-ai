@@ -79,6 +79,14 @@ The exporter rejects pseudo/automatic labels and refuses `PENDING` or `REJECTED`
 See `docs/reference_architecture/public-pose-data-policy.md` for the trust, license, and
 storage boundary.
 
+Run the accepted four-pipeline public-GT benchmark (large outputs remain on E:):
+
+```powershell
+.\.venv310\Scripts\python.exe benchmarks\reference_v1\public_pose_benchmark.py
+```
+
+Use `--reuse-inference` to rebuild metrics/review HTML from a valid saved inference artifact.
+
 Build a standalone motion debugger from a completed Reference V1 run:
 
 ```powershell

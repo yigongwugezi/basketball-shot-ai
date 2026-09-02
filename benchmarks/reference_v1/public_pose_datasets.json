@@ -50,7 +50,8 @@
       ],
       "local_root": "E:/BasketballShotAI/public_data/datasets/fast_sports/jhmdb",
       "acquisition_status": "ACQUIRED",
-      "review_status": "REVIEW_READY",
+      "review_status": "USER_ACCEPTED",
+      "user_dataset_review": "ACCEPTED",
       "known_mismatch": "Low-resolution short clips; no ball/hand GT and no visible-versus-occluded joint flag.",
       "recommended_roles": ["POSE_BENCHMARK", "MOTION_RESEARCH", "RESEARCH_ONLY"],
       "usage_recommendation": "Primary temporal/fast-action public GT candidate; research evaluation only."
@@ -92,7 +93,8 @@
       ],
       "local_root": "E:/BasketballShotAI/public_data/datasets/fast_sports/leeds_sports_pose",
       "acquisition_status": "REVIEW_SUBSET_ACQUIRED",
-      "review_status": "REVIEW_READY",
+      "review_status": "USER_ACCEPTED",
+      "user_dataset_review": "ACCEPTED",
       "known_mismatch": "Static low-resolution images; no temporal, hand, ball, or per-image sport label in the mirrored metadata.",
       "recommended_roles": ["POSE_BENCHMARK", "RESEARCH_ONLY"],
       "usage_recommendation": "High-value static sports control; do not use commercially until image rights are cleared."

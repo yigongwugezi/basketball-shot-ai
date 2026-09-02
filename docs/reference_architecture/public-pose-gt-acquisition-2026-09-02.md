@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Eight serious sources were screened. JHMDB was acquired in full and Leeds Sports Pose (LSP) was acquired as full annotations plus a deterministic 30-image RGB review subset. Both were parsed into a provenance-preserving normalized layer and stopped at `REVIEW_READY / USER_DATASET_REVIEW=PENDING`.
+Eight serious sources were screened. JHMDB was acquired in full and Leeds Sports Pose (LSP) was acquired as full annotations plus a deterministic 30-image RGB review subset. Both were parsed into a provenance-preserving normalized layer. The product owner subsequently reviewed the GT overlays and recorded `USER_ACCEPTED` for these exact source versions. They are trusted research benchmark sources, not commercial-training authorization.
 
 MPII Human Pose annotations were acquired, but the 12.9 GB image archive was deliberately deferred. Penn Action and COCO official downloads were reachable but unusably slow in this run; their incomplete E-drive partial files are explicitly non-data. PoseTrack21, Ego-Exo4D, and SportsPose require approval or a signed license and were not bypassed.
 
@@ -12,8 +12,8 @@ The machine-readable source of record is [`public_pose_datasets.json`](../../ben
 
 | Dataset | Problem relevance | GT / signals | Access result | License class | Current role/status |
 |---|---|---|---|---|---|
-| JHMDB | Basketball shooting, throwing, striking, jumping, fast articulation and short temporal clips | `HUMAN_GT`; 15 body joints on every frame; no per-joint visible/occluded split | Four official archives, 199,843,383 bytes, acquired in full | `RESEARCH_ONLY` | `POSE_BENCHMARK`, `MOTION_RESEARCH`; `REVIEW_READY` |
-| Leeds Sports Pose | Difficult athletics, badminton, baseball, gymnastics, parkour, soccer, tennis and volleyball poses | `HUMAN_GT`; 14 joints with binary occlusion | Full `joints.mat` plus deterministic 30-image review subset from original-archive mirror | `UNCLEAR` | Static `POSE_BENCHMARK`; `REVIEW_READY` |
+| JHMDB | Basketball shooting, throwing, striking, jumping, fast articulation and short temporal clips | `HUMAN_GT`; 15 body joints on every frame; no per-joint visible/occluded split | Four official archives, 199,843,383 bytes, acquired in full | `RESEARCH_ONLY` | `POSE_BENCHMARK`, `MOTION_RESEARCH`; `USER_ACCEPTED` |
+| Leeds Sports Pose | Difficult athletics, badminton, baseball, gymnastics, parkour, soccer, tennis and volleyball poses | `HUMAN_GT`; 14 joints with binary occlusion | Full `joints.mat` plus deterministic 30-image review subset from original-archive mirror | `UNCLEAR` | Static `POSE_BENCHMARK`; `USER_ACCEPTED` |
 | MPII Human Pose | Broad difficult-pose/activity control | `HUMAN_GT`; 16 joints, scale/head box and visibility | Official 12,340,483-byte annotations acquired; 12.9 GB images deferred | `RESEARCH_ONLY` | `BLOCKED_MISSING_IMAGES` |
 | COCO 2017 Keypoints | General 17-joint control and possible sports-object filtering | `HUMAN_GT`; 17 joints, COCO visibility; boxes/objects in separate file | Official and mirror annotation transfers timed out; 114,688-byte partial is invalid | `UNCLEAR` | `BLOCKED_INCOMPLETE_DOWNLOAD` |
 | Penn Action | Per-frame fast sports, throwing/striking/jumping | `HUMAN_GT`; 13 joints, visibility and boxes | Official 3,235,203,923-byte archive projected at 15+ hours; 3,022,848-byte partial is invalid | `UNCLEAR` | Future temporal benchmark; `BLOCKED_INCOMPLETE_DOWNLOAD` |
@@ -59,13 +59,13 @@ The index links to:
 
 The JHMDB sample has 402 in-frame mapped joints and 30 source-annotated joints outside the RGB bounds; those 30 retain their source coordinates but map to explicit `OUT_OF_FRAME / not_labelable`. The LSP sample has 335 visible and 25 occluded mapped joints.
 
-Each page displays source RGB with GT-only overlays, left/right color separation, filled versus occluded/visibility-unspecified points, dataset/domain, GT type, schema, license, downloaded scope, mismatch, provenance links, and recommended role. The decision file remains:
+Each page displays source RGB with GT-only overlays, left/right color separation, filled versus occluded/visibility-unspecified points, dataset/domain, GT type, schema, license, downloaded scope, mismatch, provenance links, and recommended role. The decision file now records the owner's explicit review:
 
 ```json
-{"datasets":{"jhmdb":"PENDING","lsp":"PENDING"}}
+{"datasets":{"jhmdb":"ACCEPTED","lsp":"ACCEPTED"}}
 ```
 
-No dataset was auto-accepted.
+No dataset was auto-accepted. The original source annotations remain unchanged; only derived project adapters and frozen exports are used.
 
 ## Adapter and benchmark boundary
 
@@ -83,7 +83,7 @@ No dataset was auto-accepted.
 
 After acceptance, the existing pose evaluator supplies pixel error, body-scale normalized error, PCK, median/P90/P95, joint/body-region groupings, temporal metrics, and RAW-versus-FILTERED damage. RAW YOLO, FILTERED YOLO, RTMPose, and RTMW predictions remain separate inputs. RTMPose/RTMW still require explicit person/crop status because they depend on YOLO crops.
 
-The public GT is therefore executable at the adapter/schema level, but product benchmark execution is intentionally blocked on user dataset review. No pose-backbone accuracy conclusion is published in this state.
+The accepted exports under `E:\BasketballShotAI\public_data\benchmark_ready\` were used for the 66-sample four-pipeline benchmark. Results and the architecture decision are documented in [`pose-perception-architecture-decision-2026-09-02.md`](pose-perception-architecture-decision-2026-09-02.md).
 
 ## Limitations and next decision
 
@@ -92,4 +92,4 @@ The public GT is therefore executable at the adapter/schema level, but product b
 - Neither source has hand or ball GT.
 - The exact basketball/product-domain 42-frame package remains unlabelled and unchanged.
 
-The next valid step is visual accept/reject of JHMDB and LSP. Only accepted sources may be exported under `E:\BasketballShotAI\public_data\benchmark_ready\` and used to run the four-model comparison.
+The next valid evidence step is basketball release-window HUMAN_GT. Public athletic-pose performance does not establish smartphone basketball product accuracy.

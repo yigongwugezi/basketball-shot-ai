@@ -21,6 +21,11 @@ from benchmarks.reference_v1.public_pose_gt import (
     record_decision,
 )
 from benchmarks.reference_v1.pose_gt import validate_annotations, validate_manifest
+from benchmarks.reference_v1.public_pose_benchmark import (
+    crop_diagnostics,
+    metric_summary,
+    xywh_to_xyxy,
+)
 
 
 def test_mapping_and_crop_failure_accounting() -> None:
@@ -39,6 +44,26 @@ def test_mapping_and_crop_failure_accounting() -> None:
     assert result["person_or_crop_failure_joints"] == 12
     assert result["pose_head_missing_joints"] == 0
     assert result["end_to_end_failure_rate"] == 1.0
+
+
+def test_public_benchmark_crop_and_metric_denominators() -> None:
+    mapped = {
+        name: {"x": float(index), "y": float(index), "visibility": "visible"}
+        for index, name in enumerate(CORE_JOINTS)
+    }
+    sample = {"mapped_joints": mapped, "person_bbox": [0.0, 0.0, 11.0, 11.0]}
+    crop = crop_diagnostics(sample, {"bbox": [0.0, 0.0, 8.0, 8.0]})
+    assert crop["person_detection_success"]
+    assert crop["crop_success"]  # 9/12 HUMAN_GT core joints are inside.
+    assert xywh_to_xyxy(sample["person_bbox"]) == [0.0, 0.0, 11.0, 11.0]
+    rows = [
+        {"pixel_error": 1.0, "normalized_error": 0.05},
+        {"pixel_error": None, "normalized_error": None},
+    ]
+    summary = metric_summary(rows)
+    assert summary["coverage"] == 0.5
+    assert summary["pck_005"] == 0.5
+    assert summary["pck_005_conditional"] == 1.0
 
 
 def test_user_review_gate() -> None:
@@ -97,5 +122,6 @@ def test_accepted_export_matches_existing_schema_and_rejects_pseudo_gt() -> None
 
 if __name__ == "__main__":
     test_mapping_and_crop_failure_accounting()
+    test_public_benchmark_crop_and_metric_denominators()
     test_user_review_gate()
     test_accepted_export_matches_existing_schema_and_rejects_pseudo_gt()
