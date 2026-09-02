@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import math
 from typing import Any
 
 import numpy as np
@@ -19,6 +20,7 @@ def build_analysis_pose(
     *,
     raw_key: str = "raw_pose",
     max_gap: int = MAX_GAP,
+    smooth: bool = True,
 ) -> list[dict[str, Any]]:
     """Return copied rows with raw pose preserved and analysis_pose added."""
     output = copy.deepcopy(rows)
@@ -39,7 +41,8 @@ def build_analysis_pose(
     _reject_isolated_joint_spikes(points, valid, status, scales)
     _reject_isolated_bone_failures(points, valid, status)
     _fill_short_gaps(points, confidence, valid, status, max_gap)
-    _adaptive_zero_phase_smooth(points, valid, status, scales)
+    if smooth:
+        _adaptive_zero_phase_smooth(points, valid, status, scales)
 
     for frame, row in enumerate(output):
         raw_pose = row.get(raw_key)
@@ -66,6 +69,13 @@ def build_analysis_pose(
         else:
             frame_status = "observed"
         pose = copy.deepcopy(raw_pose)
+        provenance = list(raw_pose.get("provenance", ["raw_pose_model_output"])) + [
+            "confidence_gate",
+            "anatomical_temporal_sanity",
+            "bounded_interpolation",
+        ]
+        if smooth:
+            provenance.append("adaptive_zero_phase_smoothing")
         pose.update(
             {
                 "keypoints": np.where(np.isfinite(points[frame]), points[frame], 0.0).tolist(),
@@ -75,13 +85,8 @@ def build_analysis_pose(
                 "joint_status": status[frame].tolist(),
                 "correction_status": frame_status,
                 "visible_keypoints": int(np.sum(reliability >= CONFIDENCE_THRESHOLD)),
-                "provenance": [
-                    "yolo11_pose_raw",
-                    "confidence_gate",
-                    "anatomical_temporal_sanity",
-                    "bounded_interpolation",
-                    "adaptive_zero_phase_smoothing",
-                ],
+                "provenance": provenance,
+                "raw_derived_status": "derived_temporal_signal",
             }
         )
         row["analysis_pose"] = pose
@@ -91,7 +96,7 @@ def build_analysis_pose(
         source_raw = source.get(raw_key, source.get("pose"))
         if source_raw != target.get(raw_key):
             raise RuntimeError("raw_pose changed during reliability processing")
-        if target.get("analysis_pose") is target.get(raw_key):
+        if target.get(raw_key) is not None and target.get("analysis_pose") is target.get(raw_key):
             raise RuntimeError("analysis_pose aliases raw_pose")
     return output
 
@@ -187,7 +192,7 @@ def _reject_isolated_bone_failures(
         usable = valid[:, first] & valid[:, second]
         lengths = np.full(len(points), np.nan, dtype=float)
         lengths[usable] = np.linalg.norm(points[usable, first] - points[usable, second], axis=1)
-        reference = float(np.nanmedian(lengths))
+        reference = float(np.nanmedian(lengths)) if np.any(np.isfinite(lengths)) else math.nan
         if not np.isfinite(reference) or reference <= 1:
             continue
         for frame in range(1, len(points) - 1):

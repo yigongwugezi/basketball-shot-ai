@@ -156,13 +156,17 @@ def build_signals(
     return signals, shooting_side
 
 
-def _unavailable_events(fps: float, reason: str) -> dict[str, dict[str, Any]]:
+def _unavailable_events(
+    fps: float,
+    reason: str,
+    pose_source: str,
+) -> dict[str, dict[str, Any]]:
     return {
         name: event(
             name,
             "insufficient_data",
             fps=fps,
-            provenance=["yolo11_pose", "reference_v1_temporal_heuristic"],
+            provenance=[pose_source, "reference_v1_temporal_heuristic"],
             risk_flags=["insufficient_pose_signal"],
             reason=reason,
         )
@@ -177,12 +181,13 @@ def detect_events(
     metadata: dict[str, Any],
     *,
     preprocessed_pose: bool = False,
+    pose_source: str = "yolo11_pose",
 ) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
     fps = float(metadata["fps"])
     count = len(signals)
     pose_coverage = float(np.mean([signal["pose_found"] for signal in signals])) if signals else 0.0
     if count < 10 or pose_coverage < 0.4:
-        return _unavailable_events(fps, "Too little usable body-pose evidence"), {
+        return _unavailable_events(fps, "Too little usable body-pose evidence", pose_source), {
             "pose_coverage": pose_coverage,
             "signal_coverage": 0.0,
             "risk_flags": ["insufficient_pose_signal"],
@@ -198,7 +203,7 @@ def detect_events(
     ankle_raw = np.asarray([signal["ankle_y"] for signal in signals], dtype=float)
     signal_coverage = float(np.mean(np.isfinite(elbow_raw) & np.isfinite(wrist_raw) & np.isfinite(knee_raw) & np.isfinite(hip_raw)))
     if signal_coverage < 0.4:
-        return _unavailable_events(fps, "Required temporal pose signals are incomplete"), {
+        return _unavailable_events(fps, "Required temporal pose signals are incomplete", pose_source), {
             "pose_coverage": pose_coverage,
             "signal_coverage": signal_coverage,
             "risk_flags": ["insufficient_pose_signal"],
@@ -235,7 +240,7 @@ def detect_events(
         candidates = [index for index in range(baseline_start, bottom_index + 1) if knee[index] <= threshold]
         dip_start_index = candidates[0] if candidates else None
 
-    provenance = ["yolo11_pose", "reference_v1_temporal_heuristic"]
+    provenance = [pose_source, "reference_v1_temporal_heuristic"]
     events = {
         "dip_start": event(
             "dip_start",
@@ -355,10 +360,24 @@ def detect_events(
         frame=int(strict_frame) if strict_frame is not None else None,
         fps=fps,
         confidence=strict_confidence,
-        provenance=["release_ball_v1", "yolo11_pose_wrist", "contact_transition_decoder_v1"],
+        provenance=["release_ball_v1", f"{pose_source}_wrist", "contact_transition_decoder_v1"],
         risk_flags=strict_result["risk_flags"],
         reason=None if strict_frame is not None else "Persistent supported hand-ball separation was unavailable",
     )
+    if (
+        strict_frame is not None
+        and events["landing"]["frame"] is not None
+        and events["landing"]["frame"] <= strict_frame
+    ):
+        landing_index = None
+        events["landing"] = event(
+            "landing",
+            "not_detected",
+            fps=fps,
+            provenance=provenance,
+            risk_flags=["landing_unavailable", "landing_not_after_strict_release"],
+            reason="Candidate landing did not occur after strict ball release",
+        )
 
     ambiguity_ratio = float(np.mean([bool(row.get("ambiguous_shooter")) for row in rows]))
     risk_flags = []
@@ -471,6 +490,7 @@ def calculate_metrics(
     diagnostics: dict[str, Any],
     shooting_side: str,
     fps: float,
+    pose_source: str = "yolo11_pose",
 ) -> dict[str, dict[str, Any]]:
     by_frame = {signal["frame_index"]: signal for signal in signals}
     pose_frame = events["pose_release"]["frame"]
@@ -511,7 +531,7 @@ def calculate_metrics(
         frame=pose_frame,
         source_events=["pose_release"],
         required_joints=[f"{shooting_side}_shoulder", f"{shooting_side}_elbow", f"{shooting_side}_wrist"],
-        provenance=["yolo11_pose", "image_space_geometry"],
+        provenance=[pose_source, "image_space_geometry"],
         view_requirement="side_or_diagonal_preferred",
         risk_flags=["2d_projection_only"],
         evidence_refs=["evidence/pose_release.jpg"] if pose_frame is not None else [],
@@ -528,7 +548,7 @@ def calculate_metrics(
         frame=pose_frame,
         source_events=["pose_release"],
         required_joints=[f"{shooting_side}_wrist", "ankle"],
-        provenance=["yolo11_pose", "normalized_image_space"],
+        provenance=[pose_source, "normalized_image_space"],
         view_requirement="full_body_visible",
         risk_flags=["not_real_world_height"],
         evidence_refs=["evidence/pose_release.jpg"] if pose_frame is not None else [],
@@ -551,7 +571,7 @@ def calculate_metrics(
         frame_range=[dip_start_frame, bottom_frame] if dip_start_frame is not None and bottom_frame is not None else None,
         source_events=["dip_start", "bottom"],
         required_joints=["shoulders", "hips"],
-        provenance=["yolo11_pose", "normalized_image_space"],
+        provenance=[pose_source, "normalized_image_space"],
         view_requirement="stable_camera_preferred",
         risk_flags=["camera_motion_sensitive"],
         evidence_refs=["evidence/dip_start.jpg", "evidence/bottom.jpg"] if math.isfinite(dip_depth) else [],
@@ -572,7 +592,7 @@ def calculate_metrics(
         frame=bottom_frame,
         source_events=["bottom"],
         required_joints=["hip", "knee", "ankle"],
-        provenance=["yolo11_pose", "image_space_geometry"],
+        provenance=[pose_source, "image_space_geometry"],
         view_requirement="lower_body_visible",
         risk_flags=["2d_projection_only"],
         evidence_refs=["evidence/bottom.jpg"] if bottom_frame is not None else [],
@@ -596,7 +616,7 @@ def calculate_metrics(
         frame_range=[strict_frame, apex_frame] if strict_frame is not None and apex_frame is not None else None,
         source_events=["strict_ball_release", "body_apex"],
         required_joints=["hips"],
-        provenance=["contact_transition_decoder_v1", "yolo11_pose"],
+        provenance=["contact_transition_decoder_v1", pose_source],
         view_requirement="stable_camera_and_jump_visible",
         risk_flags=["camera_motion_sensitive"],
         evidence_refs=["evidence/strict_ball_release.jpg", "evidence/body_apex.jpg"] if apex_value else [],
@@ -646,6 +666,7 @@ def build_ball_evidence(
     shooting_side: str,
     events: dict[str, dict[str, Any]],
     diagnostics: dict[str, Any],
+    pose_source: str = "yolo11_pose",
 ) -> dict[str, Any]:
     strict_frame = events["strict_ball_release"]["frame"]
     pose_frame = events["pose_release"]["frame"]
@@ -712,7 +733,7 @@ def build_ball_evidence(
         "missing_gaps": missing_gaps,
         "separation_evidence": diagnostics["strict_result"],
         "risk_flags": events["strict_ball_release"]["risk_flags"],
-        "provenance": ["release_ball_v1", "yolo11_pose_wrist", "contact_transition_decoder_v1"],
+        "provenance": ["release_ball_v1", f"{pose_source}_wrist", "contact_transition_decoder_v1"],
         "evidence_ref": "evidence/ball_motion.json",
     }
 
@@ -755,6 +776,7 @@ def analyze(
     metadata: dict[str, Any],
     *,
     pose_key: str = "pose",
+    pose_source: str = "yolo11_pose",
 ) -> dict[str, Any]:
     signals, shooting_side = build_signals(rows, int(metadata["width"]), int(metadata["height"]), pose_key)
     events, diagnostics = detect_events(
@@ -763,10 +785,18 @@ def analyze(
         shooting_side,
         metadata,
         preprocessed_pose=pose_key == "analysis_pose",
+        pose_source=pose_source,
     )
     phases = build_phases(events, rows[0]["frame_index"], rows[-1]["frame_index"], float(metadata["fps"]))
-    metrics = calculate_metrics(events, signals, diagnostics, shooting_side, float(metadata["fps"]))
-    ball_evidence = build_ball_evidence(signals, shooting_side, events, diagnostics)
+    metrics = calculate_metrics(
+        events,
+        signals,
+        diagnostics,
+        shooting_side,
+        float(metadata["fps"]),
+        pose_source,
+    )
+    ball_evidence = build_ball_evidence(signals, shooting_side, events, diagnostics, pose_source)
     observations, suggestions = build_observations_and_suggestions(metrics)
     return {
         "shooting_side": shooting_side,

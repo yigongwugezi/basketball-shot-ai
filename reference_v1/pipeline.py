@@ -10,13 +10,19 @@ from pathlib import Path
 from typing import Any
 
 os.environ.setdefault("YOLO_CONFIG_DIR", r"E:\BasketballShotAI\config\ultralytics")
+os.environ.setdefault("XDG_CACHE_HOME", r"E:\BasketballShotAI\public_data\cache")
+os.environ.setdefault("TORCH_HOME", r"E:\BasketballShotAI\public_data\cache\rtmlib")
+os.environ.setdefault("HF_HOME", r"E:\BasketballShotAI\public_data\cache\huggingface")
 
 import cv2
 import numpy as np
 from ultralytics import YOLO
 
+from benchmarks.reference_v1.model_adapters import RtmlibPoseAdapter
+
 from . import SCHEMA_VERSION
 from .analysis import analyze
+from .perception import ShooterContinuitySelector, pose_candidates
 from .pose.metrics import evaluate_pose_rows, no_lag_metrics
 from .pose.reliability import build_analysis_pose
 from .render import render_annotated_video, write_report_html
@@ -35,6 +41,7 @@ BALL_MODEL_PATH = (
     / "weights"
     / "best.pt"
 )
+RTMPOSE_MODEL_CONFIG = "rtmpose-m_simcc-body7_256x192-e48f03d0"
 
 
 def run_pipeline(
@@ -42,7 +49,8 @@ def run_pipeline(
     output_dir: Path,
     *,
     shot_type: str | None = None,
-    pose_view: str = "analysis",
+    pose_view: str = "raw",
+    pose_backbone: str = "rtmpose",
 ) -> dict[str, Any]:
     started = time.perf_counter()
     input_path = input_path.resolve()
@@ -56,13 +64,24 @@ def run_pipeline(
     evidence_dir.mkdir(parents=True, exist_ok=True)
 
     metadata = read_video_metadata(input_path)
+    if pose_backbone not in {"yolo", "rtmpose"}:
+        raise ValueError(f"Unknown pose backbone: {pose_backbone}")
+
     model_started = time.perf_counter()
-    pose_model = YOLO(str(POSE_MODEL_PATH))
+    person_model = YOLO(str(POSE_MODEL_PATH))
+    pose_model = RtmlibPoseAdapter("rtmpose") if pose_backbone == "rtmpose" else None
     ball_model = YOLO(str(BALL_MODEL_PATH)) if BALL_MODEL_PATH.is_file() else None
     model_load_seconds = time.perf_counter() - model_started
 
     inference_started = time.perf_counter()
-    rows, inference_runtime = infer_video(input_path, pose_model, ball_model, metadata)
+    rows, inference_runtime = infer_video(
+        input_path,
+        person_model,
+        pose_model,
+        ball_model,
+        metadata,
+        pose_backbone=pose_backbone,
+    )
     inference_seconds = time.perf_counter() - inference_started
     if not rows:
         raise RuntimeError("No video frame could be analyzed")
@@ -71,14 +90,15 @@ def run_pipeline(
     metadata["duration_seconds"] = len(rows) / metadata["fps"]
 
     analysis_started = time.perf_counter()
-    raw_analysis = analyze(rows, metadata, pose_key="raw_pose")
-    rows = build_analysis_pose(rows)
-    analysis = analyze(rows, metadata, pose_key="analysis_pose")
+    pose_source = "rtmpose-m_body7_256x192" if pose_backbone == "rtmpose" else "yolo11_pose"
+    raw_analysis = analyze(rows, metadata, pose_key="raw_pose", pose_source=pose_source)
+    rows = build_analysis_pose(rows, smooth=pose_backbone == "yolo")
+    analysis = analyze(rows, metadata, pose_key="analysis_pose", pose_source=pose_source)
     for row in rows:
         for key in ("raw_pose", "analysis_pose"):
             if row.get(key):
                 row[key]["shooting_side"] = analysis["shooting_side"]
-    pose_reliability = build_pose_reliability(rows, raw_analysis, analysis)
+    pose_reliability = build_pose_reliability(rows, raw_analysis, analysis, pose_backbone)
     analysis_seconds = time.perf_counter() - analysis_started
 
     quality = build_quality(metadata, analysis, ball_model is not None)
@@ -120,6 +140,22 @@ def run_pipeline(
         "observations": analysis["observations"],
         "suggestions": analysis["suggestions"],
         "risks": risks,
+        "perception": {
+            "pose_backbone": pose_backbone,
+            "pose_provider": "rtmlib" if pose_backbone == "rtmpose" else "ultralytics",
+            "pose_model": "RTMPose-m Body7 256x192" if pose_backbone == "rtmpose" else "YOLO11n-pose",
+            "pose_model_config": RTMPOSE_MODEL_CONFIG if pose_backbone == "rtmpose" else "yolo11n-pose.pt",
+            "person_box_source": (
+                "yolo11n_pose_temporal_shooter_continuity"
+                if pose_backbone == "rtmpose"
+                else "yolo11n_pose_largest_person_per_frame"
+            ),
+            "coordinate_space": "original_video_frame_pixels",
+            "localization_evidence": "raw_pose",
+            "derived_temporal_signal": "analysis_pose",
+            "annotated_pose_view": pose_view,
+            "global_coordinate_smoothing": pose_backbone == "yolo",
+        },
         "pose_reliability": pose_reliability,
         "runtime": {
             "model_load_seconds": round(model_load_seconds, 3),
@@ -128,6 +164,8 @@ def run_pipeline(
             "render_seconds": None,
             "total_seconds": None,
             "pose_inference_ms": round(inference_runtime["pose_ms"], 2),
+            "person_detector_ms": round(inference_runtime["person_ms"], 2),
+            "pose_head_ms": round(inference_runtime["pose_head_ms"], 2),
             "ball_inference_ms": round(inference_runtime["ball_ms"], 2),
             "device": "cpu",
         },
@@ -195,23 +233,68 @@ def read_video_metadata(path: Path) -> dict[str, Any]:
 
 def infer_video(
     path: Path,
-    pose_model: YOLO,
+    person_model: YOLO,
+    pose_model: RtmlibPoseAdapter | None,
     ball_model: YOLO | None,
     metadata: dict[str, Any],
+    *,
+    pose_backbone: str,
 ) -> tuple[list[dict[str, Any]], dict[str, float]]:
     capture = cv2.VideoCapture(str(path))
     rows = []
     frame_index = 0
     pose_runtime = 0.0
+    person_runtime = 0.0
+    pose_head_runtime = 0.0
     ball_runtime = 0.0
+    selector = ShooterContinuitySelector() if pose_backbone == "rtmpose" else None
     while True:
         ok, frame = capture.read()
         if not ok:
             break
-        pose_started = time.perf_counter()
-        pose_result = pose_model.predict(frame, imgsz=640, conf=0.20, verbose=False, device="cpu")[0]
-        pose_runtime += (time.perf_counter() - pose_started) * 1000
-        pose = _select_pose(pose_result)
+        person_started = time.perf_counter()
+        pose_result = person_model.predict(frame, imgsz=640, conf=0.20, verbose=False, device="cpu")[0]
+        person_ms = (time.perf_counter() - person_started) * 1000
+        person_runtime += person_ms
+        head_ms = 0.0
+        ambiguous_shooter = False
+
+        tracking: dict[str, Any]
+        if pose_backbone == "yolo":
+            pose = _select_pose(pose_result)
+            ambiguous_shooter = bool(pose and pose.get("ambiguity_ratio", 0.0) >= 0.65)
+            tracking = {
+                "shooter_track_id": None,
+                "shooter_selection_confidence": None,
+                "identity_break": False,
+                "crop_status": "ok" if pose else "missing_person",
+                "selection": "largest_person_single_shot_scope",
+            }
+            if pose:
+                pose.update(_pose_provenance("yolo", person_ms, tracking))
+        else:
+            assert selector is not None and pose_model is not None
+            selection = selector.select(pose_candidates(pose_result))
+            ambiguous_shooter = selection.ambiguous
+            tracking = {
+                "shooter_track_id": selection.track_id,
+                "shooter_selection_confidence": selection.confidence,
+                "identity_break": selection.identity_break,
+                "crop_status": selection.crop_status,
+                "selection": "temporal_shooter_continuity",
+            }
+            pose = None
+            if selection.candidate is not None:
+                pose, head_ms = pose_model.infer(frame, selection.candidate["bbox"])
+                pose_head_runtime += head_ms
+                if pose is not None:
+                    pose["pose_output_bbox"] = pose["bbox"]
+                    pose["bbox"] = selection.candidate["bbox"]
+                    pose["person_count"] = selection.candidate["person_count"]
+                    pose.update(_pose_provenance("rtmpose", head_ms, tracking))
+                else:
+                    tracking["crop_status"] = "pose_head_missing"
+        pose_runtime += person_ms + head_ms
 
         ball = None
         if ball_model is not None:
@@ -226,12 +309,52 @@ def infer_video(
                 "pose": pose,
                 "raw_pose": pose,
                 "ball": ball,
-                "ambiguous_shooter": bool(pose and pose["ambiguity_ratio"] >= 0.65),
+                "tracking": tracking,
+                "ambiguous_shooter": ambiguous_shooter,
             }
         )
         frame_index += 1
     capture.release()
-    return rows, {"pose_ms": pose_runtime, "ball_ms": ball_runtime}
+    return rows, {
+        "pose_ms": pose_runtime,
+        "person_ms": person_runtime,
+        "pose_head_ms": pose_head_runtime,
+        "ball_ms": ball_runtime,
+    }
+
+
+def _pose_provenance(
+    pose_backbone: str,
+    runtime_ms: float,
+    tracking: dict[str, Any],
+) -> dict[str, Any]:
+    if pose_backbone == "rtmpose":
+        values = {
+            "pose_provider": "rtmlib",
+            "pose_model": "RTMPose-m Body7 256x192",
+            "pose_model_config": RTMPOSE_MODEL_CONFIG,
+            "person_box_source": "yolo11n_pose_temporal_shooter_continuity",
+            "provenance": ["rtmpose-m_body7_256x192_raw"],
+        }
+    else:
+        values = {
+            "pose_provider": "ultralytics",
+            "pose_model": "YOLO11n-pose",
+            "pose_model_config": "yolo11n-pose.pt",
+            "person_box_source": "yolo11n_pose_largest_person_per_frame",
+            "provenance": ["yolo11_pose_raw"],
+        }
+    return {
+        **values,
+        "pose_runtime_ms": round(runtime_ms, 3),
+        "coordinate_space": "original_video_frame_pixels",
+        "raw_derived_status": "raw_model_output",
+        "shooter_track_id": tracking["shooter_track_id"],
+        "shooter_selection_confidence": tracking["shooter_selection_confidence"],
+        "identity_break": tracking["identity_break"],
+        "crop_status": tracking["crop_status"],
+        "selection": tracking["selection"],
+    }
 
 
 def _select_pose(result: Any) -> dict[str, Any] | None:
@@ -409,6 +532,10 @@ def build_frame_evidence(rows: list[dict[str, Any]], report: dict[str, Any]) -> 
                     "bbox": row["analysis_pose"]["bbox"],
                     "selection": row["analysis_pose"]["selection"],
                     "correction_status": row["analysis_pose"]["correction_status"],
+                    "shooter_track_id": row["analysis_pose"].get("shooter_track_id"),
+                    "shooter_selection_confidence": row["analysis_pose"].get("shooter_selection_confidence"),
+                    "identity_break": row["analysis_pose"].get("identity_break", False),
+                    "crop_status": row["analysis_pose"].get("crop_status"),
                 }
                 if row and row.get("analysis_pose")
                 else None
@@ -428,6 +555,7 @@ def build_pose_reliability(
     rows: list[dict[str, Any]],
     raw_analysis: dict[str, Any],
     analysis: dict[str, Any],
+    pose_backbone: str,
 ) -> dict[str, Any]:
     event_delta = {}
     for name in raw_analysis["events"]:
@@ -435,8 +563,19 @@ def build_pose_reliability(
         clean_frame = analysis["events"][name]["frame"]
         event_delta[name] = clean_frame - raw_frame if raw_frame is not None and clean_frame is not None else None
     return {
-        "pose_source": "yolo11_pose",
+        "pose_source": "rtmpose-m_body7_256x192" if pose_backbone == "rtmpose" else "yolo11_pose",
         "analysis_pose_integrated": True,
+        "localization_evidence": "raw_pose",
+        "temporal_signal": "analysis_pose",
+        "global_coordinate_smoothing": pose_backbone == "yolo",
+        "identity_break_frames": [
+            row["frame_index"] for row in rows if row.get("tracking", {}).get("identity_break")
+        ],
+        "crop_status_counts": {
+            status: sum(row.get("tracking", {}).get("crop_status") == status for row in rows)
+            for status in sorted({row.get("tracking", {}).get("crop_status") for row in rows})
+            if status is not None
+        },
         "raw": evaluate_pose_rows(rows, pose_key="raw_pose"),
         "analysis": evaluate_pose_rows(rows, pose_key="analysis_pose"),
         "no_lag": no_lag_metrics(rows, rows, analysis["shooting_side"]),
@@ -460,6 +599,17 @@ def build_pose_trajectories(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "raw_pose": {
                     "keypoints": raw["keypoints"],
                     "keypoint_confidence": raw["confidence"],
+                    "pose_provider": raw.get("pose_provider"),
+                    "pose_model": raw.get("pose_model"),
+                    "pose_model_config": raw.get("pose_model_config"),
+                    "pose_runtime_ms": raw.get("pose_runtime_ms"),
+                    "person_box_source": raw.get("person_box_source"),
+                    "coordinate_space": raw.get("coordinate_space"),
+                    "raw_derived_status": raw.get("raw_derived_status"),
+                    "shooter_track_id": raw.get("shooter_track_id"),
+                    "shooter_selection_confidence": raw.get("shooter_selection_confidence"),
+                    "identity_break": raw.get("identity_break", False),
+                    "crop_status": raw.get("crop_status"),
                 } if raw else None,
                 "analysis_pose": {
                     "keypoints": analysis["keypoints"],

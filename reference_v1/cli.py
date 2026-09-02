@@ -13,10 +13,27 @@ def main() -> None:
     parser.add_argument("--input", type=Path, required=True, help="Trimmed single-shot video")
     parser.add_argument("--output", type=Path, required=True, help="Artifact output directory")
     parser.add_argument("--shot-type", choices=["jump_shot", "set_shot", "free_throw"])
-    parser.add_argument("--pose-view", choices=["analysis", "raw"], default="analysis", help="Skeleton shown in annotated.mp4")
+    parser.add_argument(
+        "--pose-backbone",
+        choices=["rtmpose", "yolo"],
+        default="rtmpose",
+        help="Body pose source; yolo preserves the legacy debug path",
+    )
+    parser.add_argument(
+        "--pose-view",
+        choices=["analysis", "raw"],
+        default="raw",
+        help="Skeleton shown in annotated.mp4; raw is localization evidence",
+    )
     args = parser.parse_args()
     try:
-        report = run_pipeline(args.input, args.output, shot_type=args.shot_type, pose_view=args.pose_view)
+        report = run_pipeline(
+            args.input,
+            args.output,
+            shot_type=args.shot_type,
+            pose_view=args.pose_view,
+            pose_backbone=args.pose_backbone,
+        )
     except Exception as exc:
         print(f"Reference V1 failed: {type(exc).__name__}: {exc}", file=sys.stderr)
         raise SystemExit(1) from exc
