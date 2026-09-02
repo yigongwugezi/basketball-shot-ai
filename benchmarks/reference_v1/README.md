@@ -59,6 +59,26 @@ After replacing the starter `annotations\pose_gt.json` with the reviewed export:
 
 The evaluator refuses unreviewed frames. Model predictions and annotations are separate files.
 
+Public human GT candidates use the E-drive data boundary and a separate user-acceptance gate:
+
+```powershell
+.\.venv310\Scripts\python.exe benchmarks\reference_v1\public_pose_gt.py prepare-all
+.\.venv310\Scripts\python.exe benchmarks\reference_v1\public_pose_gt.py verify
+```
+
+Review `E:\BasketballShotAI\public_data\dataset_review\index.html`. Do not record an
+acceptance from an automated run. After the product owner explicitly accepts an exact
+dataset/version, record and export it with:
+
+```powershell
+.\.venv310\Scripts\python.exe benchmarks\reference_v1\public_pose_gt.py decision --dataset jhmdb --value ACCEPTED
+.\.venv310\Scripts\python.exe benchmarks\reference_v1\public_pose_gt.py export --dataset jhmdb
+```
+
+The exporter rejects pseudo/automatic labels and refuses `PENDING` or `REJECTED` data.
+See `docs/reference_architecture/public-pose-data-policy.md` for the trust, license, and
+storage boundary.
+
 Build a standalone motion debugger from a completed Reference V1 run:
 
 ```powershell
