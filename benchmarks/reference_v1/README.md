@@ -42,3 +42,25 @@ The 230-frame ball benchmark is research-only and is not an independent product 
 Optional candidates require `rtmlib`, `onnxruntime`, `rfdetr`, `transformers`, and `sahi`.
 Set `XDG_CACHE_HOME`, `TORCH_HOME`, and `HF_HOME` to an E-drive directory before
 first use so model caches stay outside the repository and C drive.
+
+## Human pose GT and motion representation
+
+Prepare the fixed 42-frame human-review package from existing model caches:
+
+```powershell
+.\.venv310\Scripts\python.exe benchmarks\reference_v1\pose_gt_benchmark.py prepare
+```
+
+After replacing the starter `annotations\pose_gt.json` with the reviewed export:
+
+```powershell
+.\.venv310\Scripts\python.exe benchmarks\reference_v1\pose_gt_benchmark.py evaluate
+```
+
+The evaluator refuses unreviewed frames. Model predictions and annotations are separate files.
+
+Build a standalone motion debugger from a completed Reference V1 run:
+
+```powershell
+.\.venv310\Scripts\python.exe benchmarks\reference_v1\motion_debugger.py "E:\BasketballShotAI\analysis_runs\pose_reliability_pass\accepted_img_7216"
+```

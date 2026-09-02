@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pose GT V1</title>
+<style>
+:root{color-scheme:dark;font:14px system-ui;background:#10141b;color:#e9eef6}*{box-sizing:border-box}body{margin:0}header{position:sticky;top:0;z-index:2;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;background:#171d27;border-bottom:1px solid #394254}button,select,input{background:#252d3a;color:#fff;border:1px solid #536074;border-radius:5px;padding:7px}button:hover{background:#344055}.primary{background:#176f5b}.warn{background:#74343b}.progress{margin-left:auto}.layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;height:calc(100vh - 62px)}#viewport{overflow:auto;background:#090b0f;text-align:center;padding:10px}canvas{display:block;margin:auto;box-shadow:0 0 0 1px #3c4655;touch-action:none}.side{overflow:auto;padding:12px;background:#151a23}.frame-id{font:700 18px ui-monospace;margin-bottom:5px}.tags{color:#aeb9cb;margin-bottom:12px}.joint{display:grid;grid-template-columns:1fr auto;gap:5px;padding:5px;border-radius:5px;cursor:pointer}.joint.active{background:#334055}.joint.left{border-left:4px solid #45d4ff}.joint.right{border-left:4px solid #ffac4a}.joint select{padding:3px}.help{font-size:12px;color:#aeb9cb;line-height:1.5}textarea{width:100%;min-height:55px;background:#252d3a;color:#fff;border:1px solid #536074}label{display:flex;gap:6px;align-items:center}.status{padding:7px;border-radius:5px;background:#262d38;margin:8px 0}.reviewed{background:#164d3f}.unreviewed{background:#5b3923}@media(max-width:900px){.layout{grid-template-columns:1fr;height:auto}.side{max-height:none}}
+</style>
+</head>
+<body>
+<header>
+  <button id="prev">← Prev</button><button id="next">Next →</button>
+  <select id="model"><option value="yolo_raw">YOLO raw</option><option value="yolo_filtered">YOLO filtered</option><option value="rtmpose">RTMPose (YOLO crop)</option><option value="rtmw">RTMW (YOLO crop)</option></select>
+  <button id="togglePred">P: Hide prediction</button><button id="copyPred" class="primary">B: Copy prediction → draft</button>
+  <button id="resetJoint">R: Reset joint</button><button id="clearJoint">C: Clear joint</button>
+  <button id="zoomOut">−</button><button id="zoomIn">+</button>
+  <button id="import">Import JSON</button><input id="file" type="file" accept="application/json" hidden>
+  <button id="save" class="primary">Save JSON</button><span class="progress" id="progress"></span>
+</header>
+<div class="layout">
+  <div id="viewport"><canvas id="canvas"></canvas></div>
+  <aside class="side">
+    <div class="frame-id" id="frameId"></div><div id="meta" class="tags"></div>
+    <label>Annotator <input id="annotator" placeholder="required"></label>
+    <div id="reviewStatus" class="status unreviewed"></div>
+    <label><input id="reviewed" type="checkbox"> Human-reviewed frame</label>
+    <h3>Joints</h3><div id="joints"></div>
+    <h3>Frame notes</h3><textarea id="notes"></textarea>
+    <p class="help"><b>Workflow:</b> inspect the image, optionally press B to seed a draft, drag/click joints, set visibility, then check Human-reviewed. Prediction overlay and GT are separate data layers.</p>
+    <p class="help"><b>Keys:</b> ←/→ frames · B seed · P prediction · R reset selected joint · C clear selected joint · V cycle visibility · [/] zoom. Wheel also zooms. Autosaves to this browser; Save JSON writes the human annotation file.</p>
+    <p class="help">White cross = model prediction. Cyan = left GT. Orange = right GT. <code>not_labelable</code> stores no coordinates and is excluded from accuracy.</p>
+  </aside>
+</div>
+<script>
+const PACKAGE = /*__POSE_GT_PACKAGE__*/;
+const JOINTS=PACKAGE.manifest.joint_set, VIS=['visible','occluded_but_inferable','not_labelable'];
+const key='pose-gt:'+PACKAGE.manifest.benchmark_version;
+const blank=()=>({schema_version:'pose_gt_annotations_v1',benchmark_version:PACKAGE.manifest.benchmark_version,annotator:'',created_at:null,updated_at:null,revision:1,notes:'Human-reviewed GT; predictions stored separately.',frames:PACKAGE.manifest.frames.map(f=>({frame_id:f.id,reviewed:false,reviewed_at:null,notes:'',joints:Object.fromEntries(JOINTS.map(j=>[j,{x:null,y:null,visibility:'not_labelable'}]))}))});
+let state;try{state=JSON.parse(localStorage.getItem(key))||blank()}catch{state=blank()}
+let index=0, selected=JOINTS[0], zoom=0.55, showPrediction=true, image=new Image(), dragging=false;
+const $=id=>document.getElementById(id), canvas=$('canvas'), ctx=canvas.getContext('2d');
+const frameMeta=()=>PACKAGE.manifest.frames[index], ann=()=>state.frames.find(f=>f.frame_id===frameMeta().id), pred=()=>PACKAGE.predictions[$('model').value].frames.find(f=>f.frame_id===frameMeta().id)||{joints:{}};
+function persist(){state.updated_at=new Date().toISOString();localStorage.setItem(key,JSON.stringify(state));updateProgress()}
+function loadFrame(){const f=frameMeta();image.onload=()=>{canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;setCanvasSize();draw()};image.src=PACKAGE.image_prefix+f.id+'.jpg';$('frameId').textContent=`${index+1}/${PACKAGE.manifest.frames.length} · ${f.id}`;$('meta').textContent=`${f.clip} · frame ${f.frame_index} · ${f.timestamp_seconds.toFixed(4)}s · ${f.tags.join(', ')}`;$('notes').value=ann().notes;$('reviewed').checked=ann().reviewed;renderJoints();updateReview();updateProgress()}
+function setCanvasSize(){canvas.style.width=(canvas.width*zoom)+'px';canvas.style.height=(canvas.height*zoom)+'px'}
+function draw(){if(!image.complete)return;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0);if(showPrediction){for(const [name,p] of Object.entries(pred().joints||{})){if(p.x==null)continue;ctx.strokeStyle='white';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(p.x-7,p.y);ctx.lineTo(p.x+7,p.y);ctx.moveTo(p.x,p.y-7);ctx.lineTo(p.x,p.y+7);ctx.stroke()}}for(const [name,p] of Object.entries(ann().joints)){if(p.visibility==='not_labelable'||p.x==null)continue;const left=name.startsWith('left');ctx.fillStyle=left?'#45d4ff':'#ffac4a';ctx.strokeStyle=name===selected?'#fff':'#111';ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,p.y,name===selected?9:7,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.font='bold 18px system-ui';ctx.fillText(name.replace('left_','L ').replace('right_','R '),p.x+11,p.y-8)}}
+function renderJoints(){$('joints').innerHTML='';for(const name of JOINTS){const row=document.createElement('div');row.className=`joint ${name.startsWith('left')?'left':'right'} ${name===selected?'active':''}`;const label=document.createElement('span');label.textContent=name;const select=document.createElement('select');for(const v of VIS){const option=document.createElement('option');option.value=v;option.textContent=v;select.append(option)}select.value=ann().joints[name].visibility;select.onchange=e=>{e.stopPropagation();setVisibility(name,select.value)};row.onclick=()=>{selected=name;renderJoints();draw()};row.append(label,select);$('joints').append(row)}}
+function setVisibility(name,value){const j=ann().joints[name];j.visibility=value;if(value==='not_labelable'){j.x=null;j.y=null}else if(j.x==null){resetJoint(name)}persist();renderJoints();draw()}
+function resetJoint(name=selected){const p=(pred().joints||{})[name], j=ann().joints[name];if(p&&p.x!=null){j.x=p.x;j.y=p.y;j.visibility=p.confidence>=.25?'visible':'occluded_but_inferable'}else{j.x=null;j.y=null;j.visibility='not_labelable'}persist();renderJoints();draw()}
+function clearJoint(){const j=ann().joints[selected];j.x=null;j.y=null;j.visibility='not_labelable';persist();renderJoints();draw()}
+function copyPrediction(){for(const name of JOINTS)resetJoint(name);persist();renderJoints();draw()}
+function cycleVisibility(){const current=ann().joints[selected].visibility;setVisibility(selected,VIS[(VIS.indexOf(current)+1)%VIS.length])}
+function pointer(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height}}
+function nearest(p){let best=null,d=Infinity;for(const [name,j] of Object.entries(ann().joints)){if(j.x==null)continue;const n=Math.hypot(j.x-p.x,j.y-p.y);if(n<d){d=n;best=name}}return d<35/zoom?best:null}
+canvas.onpointerdown=e=>{const p=pointer(e), near=nearest(p);if(near)selected=near;const j=ann().joints[selected];j.x=p.x;j.y=p.y;if(j.visibility==='not_labelable')j.visibility='visible';dragging=true;canvas.setPointerCapture(e.pointerId);persist();renderJoints();draw()};canvas.onpointermove=e=>{if(!dragging)return;const p=pointer(e),j=ann().joints[selected];j.x=p.x;j.y=p.y;draw()};canvas.onpointerup=()=>{dragging=false;persist()};
+function go(delta){index=Math.max(0,Math.min(PACKAGE.manifest.frames.length-1,index+delta));loadFrame()}
+function updateReview(){const done=ann().reviewed;$('reviewStatus').className='status '+(done?'reviewed':'unreviewed');$('reviewStatus').textContent=done?'Reviewed — included in GT evaluation':'Not reviewed — never treated as GT'}
+function updateProgress(){const n=state.frames.filter(f=>f.reviewed).length;$('progress').textContent=`Reviewed ${n}/${state.frames.length}`}
+$('prev').onclick=()=>go(-1);$('next').onclick=()=>go(1);$('togglePred').onclick=()=>{showPrediction=!showPrediction;$('togglePred').textContent=showPrediction?'P: Hide prediction':'P: Show prediction';draw()};$('copyPred').onclick=copyPrediction;$('resetJoint').onclick=()=>resetJoint();$('clearJoint').onclick=clearJoint;$('zoomIn').onclick=()=>{zoom=Math.min(1.5,zoom+.1);setCanvasSize()};$('zoomOut').onclick=()=>{zoom=Math.max(.2,zoom-.1);setCanvasSize()};$('model').onchange=draw;
+$('reviewed').onchange=e=>{if(e.target.checked&&!state.annotator.trim()){alert('Enter the annotator name first.');e.target.checked=false;return}ann().reviewed=e.target.checked;ann().reviewed_at=e.target.checked?new Date().toISOString():null;persist();updateReview()};$('annotator').value=state.annotator;$('annotator').oninput=e=>{state.annotator=e.target.value;persist()};$('notes').oninput=e=>{ann().notes=e.target.value;persist()};
+$('import').onclick=()=>$('file').click();$('file').onchange=async e=>{const value=JSON.parse(await e.target.files[0].text());if(value.benchmark_version!==PACKAGE.manifest.benchmark_version)return alert('Wrong benchmark version');state=value;persist();loadFrame()};
+$('save').onclick=async()=>{if(!state.annotator.trim())return alert('Enter annotator name.');state.updated_at=new Date().toISOString();state.created_at=state.created_at||state.updated_at;state.revision=(state.revision||0)+1;const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});try{const h=await showSaveFilePicker({suggestedName:'pose_gt.json',types:[{description:'JSON',accept:{'application/json':['.json']}}]});const w=await h.createWritable();await w.write(blob);await w.close()}catch(e){if(e.name==='AbortError')return;const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pose_gt.json';a.click()}persist()};
+canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.2,Math.min(1.5,zoom+(e.deltaY<0?.08:-.08)));setCanvasSize()},{passive:false});
+document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;if(e.key==='ArrowLeft')go(-1);else if(e.key==='ArrowRight')go(1);else if(e.key.toLowerCase()==='b')copyPrediction();else if(e.key.toLowerCase()==='p')$('togglePred').click();else if(e.key.toLowerCase()==='r')resetJoint();else if(e.key.toLowerCase()==='c')clearJoint();else if(e.key.toLowerCase()==='v')cycleVisibility();else if(e.key==='[')$('zoomOut').click();else if(e.key===']')$('zoomIn').click()});
+loadFrame();
+</script>
+</body></html>

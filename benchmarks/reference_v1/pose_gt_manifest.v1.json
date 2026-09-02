@@ -1,0 +1,90 @@
+{
+  "schema_version": "pose_gt_manifest_v1",
+  "benchmark_version": "basketball_shot_pose_gt_v1_2026-09-02",
+  "joint_set": [
+    "left_shoulder", "right_shoulder", "left_elbow", "right_elbow",
+    "left_wrist", "right_wrist", "left_hip", "right_hip",
+    "left_knee", "right_knee", "left_ankle", "right_ankle"
+  ],
+  "visibility_values": ["visible", "occluded_but_inferable", "not_labelable"],
+  "coordinate_system": "original_frame_pixels_top_left_origin",
+  "sampling": "stratified_high_value_not_random",
+  "clips": {
+    "img_7215": {
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/IMG_7215.MOV",
+      "fps": 29.884615384615383,
+      "width": 1080,
+      "height": 1920,
+      "source_role": "eval",
+      "slow_motion": false,
+      "contaminated_research_only": false,
+      "shooting_side": "right"
+    },
+    "img_7216": {
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/IMG_7216.MOV",
+      "fps": 29.97558780110179,
+      "width": 1080,
+      "height": 1920,
+      "source_role": "eval",
+      "slow_motion": false,
+      "contaminated_research_only": false,
+      "shooting_side": "right"
+    },
+    "bili_005_a": {
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/BILI_005_A_BV1Re4y1K7Ey.mp4",
+      "fps": 25.0,
+      "width": 480,
+      "height": 852,
+      "source_role": "stress-test",
+      "slow_motion": true,
+      "contaminated_research_only": true,
+      "shooting_side": "right"
+    }
+  },
+  "frames": [
+    {"id":"img_7215_f0075","clip":"img_7215","frame_index":75,"timestamp_seconds":2.5097,"tags":["easy_static","dip_load"]},
+    {"id":"img_7215_f0085","clip":"img_7215","frame_index":85,"timestamp_seconds":2.8443,"tags":["dip_load"]},
+    {"id":"img_7215_f0095","clip":"img_7215","frame_index":95,"timestamp_seconds":3.1789,"tags":["dip_load","ball_hand_occlusion"]},
+    {"id":"img_7215_f0103","clip":"img_7215","frame_index":103,"timestamp_seconds":3.4466,"tags":["bottom","difficult_body_configuration"]},
+    {"id":"img_7215_f0108","clip":"img_7215","frame_index":108,"timestamp_seconds":3.6139,"tags":["upward_drive"]},
+    {"id":"img_7215_f0114","clip":"img_7215","frame_index":114,"timestamp_seconds":3.8147,"tags":["upward_drive","rapid_elbow_extension"]},
+    {"id":"img_7215_f0119","clip":"img_7215","frame_index":119,"timestamp_seconds":3.9820,"tags":["takeoff","rapid_elbow_extension"]},
+    {"id":"img_7215_f0121","clip":"img_7215","frame_index":121,"timestamp_seconds":4.0489,"tags":["release_window","rapid_elbow_extension","motion_blur"]},
+    {"id":"img_7215_f0122","clip":"img_7215","frame_index":122,"timestamp_seconds":4.0824,"tags":["release_window","ball_hand_occlusion"]},
+    {"id":"img_7215_f0123","clip":"img_7215","frame_index":123,"timestamp_seconds":4.1158,"tags":["release_window","ball_hand_occlusion"]},
+    {"id":"img_7215_f0124","clip":"img_7215","frame_index":124,"timestamp_seconds":4.1493,"tags":["release_window","ball_hand_occlusion","motion_blur"]},
+    {"id":"img_7215_f0125","clip":"img_7215","frame_index":125,"timestamp_seconds":4.1828,"tags":["release_window"]},
+    {"id":"img_7215_f0126","clip":"img_7215","frame_index":126,"timestamp_seconds":4.2162,"tags":["release_window","follow_through"]},
+    {"id":"img_7215_f0128","clip":"img_7215","frame_index":128,"timestamp_seconds":4.2831,"tags":["follow_through"]},
+    {"id":"img_7215_f0132","clip":"img_7215","frame_index":132,"timestamp_seconds":4.4170,"tags":["follow_through","partial_occlusion"]},
+    {"id":"img_7215_f0133","clip":"img_7215","frame_index":133,"timestamp_seconds":4.4505,"tags":["identity_ambiguity","partial_occlusion"]},
+
+    {"id":"img_7216_f0072","clip":"img_7216","frame_index":72,"timestamp_seconds":2.4020,"tags":["easy_static","dip_load"]},
+    {"id":"img_7216_f0082","clip":"img_7216","frame_index":82,"timestamp_seconds":2.7356,"tags":["dip_load"]},
+    {"id":"img_7216_f0092","clip":"img_7216","frame_index":92,"timestamp_seconds":3.0692,"tags":["bottom","difficult_body_configuration"]},
+    {"id":"img_7216_f0100","clip":"img_7216","frame_index":100,"timestamp_seconds":3.3360,"tags":["upward_drive"]},
+    {"id":"img_7216_f0108","clip":"img_7216","frame_index":108,"timestamp_seconds":3.6029,"tags":["upward_drive"]},
+    {"id":"img_7216_f0111","clip":"img_7216","frame_index":111,"timestamp_seconds":3.7030,"tags":["takeoff"]},
+    {"id":"img_7216_f0120","clip":"img_7216","frame_index":120,"timestamp_seconds":4.0033,"tags":["upward_drive","rapid_elbow_extension"]},
+    {"id":"img_7216_f0128","clip":"img_7216","frame_index":128,"timestamp_seconds":4.2701,"tags":["rapid_elbow_extension","motion_blur"]},
+    {"id":"img_7216_f0133","clip":"img_7216","frame_index":133,"timestamp_seconds":4.4369,"tags":["release_window","ball_hand_occlusion"]},
+    {"id":"img_7216_f0135","clip":"img_7216","frame_index":135,"timestamp_seconds":4.5037,"tags":["release_window","ball_hand_occlusion"]},
+    {"id":"img_7216_f0136","clip":"img_7216","frame_index":136,"timestamp_seconds":4.5370,"tags":["release_window","motion_blur"]},
+    {"id":"img_7216_f0138","clip":"img_7216","frame_index":138,"timestamp_seconds":4.6037,"tags":["release_window"]},
+    {"id":"img_7216_f0140","clip":"img_7216","frame_index":140,"timestamp_seconds":4.6705,"tags":["release_window","follow_through"]},
+    {"id":"img_7216_f0148","clip":"img_7216","frame_index":148,"timestamp_seconds":4.9374,"tags":["follow_through","partial_occlusion"]},
+    {"id":"img_7216_f0150","clip":"img_7216","frame_index":150,"timestamp_seconds":5.0041,"tags":["identity_ambiguity","partial_occlusion"]},
+    {"id":"img_7216_f0151","clip":"img_7216","frame_index":151,"timestamp_seconds":5.0374,"tags":["identity_ambiguity","partial_occlusion"]},
+
+    {"id":"bili_005_a_f0150","clip":"bili_005_a","frame_index":150,"timestamp_seconds":6.0000,"tags":["easy_static"]},
+    {"id":"bili_005_a_f0165","clip":"bili_005_a","frame_index":165,"timestamp_seconds":6.6000,"tags":["dip_load"]},
+    {"id":"bili_005_a_f0180","clip":"bili_005_a","frame_index":180,"timestamp_seconds":7.2000,"tags":["dip_load","ball_hand_occlusion"]},
+    {"id":"bili_005_a_f0195","clip":"bili_005_a","frame_index":195,"timestamp_seconds":7.8000,"tags":["upward_drive"]},
+    {"id":"bili_005_a_f0210","clip":"bili_005_a","frame_index":210,"timestamp_seconds":8.4000,"tags":["difficult_body_configuration","partial_occlusion"]},
+    {"id":"bili_005_a_f0225","clip":"bili_005_a","frame_index":225,"timestamp_seconds":9.0000,"tags":["rapid_elbow_extension","motion_blur"]},
+    {"id":"bili_005_a_f0235","clip":"bili_005_a","frame_index":235,"timestamp_seconds":9.4000,"tags":["release_window","ball_hand_occlusion"]},
+    {"id":"bili_005_a_f0245","clip":"bili_005_a","frame_index":245,"timestamp_seconds":9.8000,"tags":["release_window","motion_blur"]},
+    {"id":"bili_005_a_f0255","clip":"bili_005_a","frame_index":255,"timestamp_seconds":10.2000,"tags":["follow_through","partial_occlusion"]},
+    {"id":"bili_005_a_f0260","clip":"bili_005_a","frame_index":260,"timestamp_seconds":10.4000,"tags":["follow_through","difficult_body_configuration"]}
+  ]
+}
