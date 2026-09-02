@@ -208,9 +208,17 @@ class RtmlibPoseAdapter:
             raise ValueError(f"Unknown RTMLib candidate: {candidate}")
         self.candidate = candidate
 
-    def infer(self, frame: np.ndarray) -> tuple[dict[str, Any] | None, float]:
+    def infer(
+        self,
+        frame: np.ndarray,
+        bbox: list[float] | None = None,
+    ) -> tuple[dict[str, Any] | None, float]:
         started = time.perf_counter()
-        keypoints, scores = self.model(frame)
+        keypoints, scores = (
+            self.model.pose_model(frame, bboxes=[bbox])
+            if bbox is not None
+            else self.model(frame)
+        )
         runtime_ms = (time.perf_counter() - started) * 1000
         keypoints = np.asarray(keypoints, dtype=float)
         scores = np.asarray(scores, dtype=float)
