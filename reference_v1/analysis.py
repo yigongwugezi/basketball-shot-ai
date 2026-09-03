@@ -301,12 +301,12 @@ def detect_events(
             apex_index = bottom_index + int(np.nanargmin(hip[bottom_index:apex_stop]))
             jump_height = baseline - float(np.nanmin(ankle[bottom_index:apex_stop]))
             tolerance = max(0.008, jump_height * 0.30)
-            returned = [
-                index
-                for index in range(max(apex_index + 1, release_index + 1), count)
-                if abs(float(ankle[index]) - baseline) <= tolerance
-            ]
-            landing_index = returned[0] if returned else None
+            landing_index = _persistent_return_index(
+                ankle,
+                max(apex_index + 1, release_index + 1),
+                baseline,
+                tolerance,
+            )
 
     if takeoff_index is None:
         takeoff_status = "insufficient_data" if ankle_coverage < 0.55 else "not_applicable"
@@ -840,6 +840,20 @@ def _extension_onset(elbow: np.ndarray, release_index: int | None, fps: float) -
         if all(math.isfinite(float(value)) for value in elbow[index : index + 4]):
             if elbow[index + 3] - elbow[index] >= 5.0 and elbow[index + 2] >= elbow[index]:
                 return index
+    return None
+
+
+def _persistent_return_index(
+    values: np.ndarray | list[float],
+    start: int,
+    baseline: float,
+    tolerance: float,
+    persistence: int = 3,
+) -> int | None:
+    for index in range(start, len(values) - persistence + 1):
+        window = values[index : index + persistence]
+        if all(math.isfinite(float(value)) and abs(float(value) - baseline) <= tolerance for value in window):
+            return index
     return None
 
 

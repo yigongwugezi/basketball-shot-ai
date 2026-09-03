@@ -3,7 +3,7 @@ from __future__ import annotations
 from benchmarks.reference_v1.validation_closure import decode_contact_transition_v1
 
 from . import SCHEMA_VERSION
-from .analysis import build_phases
+from .analysis import _persistent_return_index, build_phases
 from .human_ball import unavailable_human_ball_release
 from .schema import EVENT_LABELS, METRIC_LABELS, PHASE_LABELS, event, metric, validate_report
 
@@ -26,6 +26,11 @@ def test_phase_event_ordering() -> None:
     assert phases["upward_drive"]["end_frame"] == 32
     assert phases["follow_through"]["start_frame"] == 32
     assert phases["landing_recovery"]["start_frame"] == 45
+
+
+def test_landing_requires_persistent_return() -> None:
+    assert _persistent_return_index([0.8, 1.0, 1.18, 1.35], 1, 1.0, 0.1) is None
+    assert _persistent_return_index([0.8, 1.04, 1.02, 0.99, 1.2], 1, 1.0, 0.1) == 1
 
 
 def test_strict_release_separation() -> None:
@@ -92,6 +97,7 @@ def test_unavailable_metric_and_report_contract() -> None:
 
 def main() -> None:
     test_phase_event_ordering()
+    test_landing_requires_persistent_return()
     test_strict_release_separation()
     test_unavailable_metric_and_report_contract()
     print("reference_v1 self-test: PASS")

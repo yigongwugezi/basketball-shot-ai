@@ -50,7 +50,7 @@ The visual sequence supports the correction from the implausibly early frame 114
 - Landing is rejected unless it occurs after Strict Release when both exist.
 - Motion Representation V0 validates for all five clips. Its separation relation uses Strict Release and abstains on the three BILI clips; its generic action release may use Pose Release only with explicit provenance.
 
-The main measurement changes are expected consequences of the corrected event semantics: IMG_7215 release elbow angle changes 178.7° → 138.5° and normalized release height 0.750 → 0.729; IMG_7216 changes 170.8° → 164.4° and 0.823 → 0.759. IMG_7216 strict-dependent timing moves by one frame. No metric silently substitutes a missing strict separation event.
+The main measurement changes are expected consequences of the corrected event semantics: IMG_7215 release elbow angle changes 178.7° → 138.5° and normalized release height 0.750 → 0.729; IMG_7216 changes 170.8° → 164.4° and 0.823 → 0.759. IMG_7216 strict-dependent timing moves by one frame. IMG_7215 continues to abstain on landing and follow-through duration because the apparent ankle return is not persistent. No metric silently substitutes a missing strict separation event.
 
 ## Runtime and artifacts
 
