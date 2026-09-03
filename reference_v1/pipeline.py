@@ -94,10 +94,14 @@ def run_pipeline(
     raw_analysis = analyze(rows, metadata, pose_key="raw_pose", pose_source=pose_source)
     rows = build_analysis_pose(rows, smooth=pose_backbone == "yolo")
     analysis = analyze(rows, metadata, pose_key="analysis_pose", pose_source=pose_source)
+    human_ball_by_frame = {
+        item["frame"]: item for item in analysis["human_ball_release"]["contact_state_sequence"]
+    }
     for row in rows:
         for key in ("raw_pose", "analysis_pose"):
             if row.get(key):
                 row[key]["shooting_side"] = analysis["shooting_side"]
+        row["human_ball"] = human_ball_by_frame.get(row["frame_index"])
     pose_reliability = build_pose_reliability(rows, raw_analysis, analysis, pose_backbone)
     analysis_seconds = time.perf_counter() - analysis_started
 
@@ -136,6 +140,7 @@ def run_pipeline(
         "phases": analysis["phases"],
         "events": analysis["events"],
         "ball_evidence": analysis["ball_evidence"],
+        "human_ball_release": analysis["human_ball_release"],
         "metrics": analysis["metrics"],
         "observations": analysis["observations"],
         "suggestions": analysis["suggestions"],
@@ -175,6 +180,7 @@ def run_pipeline(
             "report_json": "report.json",
             "timeline_csv": "timeline.csv",
             "ball_evidence": "evidence/ball_motion.json",
+            "human_ball_release": "evidence/human_ball_release_v1.json",
             "frame_evidence": "evidence/frame_evidence.json",
             "pose_reliability": "evidence/pose_reliability.json",
             "pose_trajectories": "evidence/pose_trajectories.json",
@@ -185,6 +191,7 @@ def run_pipeline(
 
     write_timeline(output_dir / "timeline.csv", report)
     _write_json(evidence_dir / "ball_motion.json", analysis["ball_evidence"])
+    _write_json(evidence_dir / "human_ball_release_v1.json", analysis["human_ball_release"])
     _write_json(evidence_dir / "frame_evidence.json", build_frame_evidence(rows, report))
     _write_json(evidence_dir / "pose_reliability.json", pose_reliability)
     _write_json(evidence_dir / "pose_trajectories.json", build_pose_trajectories(rows))
@@ -297,11 +304,13 @@ def infer_video(
         pose_runtime += person_ms + head_ms
 
         ball = None
+        ball_candidates: list[dict[str, Any]] = []
         if ball_model is not None:
             ball_started = time.perf_counter()
             ball_result = ball_model.predict(frame, imgsz=640, conf=0.10, verbose=False, device="cpu")[0]
             ball_runtime += (time.perf_counter() - ball_started) * 1000
-            ball = _select_ball(ball_result)
+            ball_candidates = _ball_candidates(ball_result)
+            ball = max(ball_candidates, key=lambda item: item["confidence"], default=None)
         rows.append(
             {
                 "frame_index": frame_index,
@@ -309,6 +318,7 @@ def infer_video(
                 "pose": pose,
                 "raw_pose": pose,
                 "ball": ball,
+                "ball_candidates": ball_candidates,
                 "tracking": tracking,
                 "ambiguous_shooter": ambiguous_shooter,
             }
@@ -383,20 +393,26 @@ def _select_pose(result: Any) -> dict[str, Any] | None:
 
 
 def _select_ball(result: Any) -> dict[str, Any] | None:
+    return max(_ball_candidates(result), key=lambda item: item["confidence"], default=None)
+
+
+def _ball_candidates(result: Any) -> list[dict[str, Any]]:
     if result.boxes is None or not len(result.boxes):
-        return None
+        return []
     candidates = [box for box in result.boxes if int(box.cls[0]) == 0]
-    if not candidates:
-        return None
-    box = max(candidates, key=lambda item: float(item.conf[0]))
-    x1, y1, x2, y2 = [float(value) for value in box.xyxy[0].tolist()]
-    return {
-        "bbox": [x1, y1, x2, y2],
-        "center": [(x1 + x2) / 2, (y1 + y2) / 2],
-        "diameter": max(x2 - x1, y2 - y1, 1.0),
-        "confidence": float(box.conf[0]),
-        "source": "release_ball_v1",
-    }
+    output = []
+    for box in candidates:
+        x1, y1, x2, y2 = [float(value) for value in box.xyxy[0].tolist()]
+        output.append(
+            {
+                "bbox": [x1, y1, x2, y2],
+                "center": [(x1 + x2) / 2, (y1 + y2) / 2],
+                "diameter": max(x2 - x1, y2 - y1, 1.0),
+                "confidence": float(box.conf[0]),
+                "source": "release_ball_v1",
+            }
+        )
+    return output
 
 
 def build_quality(metadata: dict[str, Any], analysis: dict[str, Any], ball_available: bool) -> dict[str, Any]:
@@ -458,6 +474,7 @@ def determine_analysis_status(quality: dict[str, Any], analysis: dict[str, Any])
 
 def collect_risks(quality: dict[str, Any], analysis: dict[str, Any]) -> list[str]:
     risks = list(analysis["risks"])
+    risks.extend(analysis["human_ball_release"].get("uncertainty", []))
     for check in quality["checks"]:
         if check["status"] != "ok":
             risks.append(f"quality_{check['name']}_{check['status']}")
@@ -510,6 +527,22 @@ def write_timeline(path: Path, report: dict[str, Any]) -> None:
                 "source_provenance": "|".join(item["provenance"]),
             }
         )
+    human_ball = report.get("human_ball_release", {})
+    fps = float(report["input"]["fps"])
+    for item in human_ball.get("contact_state_sequence", []):
+        rows.append(
+            {
+                "type": "human_ball_frame",
+                "name": item["contact_state"],
+                "frame": item["frame"],
+                "start_frame": "",
+                "end_frame": "",
+                "timestamp": round(item["frame"] / fps, 4),
+                "status": item["ball_status"],
+                "confidence": item["state_confidence"],
+                "source_provenance": "|".join(item["provenance"]),
+            }
+        )
     with path.open("w", newline="", encoding="utf-8-sig") as handle:
         writer = csv.DictWriter(handle, fieldnames=columns)
         writer.writeheader()
@@ -540,7 +573,17 @@ def build_frame_evidence(rows: list[dict[str, Any]], report: dict[str, Any]) -> 
                 if row and row.get("analysis_pose")
                 else None
             ),
-            "ball": row.get("ball") if row else None,
+            "ball": (
+                {
+                    "center": row["human_ball"]["ball_center"],
+                    "bbox": row["human_ball"]["ball_bbox"],
+                    "confidence": row["human_ball"]["ball_confidence"],
+                    "ball_status": row["human_ball"]["ball_status"],
+                    "contact_state": row["human_ball"]["contact_state"],
+                }
+                if row and row.get("human_ball")
+                else row.get("ball") if row else None
+            ),
             "image": f"{name}.jpg" if frame is not None else None,
             "provenance": item["provenance"],
         }

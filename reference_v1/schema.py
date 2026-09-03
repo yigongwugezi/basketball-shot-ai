@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from . import SCHEMA_VERSION
+from .human_ball import VERSION as HUMAN_BALL_VERSION
 
 
 VALID_STATUSES = {
@@ -148,6 +149,7 @@ def validate_report(report: dict[str, Any]) -> None:
         "phases",
         "events",
         "ball_evidence",
+        "human_ball_release",
         "metrics",
         "observations",
         "suggestions",
@@ -166,6 +168,30 @@ def validate_report(report: dict[str, Any]) -> None:
         raise ValueError("Phase taxonomy is incomplete")
     if set(report["metrics"]) != set(METRIC_LABELS):
         raise ValueError("Metric taxonomy is incomplete")
+    human_ball = report["human_ball_release"]
+    required_human_ball = {
+        "schema_version",
+        "release_window",
+        "ball_track_quality",
+        "ball_track_status",
+        "contact_state_sequence",
+        "ball_rise_start",
+        "release_region",
+        "release_pose",
+        "strict_release",
+        "supporting_evidence",
+        "uncertainty",
+        "provenance",
+    }
+    if human_ball.get("schema_version") != HUMAN_BALL_VERSION:
+        raise ValueError("Unexpected Human-Ball evidence version")
+    if required_human_ball - set(human_ball):
+        raise ValueError("Human-Ball evidence contract is incomplete")
+    for item in human_ball["contact_state_sequence"]:
+        if item["ball_status"] not in {"DETECTED", "INTERPOLATED", "MISSING", "AMBIGUOUS"}:
+            raise ValueError("Invalid Human-Ball track status")
+        if item["contact_state"] not in {"UNKNOWN", "LIKELY_CONTACT", "SEPARATING", "NO_CONTACT"}:
+            raise ValueError("Invalid Human-Ball contact state")
     for collection in (report["events"], report["phases"], report["metrics"]):
         for item in collection.values():
             _check_status(item["status"])

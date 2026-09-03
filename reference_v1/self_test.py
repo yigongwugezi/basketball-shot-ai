@@ -4,6 +4,7 @@ from benchmarks.reference_v1.validation_closure import decode_contact_transition
 
 from . import SCHEMA_VERSION
 from .analysis import build_phases
+from .human_ball import unavailable_human_ball_release
 from .schema import EVENT_LABELS, METRIC_LABELS, PHASE_LABELS, event, metric, validate_report
 
 
@@ -78,6 +79,7 @@ def test_unavailable_metric_and_report_contract() -> None:
         "phases": phases,
         "events": events,
         "ball_evidence": {},
+        "human_ball_release": unavailable_human_ball_release("self_test_fixture"),
         "metrics": metrics,
         "observations": [],
         "suggestions": [],

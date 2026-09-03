@@ -5,8 +5,7 @@ from typing import Any
 
 import numpy as np
 
-from benchmarks.reference_v1.validation_closure import decode_contact_transition_v1
-
+from .human_ball import build_human_ball_release, unavailable_human_ball_release
 from .schema import EVENT_LABELS, METRIC_LABELS, PHASE_LABELS, event, metric, phase
 
 
@@ -180,6 +179,7 @@ def detect_events(
     shooting_side: str,
     metadata: dict[str, Any],
     *,
+    pose_key: str = "pose",
     preprocessed_pose: bool = False,
     pose_source: str = "yolo11_pose",
 ) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
@@ -190,6 +190,7 @@ def detect_events(
         return _unavailable_events(fps, "Too little usable body-pose evidence", pose_source), {
             "pose_coverage": pose_coverage,
             "signal_coverage": 0.0,
+            "human_ball_release": unavailable_human_ball_release("insufficient_pose_signal"),
             "risk_flags": ["insufficient_pose_signal"],
         }
 
@@ -206,6 +207,7 @@ def detect_events(
         return _unavailable_events(fps, "Required temporal pose signals are incomplete", pose_source), {
             "pose_coverage": pose_coverage,
             "signal_coverage": signal_coverage,
+            "human_ball_release": unavailable_human_ball_release("insufficient_pose_signal"),
             "risk_flags": ["insufficient_pose_signal"],
         }
 
@@ -219,9 +221,21 @@ def detect_events(
     release_score = 0.40 * _normalize(wrist) + 0.30 * _normalize(elbow) + 0.30 * _normalize(wrist_velocity)
     start = max(0, round(count * 0.15))
     stop = max(start + 1, min(count, round(count * 0.9)))
-    release_index = start + int(np.argmax(release_score[start:stop]))
-    pose_release_frame = int(signals[release_index]["frame_index"])
-    release_confidence = float(np.clip(0.25 + 0.5 * release_score[release_index] + 0.25 * signal_coverage, 0, 1))
+    pose_only_index = start + int(np.argmax(release_score[start:stop]))
+    human_ball_release = build_human_ball_release(
+        rows,
+        signals,
+        shooting_side,
+        pose_key,
+        pose_only_index,
+        release_score,
+        fps,
+    )
+    pose_release_frame = int(human_ball_release["release_pose"]["frame"])
+    release_index = next(
+        index for index, signal in enumerate(signals) if int(signal["frame_index"]) == pose_release_frame
+    )
+    release_confidence = float(human_ball_release["release_pose"]["confidence"])
 
     minimum_gap = max(1, round(fps * 0.08))
     bottom_stop = max(1, release_index - minimum_gap)
@@ -241,6 +255,7 @@ def detect_events(
         dip_start_index = candidates[0] if candidates else None
 
     provenance = [pose_source, "reference_v1_temporal_heuristic"]
+    pose_release_provenance = [pose_source, *human_ball_release["release_pose"]["provenance"]]
     events = {
         "dip_start": event(
             "dip_start",
@@ -265,7 +280,7 @@ def detect_events(
             frame=pose_release_frame,
             fps=fps,
             confidence=release_confidence,
-            provenance=provenance,
+            provenance=pose_release_provenance,
             risk_flags=[] if release_confidence >= 0.5 else ["low_pose_release_candidate"],
         ),
     }
@@ -335,32 +350,15 @@ def detect_events(
         reason=None if landing_index is not None else "Landing was not supported before clip end",
     )
 
-    distance_key = f"{shooting_side}_ball_distance"
-    strict_evidence = [
-        {
-            "frame_index": signal["frame_index"],
-            "ball_wrist_distance_diameters": (
-                float(signal[distance_key]) if math.isfinite(signal[distance_key]) else None
-            ),
-            "ball_center": signal["ball_center"],
-        }
-        for signal in signals
-    ]
-    strict_result = decode_contact_transition_v1(strict_evidence, pose_release_frame)
-    strict_frame = strict_result["predicted_strict_frame"]
-    strict_points = sum(
-        pose_release_frame - 10 <= signal["frame_index"] <= pose_release_frame + 12
-        and signal["ball_center"] is not None
-        for signal in signals
-    )
-    strict_confidence = min(0.85, 0.45 + strict_points / 30) if strict_frame is not None else None
+    strict_result = human_ball_release["strict_release"]
+    strict_frame = strict_result["frame"]
     events["strict_ball_release"] = event(
         "strict_ball_release",
         "ok" if strict_frame is not None else "insufficient_data",
         frame=int(strict_frame) if strict_frame is not None else None,
         fps=fps,
-        confidence=strict_confidence,
-        provenance=["release_ball_v1", f"{pose_source}_wrist", "contact_transition_decoder_v1"],
+        confidence=strict_result["confidence"],
+        provenance=strict_result["provenance"],
         risk_flags=strict_result["risk_flags"],
         reason=None if strict_frame is not None else "Persistent supported hand-ball separation was unavailable",
     )
@@ -396,6 +394,7 @@ def detect_events(
         "ambiguity_ratio": round(ambiguity_ratio, 4),
         "jump_height_image_ratio": round(jump_height, 5),
         "strict_result": strict_result,
+        "human_ball_release": human_ball_release,
         "signals": {
             "elbow": elbow,
             "wrist": wrist,
@@ -459,6 +458,7 @@ def build_phases(
             fps=fps,
             confidence=_minimum_confidence(events["bottom"], events["pose_release"]),
             provenance=provenance,
+            risk_flags=["pose_release_fallback"] if strict_release is None else [],
         ),
         "follow_through": phase(
             "follow_through",
@@ -468,7 +468,10 @@ def build_phases(
             fps=fps,
             confidence=events["strict_ball_release"]["confidence"] or events["pose_release"]["confidence"],
             provenance=provenance,
-            risk_flags=["landing_boundary_unavailable"] if release_anchor is not None and landing is None else [],
+            risk_flags=(
+                (["pose_release_fallback"] if strict_release is None else [])
+                + (["landing_boundary_unavailable"] if release_anchor is not None and landing is None else [])
+            ),
         ),
         "landing_recovery": phase(
             "landing_recovery",
@@ -624,18 +627,15 @@ def calculate_metrics(
     )
 
     elbow = diagnostics["signals"]["elbow"]
-    release_index = diagnostics["indices"]["strict_ball_release"]
-    if release_index is None:
-        release_index = diagnostics["indices"]["pose_release"]
+    release_index = diagnostics["indices"]["pose_release"]
     onset_index = _extension_onset(elbow, release_index, fps)
     onset_frame = signals[onset_index]["frame_index"] if onset_index is not None else None
     metrics["elbow_extension_onset_relative_to_release"] = _frame_delta_metric(
         "elbow_extension_onset_relative_to_release",
         onset_frame,
-        strict_frame if strict_frame is not None else pose_frame,
+        pose_frame,
         fps,
-        ["elbow_extension_onset", "strict_ball_release" if strict_frame is not None else "pose_release"],
-        risk_flags=["pose_release_fallback"] if strict_frame is None else [],
+        ["elbow_extension_onset", "pose_release"],
         signed_relative=True,
     )
 
@@ -649,12 +649,11 @@ def calculate_metrics(
     )
     metrics["follow_through_duration"] = _frame_delta_metric(
         "follow_through_duration",
-        strict_frame if strict_frame is not None else pose_frame,
+        pose_frame,
         landing_frame,
         fps,
-        ["strict_ball_release" if strict_frame is not None else "pose_release", "landing"],
+        ["pose_release", "landing"],
         unavailable_status="not_applicable" if events["landing"]["status"] == "not_applicable" else "insufficient_data",
-        risk_flags=["pose_release_fallback"] if strict_frame is None else [],
     )
     if set(metrics) != set(METRIC_LABELS):
         raise RuntimeError("Metric contract was not fully populated")
@@ -668,21 +667,15 @@ def build_ball_evidence(
     diagnostics: dict[str, Any],
     pose_source: str = "yolo11_pose",
 ) -> dict[str, Any]:
+    human_ball = diagnostics["human_ball_release"]
     strict_frame = events["strict_ball_release"]["frame"]
-    pose_frame = events["pose_release"]["frame"]
-    distance_key = f"{shooting_side}_ball_distance"
     observations = []
     missing_gaps = []
     gap_start = None
     prior_center = None
-    contact_seen = False
-    for signal in signals:
-        frame = signal["frame_index"]
-        center = signal["ball_center"]
-        in_window = pose_frame is not None and pose_frame - 12 <= frame <= pose_frame + 16
-        if not in_window:
-            continue
-        distance = signal[distance_key]
+    for item in human_ball["contact_state_sequence"]:
+        frame = item["frame"]
+        center = item["ball_center"]
         if center is None:
             gap_start = frame if gap_start is None else gap_start
             continue
@@ -690,50 +683,47 @@ def build_ball_evidence(
             missing_gaps.append({"start_frame": gap_start, "end_frame": frame - 1, "length": frame - gap_start})
             gap_start = None
         movement = math.dist(center, prior_center) if prior_center is not None else None
-        if math.isfinite(distance) and distance <= 1.25:
-            state = "contact_supported"
-            contact_seen = True
-        elif strict_frame is not None and frame >= strict_frame:
-            state = "released_confirmed"
-        elif contact_seen and math.isfinite(distance) and distance >= 1.4:
-            state = "separating"
-        elif math.isfinite(distance):
-            state = "possession_candidate"
-        else:
-            state = "unknown"
         observations.append(
             {
                 "frame": frame,
                 "center": [round(float(value), 2) for value in center],
-                "bbox": [round(float(value), 2) for value in signal["ball_bbox"]],
-                "confidence": round(float(signal["ball_confidence"]), 4),
+                "bbox": item["ball_bbox"],
+                "confidence": item["ball_confidence"],
                 "visible": True,
-                "detector_source": "release_ball_v1",
-                "ball_hand_distance_diameters": round(float(distance), 4) if math.isfinite(distance) else None,
+                "detector_source": "release_ball_v1" if item["ball_status"] != "INTERPOLATED" else "bounded_linear_interpolation_v1",
+                "ball_status": item["ball_status"],
+                "ball_hand_distance_diameters": item["wrist_ball_distance_diameters"],
+                "ball_hand_distance_radii": item["wrist_ball_distance_radii"],
                 "relative_movement_px": round(movement, 3) if movement is not None else None,
-                "contact_state": state,
+                "relative_speed_diameters_per_frame": item["relative_speed_diameters_per_frame"],
+                "elbow_angle_degrees_2d": item["elbow_angle_degrees_2d"],
+                "contact_state": item["contact_state"],
+                "state_confidence": item["state_confidence"],
+                "state_reason": item["state_reason"],
                 "persistence_supported": strict_frame is not None and frame >= strict_frame,
+                "provenance": item["provenance"],
             }
         )
         prior_center = center
-    if gap_start is not None and pose_frame is not None:
-        missing_gaps.append({"start_frame": gap_start, "end_frame": pose_frame + 16, "length": pose_frame + 17 - gap_start})
+    window = human_ball["release_window"]
+    if gap_start is not None and window is not None:
+        missing_gaps.append({"start_frame": gap_start, "end_frame": window[1], "length": window[1] + 1 - gap_start})
     return {
         "status": events["strict_ball_release"]["status"],
         "detector": "release_ball_v1",
         "detector_role": "prototype_observation_baseline",
-        "tracker_used": False,
-        "tracker_source": None,
+        "tracker_used": True,
+        "tracker_source": "release_window_ball_track_v1",
         "reanchor_count": 0,
-        "tracker_risk": ["detector_only_reference_v1"],
+        "tracker_risk": ["short_window_heuristic_tracker", "no_learned_hand_contact_model"],
         "shooting_side": shooting_side,
-        "window": [pose_frame - 12, pose_frame + 16] if pose_frame is not None else None,
+        "window": window,
         "center_observations": observations,
         "trajectory_points": [item["center"] for item in observations],
         "missing_gaps": missing_gaps,
         "separation_evidence": diagnostics["strict_result"],
         "risk_flags": events["strict_ball_release"]["risk_flags"],
-        "provenance": ["release_ball_v1", f"{pose_source}_wrist", "contact_transition_decoder_v1"],
+        "provenance": human_ball["provenance"],
         "evidence_ref": "evidence/ball_motion.json",
     }
 
@@ -784,6 +774,7 @@ def analyze(
         signals,
         shooting_side,
         metadata,
+        pose_key=pose_key,
         preprocessed_pose=pose_key == "analysis_pose",
         pose_source=pose_source,
     )
@@ -805,6 +796,7 @@ def analyze(
         "phases": phases,
         "metrics": metrics,
         "ball_evidence": ball_evidence,
+        "human_ball_release": diagnostics["human_ball_release"],
         "observations": observations,
         "suggestions": suggestions,
         "diagnostics": diagnostics,

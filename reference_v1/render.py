@@ -78,8 +78,8 @@ def render_annotated_video(
         if not ok:
             break
         row = rows_by_frame.get(frame_index)
-        if row and row.get("ball"):
-            center = row["ball"]["center"]
+        if row and row.get("human_ball") and row["human_ball"].get("ball_center"):
+            center = row["human_ball"]["ball_center"]
             trajectory.append((round(center[0]), round(center[1])))
         annotated = draw_overlay(
             frame,
@@ -136,19 +136,27 @@ def draw_overlay(
 
     for first, second in zip(trajectory, trajectory[1:]):
         cv2.line(canvas, first, second, (43, 211, 255), line)
-    if row and row.get("ball"):
-        ball = row["ball"]
-        x1, y1, x2, y2 = [round(value) for value in ball["bbox"]]
-        center = tuple(round(value) for value in ball["center"])
-        cv2.rectangle(canvas, (x1, y1), (x2, y2), (31, 145, 255), line)
-        cv2.circle(canvas, center, max(4, line + 2), (22, 235, 255), -1)
+    human_ball = row.get("human_ball") if row else None
+    if human_ball and human_ball.get("ball_center"):
+        x1, y1, x2, y2 = [round(value) for value in human_ball["ball_bbox"]]
+        center = tuple(round(value) for value in human_ball["ball_center"])
+        status = human_ball["ball_status"]
+        color = (22, 235, 255) if status == "DETECTED" else (92, 184, 255) if status == "INTERPOLATED" else (174, 146, 255)
+        cv2.rectangle(canvas, (x1, y1), (x2, y2), color, line)
+        cv2.circle(canvas, center, max(4, line + 2), color, -1)
+        wrist = human_ball.get("wrist")
+        if wrist:
+            cv2.line(canvas, center, tuple(round(value) for value in wrist), (72, 255, 151), max(1, line - 1))
+        label = f"{status} {human_ball['contact_state']} d={human_ball.get('wrist_ball_distance_diameters')}"
+        text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, scale * 0.65, line)[0][0]
+        label_x = max(8, min(x1, canvas.shape[1] - text_width - 8))
         cv2.putText(
             canvas,
-            f"ball {ball['confidence']:.2f}",
-            (x1, max(22, y1 - 8)),
+            label,
+            (label_x, max(22, y1 - 8)),
             cv2.FONT_HERSHEY_SIMPLEX,
             scale * 0.65,
-            (22, 235, 255),
+            color,
             line,
             cv2.LINE_AA,
         )
@@ -199,6 +207,15 @@ def write_report_html(report: dict[str, Any], output_path: Path) -> None:
         f'{perception.get("pose_model", "unknown")} · {perception.get("localization_evidence", "unknown")} localization · '
         f'{perception.get("person_box_source", "unknown")}'
     )
+    human_ball = report["human_ball_release"]
+    track_counts = human_ball["ball_track_quality"]["counts"]
+    strict = human_ball["strict_release"]
+    human_ball_summary = html.escape(
+        f'Pose Release f{human_ball["release_pose"]["frame"]} · '
+        f'Strict Release {"f" + str(strict["frame"]) if strict["frame"] is not None else "abstained"} · '
+        f'track coverage {human_ball["ball_track_quality"]["coverage"]:.1%} · '
+        f'D/I/M/A {track_counts["DETECTED"]}/{track_counts["INTERPOLATED"]}/{track_counts["MISSING"]}/{track_counts["AMBIGUOUS"]}'
+    )
 
     document = f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -212,9 +229,10 @@ main{{padding:24px clamp(14px,3vw,44px) 50px}}.hero{{display:grid;grid-template-
 <header><div><h1>Reference V1 · 投篮动作拆解</h1><p>{input_name} · Evidence-first experimental report</p></div><div class="status">{status}</div></header>
 <main><section class="hero"><div class="card"><video id="video" controls preload="metadata" src="annotated.mp4"></video></div><aside class="card"><h2>Attempt</h2><p><b>ID</b><br><code>{html.escape(report["attempt"]["attempt_id"])}</code></p><p><b>Pose perception</b><br>{pose_summary}</p><p><b>Shooting side</b><br>{html.escape(str(report["attempt"]["shooting_side"]))}</p><p><b>Outcome</b><br>unknown</p><h3>Quality warnings</h3><ul>{quality_html}</ul><p class="fine">总运行时间 {runtime["total_seconds"]:.2f}s；推理 {runtime["inference_seconds"]:.2f}s；渲染 {runtime["render_seconds"]:.2f}s。</p></aside></section>
 <section class="card timeline"><h2>Phase / Event Timeline</h2><div class="phase-track">{phase_html}</div><div class="events">{event_html}</div></section>
+<section class="card" style="margin-top:18px"><h2>Human-Ball Release V1</h2><p>{human_ball_summary}</p><p class="fine">Pose Release remains a pose event; Strict Ball Release requires persistent supported separation. Per-frame DETECTED / INTERPOLATED / MISSING / AMBIGUOUS and contact states are preserved in <code>evidence/human_ball_release_v1.json</code>.</p></section>
 <section class="metrics">{metric_html}</section>
 <section class="two"><div class="card"><h2>事实描述</h2><ul>{observation_html}</ul></div><div class="card"><h2>保守建议</h2><ul>{suggestion_html}</ul></div></section>
-<section class="card" style="margin-top:18px"><h2>关键证据帧</h2><div class="evidence">{evidence_html}</div><details><summary>风险与缺失原因</summary><ul>{risk_html}</ul></details><details><summary>Ball evidence</summary><p class="fine">{len(report["ball_evidence"]["center_observations"])} 个 release-window detector observations；tracker_used={str(report["ball_evidence"]["tracker_used"]).lower()}；详情见 <code>evidence/ball_motion.json</code>。</p></details></section>
+<section class="card" style="margin-top:18px"><h2>关键证据帧</h2><div class="evidence">{evidence_html}</div><details><summary>风险与缺失原因</summary><ul>{risk_html}</ul></details><details><summary>Ball evidence</summary><p class="fine">{len(report["ball_evidence"]["center_observations"])} 个 release-window tracked observations；tracker_used={str(report["ball_evidence"]["tracker_used"]).lower()}；详情见 <code>evidence/ball_motion.json</code> 与 <code>evidence/human_ball_release_v1.json</code>。</p></details></section>
 </main><script>function seekVideo(seconds){{if(seconds===null)return;const video=document.getElementById('video');video.currentTime=Number(seconds);video.play();}}</script></body></html>"""
     output_path.write_text(document, encoding="utf-8")
 
