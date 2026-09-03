@@ -101,19 +101,48 @@ def test_motion_contract() -> None:
     result = build_motion_representation(report, rows, slow_motion=True, contaminated_research_only=True)
     validate_motion_representation(result)
     assert report == original  # strict-release and all other source semantics are immutable
-    assert result["kinematics"]["normalized_shot_time"]["value"]["bottom"] == 0.0
+    assert result["schema_version"] == "shot_motion_representation_v1"
+    assert result["motion_representation_version"] == 1
+    assert tuple(result["events"]) == (
+        "dip_start", "dip_bottom", "leg_drive_onset", "ball_rise_start",
+        "elbow_extension_onset", "takeoff", "release_region_start", "release_pose",
+        "strict_ball_release", "body_apex", "release_region_end", "landing",
+    )
+    assert tuple(result["phases"]) == ("setup", "dip", "drive", "release", "follow_through", "landing_recovery")
+    assert result["kinematics"]["normalized_shot_time"]["value"]["dip_bottom"] == 0.0
     assert result["kinematics"]["normalized_shot_time"]["value"]["strict_ball_release"] == 1.0
     assert result["kinematics"]["timing_interpretation"]["status"] == "low_confidence"
     assert "no_real_time_coordination_claim" in result["uncertainty"]["restrictions"]
-    assert result["relations"]["elbow_extension_to_release"]["value"]["delta_frames"] == -6
+    relation = result["temporal_relations"]["elbow_extension_onset_to_release_pose"]
+    assert relation["delta_frames"] == 5
+    assert relation["status"] == "low_confidence"
+    assert result["events"]["release_pose"]["frame"] != result["events"]["strict_ball_release"]["frame"]
+    assert result["kinematics"]["metrics"]["elbow_extension_onset_relative_to_release"]["reliability"] in {"HIGH", "MEDIUM", "LOW"}
     report["ball_evidence"]["center_observations"] = []
     result = build_motion_representation(report, rows)
-    assert result["relations"]["ball_vertical_trajectory"]["status"] == "insufficient_data"
+    assert result["human_ball_relations"]["ball_vertical_trajectory"]["status"] == "insufficient_data"
+    report["events"]["strict_ball_release"] = event("strict_ball_release", "insufficient_data", reason="test")
+    result = build_motion_representation(report, rows)
+    assert result["temporal_relations"]["takeoff_to_strict_ball_release"]["status"] == "insufficient_data"
+    assert result["motion_primitives"]["hand_ball_separation"]["status"] == "insufficient_data"
+    report["attempt"]["view"]["status"] = "unsupported_view"
+    report["metrics"]["elbow_extension_onset_relative_to_release"]["view_requirement"] = "side_or_diagonal"
+    result = build_motion_representation(report, rows)
+    assert result["kinematics"]["metrics"]["elbow_extension_onset_relative_to_release"]["status"] == "unsupported_view"
+
+
+def test_acceptance_manifest() -> None:
+    manifest = json.loads((ROOT / "reference_v1" / "acceptance_manifest.v1.json").read_text(encoding="utf-8"))
+    assert manifest["schema_version"] == "reference_v1_acceptance_manifest_v1"
+    assert manifest["default_settings_required"] is True
+    assert [item["id"] for item in manifest["samples"]] == ["IMG_7215", "IMG_7216", "BILI_010_A", "BILI_002_A", "BILI_010_B"]
+    assert {item["classification"] for item in manifest["samples"]} <= {"SUPPORTED_GOOD_EVIDENCE", "SUPPORTED_PARTIAL_EVIDENCE", "EXPECTED_ABSTENTION", "OUT_OF_CONTRACT"}
 
 
 def main() -> None:
     test_pose_gt_contract()
     test_motion_contract()
+    test_acceptance_manifest()
     print("pose GT + motion tests: PASS")
 
 

@@ -156,6 +156,7 @@ def validate_report(report: dict[str, Any]) -> None:
         "risks",
         "runtime",
         "artifacts",
+        "motion_representation",
     }
     missing = sorted(required - set(report))
     if missing:
@@ -195,6 +196,8 @@ def validate_report(report: dict[str, Any]) -> None:
     for collection in (report["events"], report["phases"], report["metrics"]):
         for item in collection.values():
             _check_status(item["status"])
+    from .motion import validate_motion_representation
+    validate_motion_representation(report["motion_representation"])
 
 
 def _check_status(status: str) -> None:

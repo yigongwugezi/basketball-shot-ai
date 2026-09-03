@@ -216,6 +216,7 @@ def write_report_html(report: dict[str, Any], output_path: Path) -> None:
         f'track coverage {human_ball["ball_track_quality"]["coverage"]:.1%} · '
         f'D/I/M/A {track_counts["DETECTED"]}/{track_counts["INTERPOLATED"]}/{track_counts["MISSING"]}/{track_counts["AMBIGUOUS"]}'
     )
+    motion_html = _motion_summary(report.get("motion_representation", {}))
 
     document = f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -230,6 +231,7 @@ main{{padding:24px clamp(14px,3vw,44px) 50px}}.hero{{display:grid;grid-template-
 <main><section class="hero"><div class="card"><video id="video" controls preload="metadata" src="annotated.mp4"></video></div><aside class="card"><h2>Attempt</h2><p><b>ID</b><br><code>{html.escape(report["attempt"]["attempt_id"])}</code></p><p><b>Pose perception</b><br>{pose_summary}</p><p><b>Shooting side</b><br>{html.escape(str(report["attempt"]["shooting_side"]))}</p><p><b>Outcome</b><br>unknown</p><h3>Quality warnings</h3><ul>{quality_html}</ul><p class="fine">总运行时间 {runtime["total_seconds"]:.2f}s；推理 {runtime["inference_seconds"]:.2f}s；渲染 {runtime["render_seconds"]:.2f}s。</p></aside></section>
 <section class="card timeline"><h2>Phase / Event Timeline</h2><div class="phase-track">{phase_html}</div><div class="events">{event_html}</div></section>
 <section class="card" style="margin-top:18px"><h2>Human-Ball Release V1</h2><p>{human_ball_summary}</p><p class="fine">Pose Release remains a pose event; Strict Ball Release requires persistent supported separation. Per-frame DETECTED / INTERPOLATED / MISSING / AMBIGUOUS and contact states are preserved in <code>evidence/human_ball_release_v1.json</code>.</p></section>
+<section class="card" style="margin-top:18px"><h2>Motion Representation V1</h2>{motion_html}<p class="fine">Factual description only. LOW / INSUFFICIENT evidence is preserved; no coaching or good/bad judgement is produced.</p></section>
 <section class="metrics">{metric_html}</section>
 <section class="two"><div class="card"><h2>事实描述</h2><ul>{observation_html}</ul></div><div class="card"><h2>保守建议</h2><ul>{suggestion_html}</ul></div></section>
 <section class="card" style="margin-top:18px"><h2>关键证据帧</h2><div class="evidence">{evidence_html}</div><details><summary>风险与缺失原因</summary><ul>{risk_html}</ul></details><details><summary>Ball evidence</summary><p class="fine">{len(report["ball_evidence"]["center_observations"])} 个 release-window tracked observations；tracker_used={str(report["ball_evidence"]["tracker_used"]).lower()}；详情见 <code>evidence/ball_motion.json</code> 与 <code>evidence/human_ball_release_v1.json</code>。</p></details></section>
@@ -276,3 +278,24 @@ def _metric_card(item: dict[str, Any]) -> str:
     confidence = item.get("confidence")
     confidence_text = f"{confidence:.2f}" if confidence is not None else "n/a"
     return f'<article class="card metric{bad}"><span class="tag{bad}">{html.escape(item["status"])}</span><h3>{html.escape(item["label_zh"])}</h3><div class="value">{html.escape(str(value_text))}</div><p class="fine">confidence {confidence_text}<br>provenance: {html.escape(provenance)}</p></article>'
+
+
+def _motion_summary(motion: dict[str, Any]) -> str:
+    if not motion:
+        return "<p>Motion representation unavailable.</p>"
+    def names(collection: str, *, available: bool) -> str:
+        items = motion.get(collection, {})
+        selected = [name.replace("_", " ") for name, item in items.items()
+                    if (item.get("status") in {"ok", "low_confidence"}) == available]
+        return html.escape(", ".join(selected) or "none")
+    relations = [f'{item["from_event"].replace("_", " ")} → {item["to_event"].replace("_", " ")}: {item["delta_frames"]} frames'
+                 for item in motion.get("temporal_relations", {}).values() if item.get("status") in {"ok", "low_confidence"}]
+    metrics = motion.get("kinematics", {}).get("metrics", {})
+    unavailable_items = [f"{name}: {item.get('reason') or item.get('status')}" for name, item in metrics.items()
+                         if item.get("status") not in {"ok", "low_confidence"}]
+    return (f'<p><b>Events found:</b> {names("events", available=True)}</p>'
+            f'<p><b>Phases found:</b> {names("phases", available=True)}</p>'
+            f'<p><b>Motion primitives:</b> {names("motion_primitives", available=True)}</p>'
+            f'<p><b>Human–ball facts:</b> {names("human_ball_relations", available=True)}</p>'
+            f'<p><b>Timing relations:</b> {html.escape("; ".join(relations) or "insufficient evidence")}</p>'
+            f'<p><b>Unavailable:</b> {html.escape("; ".join(unavailable_items) or "none")}</p>')

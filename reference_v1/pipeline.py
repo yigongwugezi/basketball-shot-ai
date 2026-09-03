@@ -22,6 +22,7 @@ from benchmarks.reference_v1.model_adapters import RtmlibPoseAdapter
 
 from . import SCHEMA_VERSION
 from .analysis import analyze
+from .motion import build_motion_representation
 from .perception import ShooterContinuitySelector, pose_candidates
 from .pose.metrics import evaluate_pose_rows, no_lag_metrics
 from .pose.reliability import build_analysis_pose
@@ -184,17 +185,20 @@ def run_pipeline(
             "frame_evidence": "evidence/frame_evidence.json",
             "pose_reliability": "evidence/pose_reliability.json",
             "pose_trajectories": "evidence/pose_trajectories.json",
+            "motion_representation": "evidence/motion_representation_v1.json",
             "evidence_images": [],
         },
     }
+    report["motion_representation"] = build_motion_representation(report, rows)
     validate_report(report)
 
-    write_timeline(output_dir / "timeline.csv", report)
+    write_timeline(output_dir / "timeline.csv", report, rows)
     _write_json(evidence_dir / "ball_motion.json", analysis["ball_evidence"])
     _write_json(evidence_dir / "human_ball_release_v1.json", analysis["human_ball_release"])
     _write_json(evidence_dir / "frame_evidence.json", build_frame_evidence(rows, report))
     _write_json(evidence_dir / "pose_reliability.json", pose_reliability)
     _write_json(evidence_dir / "pose_trajectories.json", build_pose_trajectories(rows))
+    _write_json(evidence_dir / "motion_representation_v1.json", report["motion_representation"])
 
     render_started = time.perf_counter()
     render_result = render_annotated_video(
@@ -486,7 +490,7 @@ def collect_risks(quality: dict[str, Any], analysis: dict[str, Any]) -> list[str
     return list(dict.fromkeys(risks))
 
 
-def write_timeline(path: Path, report: dict[str, Any]) -> None:
+def write_timeline(path: Path, report: dict[str, Any], frame_rows: list[dict[str, Any]] | None = None) -> None:
     columns = [
         "type",
         "name",
@@ -497,6 +501,13 @@ def write_timeline(path: Path, report: dict[str, Any]) -> None:
         "status",
         "confidence",
         "source_provenance",
+        "normalized_shot_time",
+        "pose_status",
+        "shooter_track_id",
+        "ball_status",
+        "contact_state",
+        "phase",
+        "event_markers",
     ]
     rows = []
     for item in report["phases"].values():
@@ -527,6 +538,15 @@ def write_timeline(path: Path, report: dict[str, Any]) -> None:
                 "source_provenance": "|".join(item["provenance"]),
             }
         )
+    motion = report.get("motion_representation", {})
+    for item in motion.get("events", {}).values():
+        rows.append({"type": "motion_event", "name": item["name"], "frame": item["frame"],
+                     "timestamp": item["timestamp_seconds"], "status": item["status"],
+                     "confidence": item["confidence"], "source_provenance": "|".join(item["provenance"]),
+                     "normalized_shot_time": item["normalized_shot_time"]})
+    for name, item in motion.get("temporal_relations", {}).items():
+        rows.append({"type": "temporal_relation", "name": name, "status": item["status"],
+                     "source_provenance": "|".join(item["provenance"])})
     human_ball = report.get("human_ball_release", {})
     fps = float(report["input"]["fps"])
     for item in human_ball.get("contact_state_sequence", []):
@@ -541,8 +561,29 @@ def write_timeline(path: Path, report: dict[str, Any]) -> None:
                 "status": item["ball_status"],
                 "confidence": item["state_confidence"],
                 "source_provenance": "|".join(item["provenance"]),
+                "ball_status": item["ball_status"],
+                "contact_state": item["contact_state"],
             }
         )
+    if frame_rows:
+        phase_ranges = motion.get("phases", {})
+        markers: dict[int, list[str]] = {}
+        for name, item in motion.get("events", {}).items():
+            if item.get("frame") is not None:
+                markers.setdefault(int(item["frame"]), []).append(name)
+        for row in frame_rows:
+            frame = int(row["frame_index"])
+            pose = row.get("analysis_pose") or {}
+            hb_row = row.get("human_ball") or {}
+            phase_name = next((name for name, item in phase_ranges.items()
+                               if item.get("start_frame") is not None and item["start_frame"] <= frame <= item["end_frame"]), "")
+            rows.append({"type": "frame", "name": "frame_evidence", "frame": frame,
+                         "timestamp": round(frame / fps, 4), "status": "ok" if pose else "insufficient_data",
+                         "pose_status": "ok" if pose else "missing",
+                         "shooter_track_id": row.get("shooter_track_id", row.get("person_track_id", "")),
+                         "ball_status": hb_row.get("ball_status", ""),
+                         "contact_state": hb_row.get("contact_state", ""), "phase": phase_name,
+                         "event_markers": "|".join(markers.get(frame, []))})
     with path.open("w", newline="", encoding="utf-8-sig") as handle:
         writer = csv.DictWriter(handle, fieldnames=columns)
         writer.writeheader()

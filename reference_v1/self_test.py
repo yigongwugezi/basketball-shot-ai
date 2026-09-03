@@ -5,6 +5,7 @@ from benchmarks.reference_v1.validation_closure import decode_contact_transition
 from . import SCHEMA_VERSION
 from .analysis import _persistent_return_index, build_phases
 from .human_ball import unavailable_human_ball_release
+from .motion import build_motion_representation
 from .schema import EVENT_LABELS, METRIC_LABELS, PHASE_LABELS, event, metric, validate_report
 
 
@@ -78,9 +79,9 @@ def test_unavailable_metric_and_report_contract() -> None:
     assert all(item["value"] is None for item in metrics.values())
     report = {
         "schema_version": SCHEMA_VERSION,
-        "input": {},
+        "input": {"fps": 30.0, "frame_count": 60},
         "quality": {},
-        "attempt": {},
+        "attempt": {"shooting_side": "right", "view": {"value": "unknown", "status": "needs_review"}},
         "phases": phases,
         "events": events,
         "ball_evidence": {},
@@ -92,6 +93,7 @@ def test_unavailable_metric_and_report_contract() -> None:
         "runtime": {},
         "artifacts": {},
     }
+    report["motion_representation"] = build_motion_representation(report, [])
     validate_report(report)
 
 

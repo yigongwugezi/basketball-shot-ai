@@ -1,5 +1,7 @@
 # Human-Ball / Release Perception V1 closure
 
+> This closure record predates the final freeze. Its Motion Representation V0 references are historical; production now uses canonical `shot_motion_representation_v1` in `report.json` and `evidence/motion_representation_v1.json`.
+
 Date: 2026-09-03
 
 Starting mainline: `eb87cc0`

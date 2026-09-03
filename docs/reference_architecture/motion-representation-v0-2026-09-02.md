@@ -1,5 +1,7 @@
 # Basketball Shot Motion Representation V0 — 2026-09-02
 
+> Historical design record. Superseded by the canonical Motion Representation V1 frozen on 2026-09-03; see `reference-v1-final-acceptance-2026-09-03.md`.
+
 ## Status
 
 `MOTION_REPRESENTATION_V0 = READY`

@@ -1,0 +1,33 @@
+{
+  "schema_version": "reference_v1_acceptance_manifest_v1",
+  "generated_from": "existing local confirmed videos",
+  "command": "python -m reference_v1.cli --input VIDEO --output OUTPUT",
+  "default_settings_required": true,
+  "samples": [
+    {
+      "id": "IMG_7215",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/IMG_7215.MOV",
+      "classification": "SUPPORTED_GOOD_EVIDENCE"
+    },
+    {
+      "id": "IMG_7216",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/IMG_7216.MOV",
+      "classification": "SUPPORTED_GOOD_EVIDENCE"
+    },
+    {
+      "id": "BILI_010_A",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/BILI_010_A_BV1hK6WYtEDP.mp4",
+      "classification": "EXPECTED_ABSTENTION"
+    },
+    {
+      "id": "BILI_002_A",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/BILI_002_A_BV16u411e7Bn.mp4",
+      "classification": "EXPECTED_ABSTENTION"
+    },
+    {
+      "id": "BILI_010_B",
+      "video": "E:/BasketballShotAI/raw/confirmed_videos/BILI_010_B_BV1hK6WYtEDP.mp4",
+      "classification": "EXPECTED_ABSTENTION"
+    }
+  ]
+}
