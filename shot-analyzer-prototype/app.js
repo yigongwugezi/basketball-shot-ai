@@ -313,42 +313,68 @@ function renderReleaseBallEvidence(evidence) {
   `;
 }
 
-function renderReleaseFusionEvidence(releaseFusion) {
+function renderReleaseMeasurement(releaseMeasurement, releaseFusion) {
   if (!releaseFusionEvidence) return;
-  if (!releaseFusion) {
+  const measurement = releaseMeasurement || releaseFusion;
+  if (!measurement) {
     clearReleaseFusionEvidence();
     return;
   }
 
-  const status = releaseFusion.status || "unknown";
-  const state = status === "ok" ? "ok" : status === "warning" || status === "uncertain" ? "warn" : "danger";
-  const riskFlags = Array.isArray(releaseFusion.risk_flags) ? releaseFusion.risk_flags : [];
-  const finalSource = releaseFusion.final_source || "-";
-  const poseIndex = releaseFusion.pose_release_frame_index == null ? "-" : releaseFusion.pose_release_frame_index;
-  const detectorIndex = releaseFusion.detector_release_frame_index == null ? "-" : releaseFusion.detector_release_frame_index;
-  const frameDelta = releaseFusion.frame_delta == null ? "-" : releaseFusion.frame_delta;
-  const agreementLevel = releaseFusion.agreement_level || "-";
-  const reason = releaseFusion.reason || "未提供融合诊断说明";
+  const isMeasurement = Boolean(releaseMeasurement);
+  const status = measurement.status || "unknown";
+  const source = measurement.source || measurement.final_source || "-";
+  const releaseFrame = measurement.release_frame ?? measurement.pose_release_frame_index ?? "-";
+  const frameDelta = measurement.frame_delta == null ? "-" : measurement.frame_delta;
+  const agreementLevel = measurement.agreement_level || "-";
+  const reason = measurement.reason || "未提供释放测量说明";
+  const quality = measurement.measurement_quality || {};
+  const qualityNotes = [...(quality.issues || []), ...(quality.warnings || [])].filter(
+    (note) => typeof note === "string",
+  );
+
+  let state = "danger";
+  let label = "风险";
+  let message = "当前释放测量存在质量风险，请谨慎解读相关指标。";
+  if (isMeasurement && status === "AVAILABLE") {
+    state = "ok";
+    label = "可用";
+    message = "已提供当前可用的释放帧与来源信息。ReleaseState 尚未经过资格确认。";
+  } else if (isMeasurement && status === "INSUFFICIENT_DATA") {
+    state = "warn";
+    label = "证据不足";
+    message = "当前视频缺少足够的释放测量证据，部分投篮指标暂不可用。";
+  } else if (isMeasurement && status === "UNRELIABLE") {
+    state = "danger";
+    label = "谨慎解读";
+    message = "当前释放测量存在质量风险，请谨慎解读相关指标。";
+  } else if (!isMeasurement) {
+    state = status === "ok" ? "ok" : status === "warning" || status === "uncertain" ? "warn" : "danger";
+    label = state === "ok" ? "一致" : state === "warn" ? "待确认" : "风险";
+    message = "当前后端未提供统一测量 contract，正在展示兼容的 release fusion 诊断。";
+  }
+  const qualitySummary = qualityNotes.length
+    ? `包含 ${qualityNotes.length} 项质量提示。`
+    : "无额外质量提示。";
 
   releaseFusionEvidence.hidden = false;
   releaseFusionEvidence.innerHTML = `
     <div class="release-fusion-card ${state}">
       <div class="release-ball-card-head">
         <div>
-          <strong>Release Fusion Diagnostic</strong>
-          <small>展示后端顶层 release_fusion 结果，用于对比 pose 与 detector 的出手帧一致性。</small>
+          <strong>Release Measurement</strong>
+          <small>${message}</small>
         </div>
-        ${statusLabel(state, state === "ok" ? "一致" : state === "warn" ? "待确认" : "风险")}
+        ${statusLabel(state, label)}
       </div>
       <div class="release-fusion-grid">
         <div class="release-fusion-item"><span>status</span><strong>${status}</strong></div>
-        <div class="release-fusion-item"><span>final_source</span><strong>${finalSource}</strong></div>
+        <div class="release-fusion-item"><span>source</span><strong>${source}</strong></div>
         <div class="release-fusion-item"><span>agreement_level</span><strong>${agreementLevel}</strong></div>
-        <div class="release-fusion-item"><span>pose_release_frame_index</span><strong>${poseIndex}</strong></div>
-        <div class="release-fusion-item"><span>detector_release_frame_index</span><strong>${detectorIndex}</strong></div>
+        <div class="release-fusion-item"><span>release_frame</span><strong>${releaseFrame}</strong></div>
         <div class="release-fusion-item"><span>frame_delta</span><strong>${frameDelta}</strong></div>
         <div class="release-fusion-item release-fusion-item-wide"><span>reason</span><strong>${reason}</strong></div>
-        <div class="release-fusion-item release-fusion-item-wide"><span>risk_flags</span><strong>${riskFlags.length ? riskFlags.join("，") : "无"}</strong></div>
+        <div class="release-fusion-item release-fusion-item-wide"><span>质量说明</span><strong>${qualitySummary}</strong></div>
       </div>
     </div>
   `;
@@ -489,7 +515,7 @@ analyzeButton.addEventListener("click", async () => {
     if (activeFrameIndex < 0) activeFrameIndex = 0;
     renderFrames(report.frames);
     renderReleaseBallEvidence(report.release_ball_evidence);
-    renderReleaseFusionEvidence(report.release_fusion);
+    renderReleaseMeasurement(report.release_measurement, report.release_fusion);
     setPipeline(4);
     renderMetrics(report.metrics);
     setPipeline(5);
