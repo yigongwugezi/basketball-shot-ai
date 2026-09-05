@@ -1,0 +1,56 @@
+{
+  "version": "release_ball_v2",
+  "sha256": "b1469c67f3d54c13aa207eaae538e936e27102e8a9585883d59fda69e87a4158",
+  "size_bytes": 5455002,
+  "model_architecture": "YOLO11n",
+  "class_mapping": {
+    "0": "ball"
+  },
+  "training_commit": "353efe4",
+  "epoch_policy": "single frozen run of 100 epochs; best.pt selected only by the frozen internal validation split",
+  "training_dataset_inventory": {
+    "before_external_evaluation_exclusion": 372,
+    "after_external_evaluation_exclusion": 341,
+    "train_frames": 279,
+    "val_frames": 62,
+    "excluded_external_evaluation_sources": {
+      "IMG_7221.MOV": 31,
+      "IMG_7222.MP4": 0
+    }
+  },
+  "dataset": {
+    "manual_label_batches": [
+      "release_ball_batch_001",
+      "release_ball_batch_003"
+    ],
+    "rows": 341,
+    "split_counts": {
+      "train": 279,
+      "val": 62
+    },
+    "split_by_clip": {
+      "BILI_003_A": "val",
+      "NEW_012": "val"
+    },
+    "metadata_sha256": "6f902bd31d153ccaae5e887882f8fbce8221519a394acab0d3d82f0acaf2ec98"
+  },
+  "seed": 0,
+  "image_size": 640,
+  "evaluation_confidence_threshold": 0.15,
+  "training_args": {
+    "epochs": 100,
+    "batch": 16,
+    "optimizer": "auto",
+    "pretrained": true
+  },
+  "source_training_run": "C:\\Users\\20825\\Documents\\BALL\\basketball-shot-ai\\runs\\detect\\release_ball_v2",
+  "internal_validation": {
+    "best_epoch": 99,
+    "precision": 0.77143,
+    "recall": 0.83333,
+    "map50": 0.82594,
+    "map50_95": 0.56887
+  },
+  "trained_at_utc": "2026-09-05T17:23:02.901892+00:00",
+  "training_manifest": "RELEASE_BALL_V2_TRAINING_MANIFEST.md"
+}
