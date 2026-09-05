@@ -1,0 +1,46 @@
+{
+  "version": "release_ball_v2",
+  "purpose": "detector training only; R-CAM2 validation is excluded",
+  "architecture": "YOLO11n",
+  "image_size": 640,
+  "seed": 0,
+  "evaluation_confidence_threshold": 0.15,
+  "training_args": {
+    "epochs": 100,
+    "batch": 16,
+    "optimizer": "auto",
+    "pretrained": true
+  },
+  "dataset": {
+    "manual_label_batches": [
+      "release_ball_batch_001",
+      "release_ball_batch_003"
+    ],
+    "rows": 341,
+    "split_counts": {
+      "train": 279,
+      "val": 62
+    },
+    "split_by_clip": {
+      "BILI_003_A": "val",
+      "NEW_012": "val"
+    },
+    "metadata_sha256": "6f902bd31d153ccaae5e887882f8fbce8221519a394acab0d3d82f0acaf2ec98"
+  },
+  "rcam2_exclusion": {
+    "excluded_source_videos": [
+      "IMG_7221.MOV",
+      "IMG_7222.MP4"
+    ],
+    "excluded_rows": 31,
+    "excluded_rows_detail": [
+      {
+        "source_batch": "release_ball_batch_003",
+        "clip_id": "NEW_006",
+        "source_video": "IMG_7221.MOV",
+        "reason": "R-CAM2 localization validation source-video exclusion"
+      }
+    ],
+    "rule": "exclude every training frame from a R-CAM2 validation source video"
+  }
+}

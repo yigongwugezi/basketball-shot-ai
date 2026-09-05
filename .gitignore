@@ -27,6 +27,7 @@ datasets/**/*.inspect.ndjson
 runs/
 wandb/
 mlruns/
+models/release_ball_v2/*.pt
 
 # Local media outputs
 *.mp4
