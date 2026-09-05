@@ -14,7 +14,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from ultralytics import YOLO
 
-from backend.measurement import release_fusion_to_measurement
+from backend.measurement import pose_release_to_measurement, release_fusion_to_measurement
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1209,8 +1209,8 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
             "frames": frames,
             "metrics": summarize_metrics_v2(frames, camera),
         }
+        release = next((frame for frame in frames if frame["key"] == "release"), None)
         if release_ball_detector_enabled():
-            release = next((frame for frame in frames if frame["key"] == "release"), None)
             if release:
                 release_ball_evidence = build_release_ball_evidence(
                     temp_path,
@@ -1227,6 +1227,10 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
             response["release_fusion"] = release_fusion
             response["release_measurement"] = release_fusion_to_measurement(
                 release_fusion
+            ).to_dict()
+        else:
+            response["release_measurement"] = pose_release_to_measurement(
+                int(release["frame_index"]) if release else None
             ).to_dict()
         return response
     finally:

@@ -17,7 +17,7 @@ from backend import main
 
 
 class AnalyzeApiTest(unittest.TestCase):
-    def _response(self, evidence: dict) -> dict:
+    def _response(self, evidence: dict, detector_enabled: bool = True) -> dict:
         frame_indices = {
             key: {
                 "frame_index": index,
@@ -41,7 +41,7 @@ class AnalyzeApiTest(unittest.TestCase):
             patch.object(main, "estimate_camera_view", return_value=None),
             patch.object(main, "quality_checks_v2", return_value=[]),
             patch.object(main, "summarize_metrics_v2", return_value=[]),
-            patch.object(main, "release_ball_detector_enabled", return_value=True),
+            patch.object(main, "release_ball_detector_enabled", return_value=detector_enabled),
             patch.object(main, "build_release_ball_evidence", return_value=evidence),
         ):
             response = TestClient(main.app).post(
@@ -82,6 +82,17 @@ class AnalyzeApiTest(unittest.TestCase):
                 measurement = report["release_measurement"]
                 self.assertEqual(measurement["status"], expected_status)
                 self.assertIsNone(measurement["release_state"])
+
+    def test_detector_disabled_still_exposes_pose_measurement(self) -> None:
+        report = self._response({}, detector_enabled=False)
+
+        self.assertNotIn("release_ball_evidence", report)
+        self.assertNotIn("release_fusion", report)
+        measurement = report["release_measurement"]
+        self.assertEqual(measurement["status"], "UNRELIABLE")
+        self.assertEqual(measurement["release_frame"], 42)
+        self.assertEqual(measurement["source"], "pose_release")
+        self.assertIsNone(measurement["release_state"])
 
 
 if __name__ == "__main__":

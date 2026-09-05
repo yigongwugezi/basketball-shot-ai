@@ -6,6 +6,7 @@ from backend.measurement import (
     MeasurementQuality,
     MeasurementStatus,
     ReleaseMeasurementResult,
+    pose_release_to_measurement,
     release_fusion_to_measurement,
 )
 
@@ -135,6 +136,25 @@ class ReleaseMeasurementContractTest(unittest.TestCase):
 
         self.assertEqual(result["status"], "INSUFFICIENT_DATA")
         self.assertEqual(result["release_frame"], 42)
+        self.assertIsNone(result["release_state"])
+
+    def test_pose_only_measurement_is_unreliable_without_corroboration(self) -> None:
+        result = pose_release_to_measurement(42).to_dict()
+
+        self.assertEqual(result["status"], "UNRELIABLE")
+        self.assertEqual(result["release_frame"], 42)
+        self.assertEqual(result["source"], "pose_release")
+        self.assertIsNone(result["confidence"])
+        self.assertIsNone(result["release_time"])
+        self.assertIsNone(result["release_state"])
+        self.assertEqual(result["evidence"]["release_sources"], ["pose_release"])
+        self.assertEqual(result["measurement_quality"]["issues"], ["release_ball_corroboration_unavailable"])
+
+    def test_missing_pose_release_frame_is_insufficient(self) -> None:
+        result = pose_release_to_measurement(None).to_dict()
+
+        self.assertEqual(result["status"], "INSUFFICIENT_DATA")
+        self.assertIsNone(result["release_frame"])
         self.assertIsNone(result["release_state"])
 
 

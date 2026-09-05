@@ -111,3 +111,37 @@ def release_fusion_to_measurement(
             else [],
         ),
     )
+
+
+def pose_release_to_measurement(
+    release_frame: int | None,
+) -> ReleaseMeasurementResult:
+    if release_frame is None:
+        return ReleaseMeasurementResult(
+            status=MeasurementStatus.INSUFFICIENT_DATA,
+            reason="Release frame is unavailable from pose analysis.",
+            measurement_quality=MeasurementQuality(
+                status=MeasurementStatus.INSUFFICIENT_DATA,
+                issues=["pose_release_frame_unavailable"],
+            ),
+        )
+
+    issue = "release_ball_corroboration_unavailable"
+    return ReleaseMeasurementResult(
+        status=MeasurementStatus.UNRELIABLE,
+        release_frame=release_frame,
+        source="pose_release",
+        reason=(
+            "Release frame is available from pose analysis, but release-ball "
+            "corroboration is unavailable."
+        ),
+        risk_flags=[issue],
+        evidence=MeasurementEvidence(
+            release_sources=["pose_release"],
+            risk_flags=[issue],
+        ),
+        measurement_quality=MeasurementQuality(
+            status=MeasurementStatus.UNRELIABLE,
+            issues=[issue],
+        ),
+    )
