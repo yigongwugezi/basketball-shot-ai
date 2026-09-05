@@ -25,6 +25,7 @@ class ReleaseMeasurementResult:
     source: str | None = None
     confidence: float | None = None
     agreement_level: str | None = None
+    frame_delta: int | None = None
     reason: str | None = None
     risk_flags: list[str] = field(default_factory=list)
     evidence: dict[str, Any] = field(default_factory=dict)
@@ -35,3 +36,22 @@ class ReleaseMeasurementResult:
         result = asdict(self)
         result["status"] = self.status.value
         return result
+
+
+def release_fusion_to_measurement(
+    release_fusion: dict[str, Any],
+) -> ReleaseMeasurementResult:
+    status = {
+        "ok": MeasurementStatus.AVAILABLE,
+        "insufficient_data": MeasurementStatus.INSUFFICIENT_DATA,
+    }.get(release_fusion.get("status"), MeasurementStatus.UNRELIABLE)
+
+    return ReleaseMeasurementResult(
+        status=status,
+        release_frame=release_fusion.get("pose_release_frame_index"),
+        source=release_fusion.get("final_source"),
+        agreement_level=release_fusion.get("agreement_level"),
+        frame_delta=release_fusion.get("frame_delta"),
+        reason=release_fusion.get("reason"),
+        risk_flags=list(release_fusion.get("risk_flags") or []),
+    )
