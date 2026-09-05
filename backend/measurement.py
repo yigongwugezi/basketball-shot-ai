@@ -28,15 +28,15 @@ class MeasurementEvidence:
     fps: float | None = None
     actual_timestamps: list[float] | None = None
     trusted_window_point_count: int | None = None
-    trusted_window_temporal_span: float | None = None
+    trusted_window_temporal_span_ms: float | None = None
     missing_observations: int | None = None
     tracking_regime_flags: list[str] | None = None
-    fit_rms: float | None = None
-    ensemble_disagreement: float | None = None
-    leave_one_out_disagreement: float | None = None
-    holdout_prediction_error: float | None = None
+    fit_rms_cm: float | None = None
+    ensemble_velocity_disagreement_mps: float | None = None
+    leave_one_out_velocity_disagreement_mps: float | None = None
+    holdout_prediction_error_cm: float | None = None
     release_epoch_status: str | None = None
-    release_epoch_uncertainty: float | None = None
+    release_epoch_uncertainty_ms: float | None = None
 
 
 @dataclass(frozen=True, slots=True)

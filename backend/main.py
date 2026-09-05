@@ -14,6 +14,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from ultralytics import YOLO
 
+from backend.measurement import release_fusion_to_measurement
+
 
 ROOT = Path(__file__).resolve().parents[1]
 STATIC_ROOT = ROOT / "shot-analyzer-prototype"
@@ -1218,10 +1220,14 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
             else:
                 release_ball_evidence = base_release_ball_evidence("no_release_frame")
             response["release_ball_evidence"] = release_ball_evidence
-            response["release_fusion"] = build_release_fusion_diagnostic(
+            release_fusion = build_release_fusion_diagnostic(
                 int(release["frame_index"]) if release else None,
                 release_ball_evidence,
             )
+            response["release_fusion"] = release_fusion
+            response["release_measurement"] = release_fusion_to_measurement(
+                release_fusion
+            ).to_dict()
         return response
     finally:
         temp_path.unlink(missing_ok=True)

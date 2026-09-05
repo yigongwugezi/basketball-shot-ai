@@ -38,7 +38,16 @@ class ReleaseMeasurementContractTest(unittest.TestCase):
         self.assertEqual(result["evidence"]["release_sources"], ["pose_release"])
         self.assertIsNone(result["evidence"]["existing_tracking_evidence"])
         self.assertIsNone(result["evidence"]["trusted_window_point_count"])
-        self.assertIsNone(result["evidence"]["release_epoch_uncertainty"])
+        self.assertIsNone(result["evidence"]["trusted_window_temporal_span_ms"])
+        self.assertIsNone(result["evidence"]["fit_rms_cm"])
+        self.assertIsNone(
+            result["evidence"]["ensemble_velocity_disagreement_mps"]
+        )
+        self.assertIsNone(
+            result["evidence"]["leave_one_out_velocity_disagreement_mps"]
+        )
+        self.assertIsNone(result["evidence"]["holdout_prediction_error_cm"])
+        self.assertIsNone(result["evidence"]["release_epoch_uncertainty_ms"])
         self.assertIsNone(result["release_state"])
         json.dumps(result)
 
