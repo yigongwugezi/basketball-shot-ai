@@ -40,6 +40,47 @@ class MeasurementEvidence:
 
 
 @dataclass(frozen=True, slots=True)
+class BallTrackDetection:
+    bbox: list[float]
+    center_x_px: float
+    center_y_px: float
+    confidence: float
+    source: str
+
+
+@dataclass(frozen=True, slots=True)
+class BallTrackFrameEvidence:
+    frame_index: int
+    time_s: float | None
+    detections: list[BallTrackDetection] = field(default_factory=list)
+    bbox: list[float] | None = None
+    center_x_px: float | None = None
+    center_y_px: float | None = None
+    confidence: float | None = None
+    source: str | None = None
+    status: str = "no_detection"
+
+
+@dataclass(frozen=True, slots=True)
+class BallTrackEvidence:
+    status: str
+    start_frame: int | None = None
+    end_frame: int | None = None
+    fps: float | None = None
+    requested_frame_count: int = 0
+    observed_frame_count: int = 0
+    detection_frame_count: int = 0
+    missing_frame_count: int = 0
+    frames: list[BallTrackFrameEvidence] = field(default_factory=list)
+    actual_timestamps: list[float] = field(default_factory=list)
+    reason: str | None = None
+    warnings: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True, slots=True)
 class TrustedFlightSegment:
     status: MeasurementStatus
     start_frame: int | None = None
@@ -108,6 +149,7 @@ class ReleaseMeasurementResult:
 
 def release_fusion_to_measurement(
     release_fusion: dict[str, Any],
+    ball_track_evidence: BallTrackEvidence | None = None,
 ) -> ReleaseMeasurementResult:
     status = {
         "ok": MeasurementStatus.AVAILABLE,
@@ -138,6 +180,26 @@ def release_fusion_to_measurement(
                 "agreement_level": release_fusion.get("agreement_level"),
             },
             risk_flags=risk_flags,
+            existing_tracking_evidence=(
+                {
+                    "status": ball_track_evidence.status,
+                    "start_frame": ball_track_evidence.start_frame,
+                    "end_frame": ball_track_evidence.end_frame,
+                    "requested_frame_count": ball_track_evidence.requested_frame_count,
+                    "observed_frame_count": ball_track_evidence.observed_frame_count,
+                    "detection_frame_count": ball_track_evidence.detection_frame_count,
+                    "missing_frame_count": ball_track_evidence.missing_frame_count,
+                }
+                if ball_track_evidence
+                else None
+            ),
+            fps=ball_track_evidence.fps if ball_track_evidence else None,
+            actual_timestamps=(
+                ball_track_evidence.actual_timestamps if ball_track_evidence else None
+            ),
+            missing_observations=(
+                ball_track_evidence.missing_frame_count if ball_track_evidence else None
+            ),
         ),
         measurement_quality=MeasurementQuality(
             status=status,

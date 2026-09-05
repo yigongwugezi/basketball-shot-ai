@@ -14,7 +14,13 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from ultralytics import YOLO
 
-from backend.measurement import pose_release_to_measurement, release_fusion_to_measurement
+from backend.measurement import (
+    BallTrackDetection,
+    BallTrackEvidence,
+    BallTrackFrameEvidence,
+    pose_release_to_measurement,
+    release_fusion_to_measurement,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -92,6 +98,8 @@ release_ball_model_path: Path | None = None
 
 RELEASE_BALL_WINDOW_RADIUS = 3
 RELEASE_BALL_CONFIDENCE = 0.25
+BALL_TRACK_COLLECTION_PRE_RELEASE_FRAMES = 3
+BALL_TRACK_COLLECTION_POST_RELEASE_SECONDS = 0.5
 
 
 def get_custom_model() -> YOLO:
@@ -711,6 +719,30 @@ def detect_frame(frame) -> list[dict[str, Any]]:
     return detections
 
 
+def release_ball_detections(frame, model: YOLO) -> list[dict[str, Any]]:
+    results = model.predict(
+        frame,
+        imgsz=640,
+        conf=RELEASE_BALL_CONFIDENCE,
+        verbose=False,
+        device="cpu",
+    )
+    detections: list[dict[str, Any]] = []
+    if results and results[0].boxes is not None:
+        for box in results[0].boxes:
+            class_id = int(box.cls[0].item())
+            if class_id != 0:
+                continue
+            detections.append(
+                {
+                    "bbox": [round(float(v), 2) for v in box.xyxy[0].tolist()],
+                    "confidence": round(float(box.conf[0].item()), 4),
+                    "source": "release_ball_yolo",
+                }
+            )
+    return detections
+
+
 def best_release_ball_detection(frame) -> dict[str, Any]:
     model, model_path, missing_status = get_release_ball_model()
     if model is None:
@@ -722,32 +754,152 @@ def best_release_ball_detection(frame) -> dict[str, Any]:
             "model_path": str(model_path) if model_path else None,
         }
 
-    results = model.predict(
-        frame,
-        imgsz=640,
-        conf=RELEASE_BALL_CONFIDENCE,
-        verbose=False,
-        device="cpu",
-    )
-    best_box = None
-    best_conf = 0.0
-    if results and results[0].boxes is not None:
-        for box in results[0].boxes:
-            class_id = int(box.cls[0].item())
-            if class_id != 0:
-                continue
-            confidence = float(box.conf[0].item())
-            if confidence > best_conf:
-                best_conf = confidence
-                best_box = [float(v) for v in box.xyxy[0].tolist()]
+    detections = release_ball_detections(frame, model)
+    best_detection = max(detections, key=lambda item: item["confidence"], default=None)
 
     return {
-        "has_detection": best_box is not None,
-        "confidence": round(best_conf, 4) if best_box is not None else 0.0,
-        "bbox": [round(v, 2) for v in best_box] if best_box is not None else None,
-        "status": "ok" if best_box is not None else "no_detection",
+        "has_detection": best_detection is not None,
+        "confidence": best_detection["confidence"] if best_detection else 0.0,
+        "bbox": best_detection["bbox"] if best_detection else None,
+        "status": "ok" if best_detection else "no_detection",
         "model_path": str(model_path) if model_path else None,
     }
+
+
+def build_ball_track_evidence(
+    video_path: Path,
+    meta: dict[str, Any],
+    release_frame_index: int | None,
+) -> BallTrackEvidence:
+    fps = float(meta.get("fps") or 0)
+    if release_frame_index is None:
+        return BallTrackEvidence(
+            status="insufficient_data",
+            fps=fps or None,
+            reason="Pose release frame is unavailable for ball-track collection.",
+        )
+
+    max_index = max(0, int(meta["frame_count"]) - 1)
+    post_release_frames = max(1, math.ceil(fps * BALL_TRACK_COLLECTION_POST_RELEASE_SECONDS))
+    start = max(0, release_frame_index - BALL_TRACK_COLLECTION_PRE_RELEASE_FRAMES)
+    end = min(max_index, release_frame_index + post_release_frames)
+    warnings: list[str] = []
+    if start > release_frame_index - BALL_TRACK_COLLECTION_PRE_RELEASE_FRAMES:
+        warnings.append("collection_truncated_at_video_start")
+    if end < release_frame_index + post_release_frames:
+        warnings.append("collection_truncated_at_video_end")
+
+    try:
+        model, _, missing_status = get_release_ball_model()
+    except Exception as exc:
+        return BallTrackEvidence(
+            status="error",
+            start_frame=start,
+            end_frame=end,
+            fps=fps or None,
+            requested_frame_count=end - start + 1,
+            reason=str(exc),
+            warnings=warnings,
+        )
+    if model is None:
+        return BallTrackEvidence(
+            status=missing_status or "model_missing",
+            start_frame=start,
+            end_frame=end,
+            fps=fps or None,
+            requested_frame_count=end - start + 1,
+            reason="Release-ball detector is unavailable for continuous collection.",
+            warnings=warnings,
+        )
+
+    frames: list[BallTrackFrameEvidence] = []
+    actual_timestamps: list[float] = []
+    observed_frame_count = 0
+    detection_frame_count = 0
+    for frame_index in range(start, end + 1):
+        time_s = frame_index / fps if fps else None
+        try:
+            frame = read_frame(video_path, frame_index)
+        except Exception:
+            frames.append(
+                BallTrackFrameEvidence(
+                    frame_index=frame_index,
+                    time_s=time_s,
+                    status="read_failed",
+                )
+            )
+            continue
+
+        observed_frame_count += 1
+        if time_s is not None:
+            actual_timestamps.append(time_s)
+        try:
+            detected = release_ball_detections(frame, model)
+        except Exception:
+            frames.append(
+                BallTrackFrameEvidence(
+                    frame_index=frame_index,
+                    time_s=time_s,
+                    status="error",
+                )
+            )
+            continue
+
+        detections = [
+            BallTrackDetection(
+                bbox=item["bbox"],
+                center_x_px=(item["bbox"][0] + item["bbox"][2]) / 2,
+                center_y_px=(item["bbox"][1] + item["bbox"][3]) / 2,
+                confidence=item["confidence"],
+                source=item["source"],
+            )
+            for item in detected
+        ]
+        if len(detections) == 1:
+            detection = detections[0]
+            frames.append(
+                BallTrackFrameEvidence(
+                    frame_index=frame_index,
+                    time_s=time_s,
+                    detections=detections,
+                    bbox=detection.bbox,
+                    center_x_px=detection.center_x_px,
+                    center_y_px=detection.center_y_px,
+                    confidence=detection.confidence,
+                    source=detection.source,
+                    status="ok",
+                )
+            )
+            detection_frame_count += 1
+        else:
+            frames.append(
+                BallTrackFrameEvidence(
+                    frame_index=frame_index,
+                    time_s=time_s,
+                    detections=detections,
+                    status="multiple_detections" if detections else "no_detection",
+                )
+            )
+            if detections:
+                detection_frame_count += 1
+
+    requested_frame_count = end - start + 1
+    missing_frame_count = requested_frame_count - detection_frame_count
+    if missing_frame_count:
+        warnings.append("ball_missing_in_collection_frames")
+    return BallTrackEvidence(
+        status="ok",
+        start_frame=start,
+        end_frame=end,
+        fps=fps or None,
+        requested_frame_count=requested_frame_count,
+        observed_frame_count=observed_frame_count,
+        detection_frame_count=detection_frame_count,
+        missing_frame_count=missing_frame_count,
+        frames=frames,
+        actual_timestamps=actual_timestamps,
+        warnings=warnings,
+    )
 
 
 def build_release_ball_evidence(
@@ -1225,10 +1377,18 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
                 release_ball_evidence,
             )
             response["release_fusion"] = release_fusion
+            ball_track_evidence = build_ball_track_evidence(
+                temp_path,
+                meta,
+                int(release["frame_index"]) if release else None,
+            )
+            response["ball_track_evidence"] = ball_track_evidence.to_dict()
             response["release_measurement"] = release_fusion_to_measurement(
-                release_fusion
+                release_fusion,
+                ball_track_evidence,
             ).to_dict()
         else:
+            response["ball_track_evidence"] = None
             response["release_measurement"] = pose_release_to_measurement(
                 int(release["frame_index"]) if release else None
             ).to_dict()

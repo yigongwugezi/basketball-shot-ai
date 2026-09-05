@@ -7,6 +7,7 @@ const qualityList = document.getElementById("qualityList");
 const pipelineList = document.getElementById("pipelineList");
 const framesGrid = document.getElementById("framesGrid");
 const releaseBallEvidence = document.getElementById("releaseBallEvidence");
+const ballTrackEvidence = document.getElementById("ballTrackEvidence");
 const releaseFusionEvidence = document.getElementById("releaseFusionEvidence");
 const metricsList = document.getElementById("metricsList");
 const imageModal = document.getElementById("imageModal");
@@ -203,6 +204,12 @@ function clearReleaseBallEvidence() {
   releaseBallEvidence.innerHTML = "";
 }
 
+function clearBallTrackEvidence() {
+  if (!ballTrackEvidence) return;
+  ballTrackEvidence.hidden = true;
+  ballTrackEvidence.innerHTML = "";
+}
+
 function clearReleaseFusionEvidence() {
   if (!releaseFusionEvidence) return;
   releaseFusionEvidence.hidden = true;
@@ -308,6 +315,42 @@ function renderReleaseBallEvidence(evidence) {
           <span>best_frame.bbox</span>
           <strong>${bestFrame ? formatReleaseBallBBox(bestFrame.bbox) : "无"}</strong>
         </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderBallTrackEvidence(evidence) {
+  if (!ballTrackEvidence) return;
+  if (!evidence) {
+    clearBallTrackEvidence();
+    return;
+  }
+
+  const frames = Array.isArray(evidence.frames) ? evidence.frames : [];
+  const state = evidence.status === "ok" ? "ok" : "warn";
+  const timeline = frames
+    .map(
+      (frame) =>
+        `<span class="ball-track-tick ${frame.status || "no_detection"}" title="frame ${frame.frame_index}: ${frame.status || "no_detection"}"></span>`,
+    )
+    .join("");
+
+  ballTrackEvidence.hidden = false;
+  ballTrackEvidence.innerHTML = `
+    <div class="release-ball-card ${state}">
+      <div class="release-ball-card-head">
+        <div>
+          <strong>Ball Tracking Evidence</strong>
+          <small>连续帧采集与 detector observation，仅供工程诊断，不代表可信 flight。</small>
+        </div>
+        ${statusLabel(state, evidence.status === "ok" ? "已采集" : "不可用")}
+      </div>
+      <div class="release-ball-grid">
+        <div class="release-ball-item"><span>连续采集帧数</span><strong>${evidence.requested_frame_count ?? 0}</strong></div>
+        <div class="release-ball-item"><span>检出球帧数</span><strong>${evidence.detection_frame_count ?? 0}</strong></div>
+        <div class="release-ball-item"><span>缺失帧数</span><strong>${evidence.missing_frame_count ?? 0}</strong></div>
+        <div class="release-ball-item release-ball-item-wide"><span>frame timeline</span><strong class="ball-track-timeline">${timeline || "无可用帧"}</strong></div>
       </div>
     </div>
   `;
@@ -515,6 +558,7 @@ analyzeButton.addEventListener("click", async () => {
     if (activeFrameIndex < 0) activeFrameIndex = 0;
     renderFrames(report.frames);
     renderReleaseBallEvidence(report.release_ball_evidence);
+    renderBallTrackEvidence(report.ball_track_evidence);
     renderReleaseMeasurement(report.release_measurement, report.release_fusion);
     setPipeline(4);
     renderMetrics(report.metrics);
@@ -526,6 +570,7 @@ analyzeButton.addEventListener("click", async () => {
     activeFrameIndex = 0;
     renderFrames(frames);
     clearReleaseBallEvidence();
+    clearBallTrackEvidence();
     clearReleaseFusionEvidence();
     setPipeline(4);
     renderMetrics(getPlaceholderMetrics(videoPreview));
@@ -551,6 +596,7 @@ resetButton.addEventListener("click", () => {
   qualityList.innerHTML = "";
   framesGrid.innerHTML = "";
   clearReleaseBallEvidence();
+  clearBallTrackEvidence();
   clearReleaseFusionEvidence();
   metricsList.innerHTML = "";
   renderedFrames = [];

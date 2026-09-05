@@ -5,6 +5,8 @@ from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
+from backend.measurement import BallTrackEvidence
+
 
 if "cv2" not in sys.modules:
     sys.modules["cv2"] = types.ModuleType("cv2")
@@ -28,6 +30,17 @@ class AnalyzeApiTest(unittest.TestCase):
             for index, key in enumerate(main.FRAME_KEYS)
         }
         frame_indices["release"]["frame_index"] = 42
+        track_evidence = BallTrackEvidence(
+            status="ok",
+            start_frame=39,
+            end_frame=57,
+            fps=30,
+            requested_frame_count=19,
+            observed_frame_count=19,
+            detection_frame_count=12,
+            missing_frame_count=7,
+            actual_timestamps=[1.3, 1.3333],
+        )
 
         with (
             patch.object(main, "video_metadata", return_value={"fps": 30, "frame_count": 90}),
@@ -43,6 +56,7 @@ class AnalyzeApiTest(unittest.TestCase):
             patch.object(main, "summarize_metrics_v2", return_value=[]),
             patch.object(main, "release_ball_detector_enabled", return_value=detector_enabled),
             patch.object(main, "build_release_ball_evidence", return_value=evidence),
+            patch.object(main, "build_ball_track_evidence", return_value=track_evidence),
         ):
             response = TestClient(main.app).post(
                 "/api/analyze",
@@ -69,8 +83,12 @@ class AnalyzeApiTest(unittest.TestCase):
         )
         self.assertIsNone(measurement["release_state"])
         self.assertIsNone(measurement["release_time"])
+        self.assertIsNone(measurement["trusted_flight"])
         self.assertIsNone(measurement["evidence"]["fit_rms_cm"])
         self.assertIsNone(measurement["evidence"]["release_epoch_uncertainty_ms"])
+        self.assertEqual(measurement["evidence"]["fps"], 30)
+        self.assertEqual(measurement["evidence"]["missing_observations"], 7)
+        self.assertEqual(report["ball_track_evidence"]["detection_frame_count"], 12)
 
     def test_insufficient_and_unreliable_statuses_survive_api_serialization(self) -> None:
         for evidence, expected_status in (
@@ -86,6 +104,8 @@ class AnalyzeApiTest(unittest.TestCase):
     def test_detector_disabled_still_exposes_pose_measurement(self) -> None:
         report = self._response({}, detector_enabled=False)
 
+        self.assertIn("ball_track_evidence", report)
+        self.assertIsNone(report["ball_track_evidence"])
         self.assertNotIn("release_ball_evidence", report)
         self.assertNotIn("release_fusion", report)
         measurement = report["release_measurement"]
@@ -93,6 +113,40 @@ class AnalyzeApiTest(unittest.TestCase):
         self.assertEqual(measurement["release_frame"], 42)
         self.assertEqual(measurement["source"], "pose_release")
         self.assertIsNone(measurement["release_state"])
+
+    def test_continuous_track_preserves_missing_and_multiple_detections(self) -> None:
+        detections = {
+            5: [],
+            6: [
+                {"bbox": [1, 2, 5, 6], "confidence": 0.8, "source": "release_ball_yolo"},
+                {"bbox": [10, 12, 14, 16], "confidence": 0.7, "source": "release_ball_yolo"},
+            ],
+            7: [{"bbox": [2, 4, 6, 8], "confidence": 0.9, "source": "release_ball_yolo"}],
+            8: [],
+            9: [],
+        }
+        with (
+            patch.object(main, "get_release_ball_model", return_value=(object(), None, None)),
+            patch.object(main, "read_frame", side_effect=lambda _, index: index),
+            patch.object(main, "release_ball_detections", side_effect=lambda frame, _: detections[frame]),
+        ):
+            evidence = main.build_ball_track_evidence(
+                "test.mp4",
+                {"fps": 10, "frame_count": 10},
+                8,
+            )
+
+        self.assertEqual((evidence.start_frame, evidence.end_frame), (5, 9))
+        self.assertEqual(evidence.requested_frame_count, 5)
+        self.assertEqual(evidence.observed_frame_count, 5)
+        self.assertEqual(evidence.detection_frame_count, 2)
+        self.assertEqual(evidence.missing_frame_count, 3)
+        self.assertEqual(evidence.actual_timestamps, [0.5, 0.6, 0.7, 0.8, 0.9])
+        self.assertEqual(evidence.frames[0].status, "no_detection")
+        self.assertEqual(evidence.frames[1].status, "multiple_detections")
+        self.assertEqual(len(evidence.frames[1].detections), 2)
+        self.assertEqual(evidence.frames[2].bbox, [2, 4, 6, 8])
+        self.assertIn("collection_truncated_at_video_end", evidence.warnings)
 
 
 if __name__ == "__main__":

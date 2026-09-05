@@ -266,6 +266,10 @@ video {
   margin-top: 14px;
 }
 
+.ball-track-evidence {
+  margin-top: 14px;
+}
+
 .release-fusion-evidence {
   margin-top: 14px;
 }
@@ -342,6 +346,28 @@ video {
 
 .release-ball-item-wide {
   grid-column: span 2;
+}
+
+.ball-track-timeline {
+  display: flex !important;
+  gap: 4px;
+  min-height: 12px;
+  align-items: center;
+}
+
+.ball-track-tick {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+.ball-track-tick.ok {
+  background: #22c55e;
+}
+
+.ball-track-tick.multiple_detections {
+  background: #f59e0b;
 }
 
 .release-fusion-card {
