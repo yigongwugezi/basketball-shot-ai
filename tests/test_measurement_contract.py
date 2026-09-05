@@ -5,7 +5,10 @@ from backend.measurement import (
     MeasurementEvidence,
     MeasurementQuality,
     MeasurementStatus,
+    ReleaseStateEstimate,
+    ReleaseStateUncertainty,
     ReleaseMeasurementResult,
+    TrustedFlightSegment,
     pose_release_to_measurement,
     release_fusion_to_measurement,
 )
@@ -156,6 +159,29 @@ class ReleaseMeasurementContractTest(unittest.TestCase):
         self.assertEqual(result["status"], "INSUFFICIENT_DATA")
         self.assertIsNone(result["release_frame"])
         self.assertIsNone(result["release_state"])
+
+    def test_unavailable_extension_contracts_serialize_without_estimates(self) -> None:
+        result = ReleaseMeasurementResult(
+            status=MeasurementStatus.INSUFFICIENT_DATA,
+            trusted_flight=TrustedFlightSegment(
+                status=MeasurementStatus.INSUFFICIENT_DATA,
+                reason="AWAITING_RESEARCH_DECISION",
+            ),
+            release_state=ReleaseStateEstimate(
+                status=MeasurementStatus.INSUFFICIENT_DATA,
+                uncertainty=ReleaseStateUncertainty(),
+                reason="AWAITING_RESEARCH_DECISION",
+            ),
+        ).to_dict()
+
+        self.assertEqual(result["trusted_flight"]["status"], "INSUFFICIENT_DATA")
+        self.assertIsNone(result["trusted_flight"]["start_frame"])
+        self.assertEqual(result["release_state"]["status"], "INSUFFICIENT_DATA")
+        self.assertIsNone(result["release_state"]["state_anchor_frame"])
+        self.assertIsNone(result["release_state"]["position_m"])
+        self.assertIsNone(result["release_state"]["velocity_mps"])
+        self.assertIsNone(result["release_state"]["uncertainty"]["position_std_cm"])
+        json.dumps(result)
 
 
 if __name__ == "__main__":

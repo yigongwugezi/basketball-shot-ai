@@ -40,6 +40,39 @@ class MeasurementEvidence:
 
 
 @dataclass(frozen=True, slots=True)
+class TrustedFlightSegment:
+    status: MeasurementStatus
+    start_frame: int | None = None
+    end_frame: int | None = None
+    point_count: int | None = None
+    temporal_span_ms: float | None = None
+    fps: float | None = None
+    reason: str | None = None
+    quality_flags: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True, slots=True)
+class ReleaseStateUncertainty:
+    position_std_cm: tuple[float, float, float] | None = None
+    velocity_std_mps: tuple[float, float, float] | None = None
+    state_anchor_time_std_ms: float | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ReleaseStateEstimate:
+    status: MeasurementStatus
+    state_anchor_frame: int | None = None
+    state_anchor_time: float | None = None
+    position_m: tuple[float, float, float] | None = None
+    velocity_mps: tuple[float, float, float] | None = None
+    speed_mps: float | None = None
+    elevation_angle_deg: float | None = None
+    azimuth_angle_deg: float | None = None
+    uncertainty: ReleaseStateUncertainty | None = None
+    reason: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class ReleaseMeasurementResult:
     """Stable product contract around release measurements.
 
@@ -58,13 +91,18 @@ class ReleaseMeasurementResult:
     risk_flags: list[str] = field(default_factory=list)
     evidence: MeasurementEvidence = field(default_factory=MeasurementEvidence)
     measurement_quality: MeasurementQuality | None = None
-    release_state: dict[str, Any] | None = None
+    trusted_flight: TrustedFlightSegment | None = None
+    release_state: ReleaseStateEstimate | None = None
 
     def to_dict(self) -> dict[str, Any]:
         result = asdict(self)
         result["status"] = self.status.value
         if self.measurement_quality:
             result["measurement_quality"]["status"] = self.measurement_quality.status.value
+        if self.trusted_flight:
+            result["trusted_flight"]["status"] = self.trusted_flight.status.value
+        if self.release_state:
+            result["release_state"]["status"] = self.release_state.status.value
         return result
 
 
