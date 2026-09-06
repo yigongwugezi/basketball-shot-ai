@@ -3,30 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI 投篮动作分析原型</title>
+    <title>Basketball Intelligence（篮球智能）</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="app">
+      <header class="product-header">
+        <p class="eyebrow">Basketball Intelligence（篮球智能）</p>
+        <h1>投篮分析</h1>
+        <p class="lede">上传一段侧面或近侧面投篮视频，系统将分析动作、出手与篮球飞行，并只展示当前视频能够可靠支持的测量结果。</p>
+      </header>
+
       <section class="workspace">
         <div class="panel upload-panel">
           <div>
-            <p class="eyebrow">Shot Analysis MVP</p>
-            <h1>投篮动作分析原型</h1>
-            <p class="lede">
-              上传一段固定机位投篮视频，后端会抽取关键帧，检测人体骨架、篮球、篮筐和球员，并生成第一版姿态指标。
-            </p>
+            <h2>上传视频</h2>
+            <p class="section-copy">尽量从球员侧面或近侧面拍摄，保持手机稳定，并完整拍到球员和出手后的篮球飞行。</p>
           </div>
-
           <label class="dropzone" for="videoInput">
             <input id="videoInput" type="file" accept="video/*" />
             <span class="drop-icon">+</span>
             <strong>选择投篮视频</strong>
-            <small>建议全身入镜、侧面或 45 度、光线充足；竖屏素材也可以先测试骨架。</small>
+            <small>支持常见视频格式；完整球路比单纯高帧率更重要。</small>
           </label>
-
           <div class="controls">
-            <button id="analyzeButton" type="button" disabled>生成分析报告</button>
+            <button id="analyzeButton" type="button" disabled>开始分析</button>
             <button id="resetButton" type="button" class="secondary" disabled>重置</button>
           </div>
         </div>
@@ -37,56 +38,83 @@
         </div>
       </section>
 
+      <section id="analysisSummary" class="panel summary-panel" aria-live="polite"></section>
+
+      <section class="panel flight-panel">
+        <div class="section-title section-title-row">
+          <div>
+            <p class="eyebrow">Basketball Flight（篮球飞行）</p>
+            <h2>篮球飞行</h2>
+          </div>
+          <span id="flightStatus" class="status neutral">等待分析</span>
+        </div>
+        <div id="flightVisualization" class="flight-visualization">
+          <div class="empty-state">分析后将在这里显示真实观测到的篮球轨迹。</div>
+        </div>
+        <div id="flightSummary" class="flight-summary"></div>
+        <div class="trajectory-legend" aria-label="篮球轨迹图例">
+          <span><i class="legend-dot observed"></i>Observed trajectory（实际观测轨迹）</span>
+          <span><i class="legend-dot trusted"></i>TrustedFlight（可信飞行段）</span>
+          <span><i class="legend-dot epoch"></i>ReleaseEpoch（出手时刻区间）</span>
+        </div>
+      </section>
+
       <section class="report-grid">
         <div class="panel">
           <div class="section-title">
-            <p class="eyebrow">Quality Gate</p>
-            <h2>拍摄质量检查</h2>
+            <p class="eyebrow">Capture Suitability（拍摄适用性）</p>
+            <h2>拍摄适用性</h2>
           </div>
           <div id="qualityList" class="quality-list"></div>
         </div>
 
         <div class="panel">
           <div class="section-title">
-            <p class="eyebrow">Pipeline</p>
+            <p class="eyebrow">Analysis Progress（分析进度）</p>
             <h2>分析状态</h2>
           </div>
           <ol id="pipelineList" class="pipeline-list"></ol>
+          <details class="video-details">
+            <summary>Video information（视频信息）</summary>
+            <div id="videoInfoList" class="video-info-list"></div>
+          </details>
         </div>
       </section>
 
       <section class="panel keyframes-panel">
         <div class="section-title">
-          <p class="eyebrow">Key Frames</p>
-          <h2>投篮关键帧</h2>
+          <p class="eyebrow">Action Timeline（动作时间线）</p>
+          <h2>动作时间线</h2>
+          <p class="section-copy">准备、下沉、出手、随球与落地关键帧；出手帧是动作定位，不代表物理出手时刻被精确锁定在单帧。</p>
         </div>
         <div id="framesGrid" class="frames-grid"></div>
-        <div id="releaseBallEvidence" class="release-ball-evidence" hidden></div>
-        <div id="ballTrackEvidence" class="ball-track-evidence" hidden></div>
-        <div id="releaseFusionEvidence" class="release-fusion-evidence" hidden></div>
       </section>
 
-      <section class="report-grid">
-        <div class="panel">
-          <div class="section-title">
-            <p class="eyebrow">Metrics</p>
-            <h2>第一版姿态指标</h2>
+      <section class="panel facts-panel">
+        <div class="section-title section-title-row">
+          <div>
+            <p class="eyebrow">Action Facts（动作事实）</p>
+            <h2>动作事实</h2>
           </div>
-          <div id="metricsList" class="metrics-list"></div>
+          <span class="fact-badge">2D 画面测量</span>
         </div>
-
-        <div class="panel">
-          <div class="section-title">
-            <p class="eyebrow">Next</p>
-            <h2>下一步接入</h2>
-          </div>
-          <div class="next-list">
-            <p>1. 继续优化出手帧识别，重点减少偏早/偏晚问题。</p>
-            <p>2. 用连续骨架轨迹计算投篮节奏、下沉幅度和随球稳定性。</p>
-            <p>3. 当前角度是 2D 画面投影角，后续接入 3D 骨架以降低拍摄角度误差。</p>
-          </div>
-        </div>
+        <p class="section-copy">这些是冻结的 V1 动作事实，用于观察画面中的动作，不评价动作好坏。</p>
+        <div id="metricsList" class="metrics-list"></div>
       </section>
+
+      <details class="panel evidence-panel">
+        <summary>
+          <span><strong>Measurement Evidence（测量依据）</strong><small>观测数量、飞行支持、出手区间与不确定性</small></span>
+        </summary>
+        <div id="releaseFusionEvidence" class="release-fusion-evidence"></div>
+        <div id="ballTrackEvidence" class="ball-track-evidence"></div>
+        <details class="developer-details">
+          <summary>Developer details（开发者详情）</summary>
+          <p class="section-copy">以下为诊断字段，不代表用户结果或动作评价。</p>
+          <div id="releaseBallEvidence" class="release-ball-evidence"></div>
+          <pre id="rawDeveloperDetails" class="raw-details"></pre>
+        </details>
+      </details>
     </main>
 
     <div id="imageModal" class="image-modal" aria-hidden="true">
@@ -94,6 +122,7 @@
       <img id="imageModalImg" alt="关键帧大图" />
     </div>
 
+    <script src="./ui-model.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
