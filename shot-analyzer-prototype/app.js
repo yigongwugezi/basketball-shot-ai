@@ -366,7 +366,9 @@ function renderBallTrackEvidence(evidence, releaseMeasurement) {
 }
 
 function formatMetric(value, digits, unit) {
-  return Number.isFinite(Number(value)) ? `${Number(value).toFixed(digits)} ${unit}` : "Unavailable";
+  return value != null && Number.isFinite(Number(value))
+    ? `${Number(value).toFixed(digits)} ${unit}`
+    : "Unavailable";
 }
 
 function formatMetricInterval(interval, digits, unit) {

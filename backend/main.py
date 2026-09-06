@@ -795,10 +795,14 @@ def build_ball_track_evidence(
     release_frame_index: int | None,
 ) -> BallTrackEvidence:
     fps = float(meta.get("fps") or 0)
+    image_width_px = int(meta.get("width") or 0) or None
+    image_height_px = int(meta.get("height") or 0) or None
     if release_frame_index is None:
         return BallTrackEvidence(
             status="insufficient_data",
             fps=fps or None,
+            image_width_px=image_width_px,
+            image_height_px=image_height_px,
             reason="Pose release frame is unavailable for ball-track collection.",
         )
 
@@ -820,6 +824,8 @@ def build_ball_track_evidence(
             start_frame=start,
             end_frame=end,
             fps=fps or None,
+            image_width_px=image_width_px,
+            image_height_px=image_height_px,
             requested_frame_count=end - start + 1,
             reason=str(exc),
             warnings=warnings,
@@ -830,6 +836,8 @@ def build_ball_track_evidence(
             start_frame=start,
             end_frame=end,
             fps=fps or None,
+            image_width_px=image_width_px,
+            image_height_px=image_height_px,
             requested_frame_count=end - start + 1,
             reason="Release-ball detector is unavailable for continuous collection.",
             warnings=warnings,
@@ -921,6 +929,8 @@ def build_ball_track_evidence(
         start_frame=start,
         end_frame=end,
         fps=fps or None,
+        image_width_px=image_width_px,
+        image_height_px=image_height_px,
         requested_frame_count=requested_frame_count,
         observed_frame_count=observed_frame_count,
         detection_frame_count=detection_frame_count,

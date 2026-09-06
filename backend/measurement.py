@@ -71,6 +71,8 @@ class BallTrackEvidence:
     start_frame: int | None = None
     end_frame: int | None = None
     fps: float | None = None
+    image_width_px: int | None = None
+    image_height_px: int | None = None
     requested_frame_count: int = 0
     observed_frame_count: int = 0
     detection_frame_count: int = 0
@@ -309,6 +311,9 @@ def release_fusion_to_measurement(
         timestamp_source=metric.timestamp_source,
         metric_output_qualification=metric.qualification,
         metric_uncertainty_sources=metric.uncertainty_sources,
+        fit_rms_cm=(
+            metric.fit_rms_m * 100 if metric.fit_rms_m is not None else None
+        ),
     )
     quality = replace(
         result.measurement_quality,
