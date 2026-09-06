@@ -1,0 +1,29 @@
+{
+  "version": "release_ball_v3a_pseudo",
+  "manual_gt": false,
+  "input_frames": 217,
+  "models": {
+    "release_ball_v2": {
+      "path": "C:\\Users\\20825\\Documents\\BALL\\basketball-shot-ai\\models\\release_ball_v2\\best.pt",
+      "confidence": 0.15
+    },
+    "coco_yolo11n_teacher": {
+      "path": "C:\\Users\\20825\\Documents\\BALL\\basketball-shot-ai\\yolo11n.pt",
+      "class": "sports ball",
+      "confidence": 0.15
+    }
+  },
+  "acceptance_rule": {
+    "min_cross_model_iou": 0.3,
+    "max_neighbor_center_distance_diagonal": 0.2
+  },
+  "excluded_sources": [
+    "IMG_7221.MOV",
+    "IMG_7222.MP4"
+  ],
+  "counts": {
+    "pseudo_positive": 5,
+    "pseudo_negative": 163,
+    "unresolved": 49
+  }
+}

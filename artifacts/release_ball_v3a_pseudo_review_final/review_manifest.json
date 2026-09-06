@@ -1,0 +1,16 @@
+{
+  "kind": "read_only_visual_review",
+  "input": "C:\\Users\\20825\\Documents\\BALL\\basketball-shot-ai\\datasets\\annotations\\release_ball_v3a_pseudo\\pseudo_labels.json",
+  "frame_count": 217,
+  "display_status_counts": {
+    "unlabeled": 163,
+    "unresolved": 49,
+    "pseudo-positive": 5
+  },
+  "clip_count": 7,
+  "notes": [
+    "Original images are copied without annotation under originals/.",
+    "Overlays are derived previews only; no pseudo-label input was modified.",
+    "pseudo_negative is displayed as unlabeled to avoid presenting it as training ground truth."
+  ]
+}

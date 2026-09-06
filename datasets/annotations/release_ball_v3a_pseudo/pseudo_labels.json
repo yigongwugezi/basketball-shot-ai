@@ -1,0 +1,3467 @@
+[
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 27,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0027.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 28,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0028.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 29,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0029.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 30,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0030.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 31,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0031.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 32,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0032.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 33,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0033.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 34,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0034.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 35,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0035.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 36,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0036.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 37,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0037.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 38,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0038.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 39,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0039.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 40,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0040.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 41,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0041.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 42,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0042.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 43,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0043.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 44,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0044.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 45,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0045.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 46,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0046.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 47,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0047.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 48,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0048.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 49,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0049.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 50,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0050.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 51,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0051.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 52,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0052.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 53,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0053.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          127.89,
+          0.0393,
+          174.983,
+          6.0105
+        ],
+        "confidence": 0.171411
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 54,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0054.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 55,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0055.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 56,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0056.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_001_C",
+    "frame_index": 57,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_001_C\\frames\\BILI_001_C_frame_0057.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 30,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0030.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 31,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0031.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 32,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0032.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 33,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0033.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 34,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0034.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 35,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0035.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 36,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0036.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 37,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0037.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 38,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0038.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 39,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0039.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          144.5436,
+          95.3756,
+          164.1636,
+          117.4285
+        ],
+        "confidence": 0.307985
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 40,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0040.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          144.3964,
+          95.3198,
+          164.1804,
+          117.5396
+        ],
+        "confidence": 0.328429
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 41,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0041.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          144.4119,
+          95.3382,
+          164.1738,
+          117.5416
+        ],
+        "confidence": 0.296957
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 42,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0042.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          144.5675,
+          95.3711,
+          164.3425,
+          117.5982
+        ],
+        "confidence": 0.266208
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 43,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0043.jpg",
+    "label_type": "pseudo_positive",
+    "bbox": [
+      154.8736,
+      76.8124,
+      182.0695,
+      105.2992
+    ],
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          154.8736,
+          76.8124,
+          182.0695,
+          105.2992
+        ],
+        "confidence": 0.225891
+      }
+    ],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          156.3816,
+          78.3442,
+          180.7512,
+          103.2245
+        ],
+        "confidence": 0.325757
+      }
+    ],
+    "cross_model_iou": 0.782631,
+    "temporal_support": true,
+    "reason": "v2_teacher_bbox_agreement_and_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 44,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0044.jpg",
+    "label_type": "pseudo_positive",
+    "bbox": [
+      154.8439,
+      76.846,
+      182.309,
+      105.3381
+    ],
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          154.8439,
+          76.846,
+          182.309,
+          105.3381
+        ],
+        "confidence": 0.247441
+      }
+    ],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          156.3368,
+          78.3309,
+          180.6462,
+          103.5095
+        ],
+        "confidence": 0.330002
+      }
+    ],
+    "cross_model_iou": 0.782168,
+    "temporal_support": true,
+    "reason": "v2_teacher_bbox_agreement_and_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 45,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0045.jpg",
+    "label_type": "pseudo_positive",
+    "bbox": [
+      154.8338,
+      76.834,
+      182.3067,
+      105.3414
+    ],
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          154.8338,
+          76.834,
+          182.3067,
+          105.3414
+        ],
+        "confidence": 0.252987
+      }
+    ],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          156.3455,
+          78.3323,
+          180.6396,
+          103.4755
+        ],
+        "confidence": 0.333246
+      }
+    ],
+    "cross_model_iou": 0.779937,
+    "temporal_support": true,
+    "reason": "v2_teacher_bbox_agreement_and_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 46,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0046.jpg",
+    "label_type": "pseudo_positive",
+    "bbox": [
+      154.8305,
+      76.8298,
+      182.3145,
+      105.3457
+    ],
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          154.8305,
+          76.8298,
+          182.3145,
+          105.3457
+        ],
+        "confidence": 0.252057
+      }
+    ],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          156.3448,
+          78.3292,
+          180.6426,
+          103.4991
+        ],
+        "confidence": 0.328172
+      }
+    ],
+    "cross_model_iou": 0.780336,
+    "temporal_support": true,
+    "reason": "v2_teacher_bbox_agreement_and_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 47,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0047.jpg",
+    "label_type": "pseudo_positive",
+    "bbox": [
+      154.8414,
+      76.8317,
+      182.3068,
+      105.3438
+    ],
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          154.8414,
+          76.8317,
+          182.3068,
+          105.3438
+        ],
+        "confidence": 0.252445
+      }
+    ],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          156.3352,
+          78.3283,
+          180.6548,
+          103.5245
+        ],
+        "confidence": 0.32918
+      }
+    ],
+    "cross_model_iou": 0.782486,
+    "temporal_support": true,
+    "reason": "v2_teacher_bbox_agreement_and_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 48,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0048.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          168.9512,
+          64.3902,
+          192.3376,
+          88.102
+        ],
+        "confidence": 0.639805
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 49,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0049.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          168.9685,
+          64.3696,
+          192.2871,
+          88.1056
+        ],
+        "confidence": 0.639907
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 50,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0050.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          168.9776,
+          64.3633,
+          192.3401,
+          88.1216
+        ],
+        "confidence": 0.647969
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 51,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0051.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          168.9012,
+          63.9359,
+          192.4476,
+          88.0675
+        ],
+        "confidence": 0.652793
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 52,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0052.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          180.3904,
+          51.8038,
+          203.5645,
+          76.4666
+        ],
+        "confidence": 0.240584
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 53,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0053.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          180.391,
+          51.8043,
+          203.5649,
+          76.4655
+        ],
+        "confidence": 0.241772
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 54,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0054.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          180.392,
+          51.8051,
+          203.5633,
+          76.4647
+        ],
+        "confidence": 0.244389
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 55,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0055.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          180.3916,
+          51.8051,
+          203.5647,
+          76.4644
+        ],
+        "confidence": 0.243391
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 56,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0056.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          180.3916,
+          51.8053,
+          203.5641,
+          76.4644
+        ],
+        "confidence": 0.243345
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 57,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0057.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          192.1613,
+          41.3724,
+          213.5419,
+          64.2548
+        ],
+        "confidence": 0.528518
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 58,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0058.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          192.2115,
+          41.4531,
+          213.4709,
+          64.2958
+        ],
+        "confidence": 0.536557
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 59,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0059.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          192.3598,
+          41.5748,
+          213.4848,
+          64.2309
+        ],
+        "confidence": 0.53331
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_002_A",
+    "frame_index": 60,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_002_A\\frames\\BILI_002_A_frame_0060.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          192.3979,
+          41.763,
+          213.6809,
+          64.1073
+        ],
+        "confidence": 0.602051
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 127,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0127.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 128,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0128.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 129,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0129.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 130,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0130.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 131,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0131.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          101.9518,
+          6.0257,
+          191.3348,
+          93.2358
+        ],
+        "confidence": 0.770672
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 132,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0132.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          102.0019,
+          6.0373,
+          191.3397,
+          93.2276
+        ],
+        "confidence": 0.772337
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 133,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0133.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          101.9954,
+          6.0351,
+          191.3433,
+          93.2474
+        ],
+        "confidence": 0.773267
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 134,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0134.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          102.0465,
+          6.0288,
+          191.3431,
+          93.2644
+        ],
+        "confidence": 0.772274
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 135,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0135.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          102.0122,
+          6.0297,
+          191.3459,
+          93.2706
+        ],
+        "confidence": 0.771478
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 136,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0136.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 137,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0137.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 138,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0138.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 139,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0139.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 140,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0140.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 141,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0141.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 142,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0142.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 143,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0143.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 144,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0144.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 145,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0145.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 146,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0146.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 147,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0147.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 148,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0148.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 149,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0149.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 150,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0150.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 151,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0151.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 152,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0152.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 153,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0153.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 154,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0154.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 155,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0155.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 156,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0156.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_006_A",
+    "frame_index": 157,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_006_A\\frames\\BILI_006_A_frame_0157.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 156,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0156.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 157,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0157.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 158,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0158.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 159,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0159.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 160,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0160.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 161,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0161.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 162,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0162.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 163,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0163.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 164,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0164.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          236.5635,
+          67.7026,
+          279.1968,
+          116.2198
+        ],
+        "confidence": 0.195794
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 165,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0165.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          236.39,
+          66.4737,
+          279.3156,
+          117.9042
+        ],
+        "confidence": 0.211042
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 166,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0166.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          236.8164,
+          67.6028,
+          279.2454,
+          118.683
+        ],
+        "confidence": 0.199383
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 167,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0167.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 168,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0168.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 169,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0169.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 170,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0170.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 171,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0171.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 172,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0172.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 173,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0173.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 174,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0174.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          272.1852,
+          78.2086,
+          297.5984,
+          105.3398
+        ],
+        "confidence": 0.271114
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 175,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0175.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          272.6332,
+          81.5834,
+          300.3158,
+          106.2448
+        ],
+        "confidence": 0.316346
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 176,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0176.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 177,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0177.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 178,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0178.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 179,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0179.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 180,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0180.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 181,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0181.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 182,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0182.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 183,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0183.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 184,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0184.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 185,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0185.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_008_A",
+    "frame_index": 186,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_008_A\\frames\\BILI_008_A_frame_0186.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 22,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0022.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 23,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0023.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 24,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0024.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 25,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0025.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          350.176,
+          425.1102,
+          365.3175,
+          442.458
+        ],
+        "confidence": 0.162541
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 26,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0026.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 27,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0027.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 28,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0028.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 29,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0029.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 30,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0030.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 31,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0031.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 32,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0032.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 33,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0033.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 34,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0034.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 35,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0035.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 36,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0036.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 37,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0037.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          385.6416,
+          96.8794,
+          416.791,
+          131.0516
+        ],
+        "confidence": 0.198686
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 38,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0038.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 39,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0039.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 40,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0040.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          401.71,
+          66.1735,
+          425.5094,
+          92.1041
+        ],
+        "confidence": 0.311088
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 41,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0041.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 42,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0042.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 43,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0043.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 44,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0044.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 45,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0045.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 46,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0046.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 47,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0047.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 48,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0048.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 49,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0049.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 50,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0050.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 51,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0051.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_A",
+    "frame_index": 52,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_A\\frames\\BILI_010_A_frame_0052.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 37,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0037.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 38,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0038.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 39,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0039.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 40,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0040.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 41,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0041.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 42,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0042.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 43,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0043.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 44,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0044.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 45,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0045.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 46,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0046.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 47,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0047.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 48,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0048.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          454.0834,
+          131.1307,
+          464.5907,
+          143.683
+        ],
+        "confidence": 0.155062
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 49,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0049.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 50,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0050.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 51,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0051.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 52,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0052.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 53,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0053.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 54,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0054.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 55,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0055.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 56,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0056.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 57,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0057.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 58,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0058.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 59,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0059.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 60,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0060.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 61,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0061.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 62,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0062.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 63,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0063.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 64,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0064.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 65,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0065.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 66,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0066.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_B",
+    "frame_index": 67,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_B\\frames\\BILI_010_B_frame_0067.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 69,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0069.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          383.5624,
+          279.5841,
+          407.3698,
+          303.7345
+        ],
+        "confidence": 0.209417
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 70,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0070.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          184.7821,
+          131.5287,
+          208.7885,
+          157.2571
+        ],
+        "confidence": 0.229891
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 71,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0071.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          373.6869,
+          280.4612,
+          403.112,
+          310.1869
+        ],
+        "confidence": 0.370241
+      }
+    ],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          605.761,
+          330.5307,
+          641.4475,
+          362.1897
+        ],
+        "confidence": 0.173056
+      },
+      {
+        "bbox": [
+          714.819,
+          134.7081,
+          742.8828,
+          161.4027
+        ],
+        "confidence": 0.153279
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 72,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0072.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 73,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0073.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          367.7885,
+          284.0995,
+          392.2458,
+          309.5573
+        ],
+        "confidence": 0.284219
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 74,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0074.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          362.8725,
+          285.5101,
+          391.0979,
+          311.0686
+        ],
+        "confidence": 0.558954
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 75,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0075.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          357.3593,
+          286.304,
+          383.7022,
+          311.6335
+        ],
+        "confidence": 0.827558
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 76,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0076.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          353.2879,
+          285.7654,
+          380.1351,
+          310.6191
+        ],
+        "confidence": 0.88269
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 77,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0077.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          349.1625,
+          283.4901,
+          378.2488,
+          308.6097
+        ],
+        "confidence": 0.52763
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 78,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0078.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          347.5134,
+          285.3064,
+          373.0154,
+          307.0806
+        ],
+        "confidence": 0.605273
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 79,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0079.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          346.1744,
+          284.6326,
+          371.0526,
+          306.8166
+        ],
+        "confidence": 0.773948
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 80,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0080.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 81,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0081.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          335.0744,
+          280.2444,
+          363.0361,
+          306.2275
+        ],
+        "confidence": 0.488833
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 82,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0082.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          549.3657,
+          29.7083,
+          575.4018,
+          53.124
+        ],
+        "confidence": 0.343933
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 83,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0083.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          325.6313,
+          282.7406,
+          355.9849,
+          310.2434
+        ],
+        "confidence": 0.213242
+      }
+    ],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 84,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0084.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          793.4208,
+          391.8545,
+          810.6805,
+          407.7552
+        ],
+        "confidence": 0.15517
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 85,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0085.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 86,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0086.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 87,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0087.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          474.0906,
+          12.1493,
+          499.2117,
+          34.881
+        ],
+        "confidence": 0.261443
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 88,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0088.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [
+      {
+        "bbox": [
+          170.1091,
+          184.1505,
+          188.5205,
+          199.0441
+        ],
+        "confidence": 0.156328
+      }
+    ],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          459.5446,
+          11.0692,
+          483.6182,
+          32.1117
+        ],
+        "confidence": 0.290942
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 89,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0089.jpg",
+    "label_type": "unresolved",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [
+      {
+        "bbox": [
+          443.4883,
+          10.2219,
+          469.2317,
+          31.8792
+        ],
+        "confidence": 0.300459
+      }
+    ],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "insufficient_cross_model_or_temporal_evidence"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 90,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0090.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 91,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0091.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 92,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0092.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 93,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0093.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 94,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0094.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 95,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0095.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 96,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0096.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 97,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0097.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 98,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0098.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  },
+  {
+    "clip_id": "BILI_010_D",
+    "frame_index": 99,
+    "image_path": "C:\\Users\\20825\\Documents\\Codex\\2026-05-21\\1-2-ai-app-3-ai\\tmp\\release_ball_annotation_batch_002\\BILI_010_D\\frames\\BILI_010_D_frame_0099.jpg",
+    "label_type": "pseudo_negative",
+    "bbox": null,
+    "label_source": "pseudo_release_ball_v2_plus_coco_yolo11n",
+    "v2_candidates": [],
+    "teacher_sports_ball_candidates": [],
+    "cross_model_iou": 0.0,
+    "temporal_support": false,
+    "reason": "both_models_no_candidate_and_no_neighbor_trajectory"
+  }
+]
