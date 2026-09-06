@@ -108,6 +108,43 @@
         </summary>
         <div id="releaseFusionEvidence" class="release-fusion-evidence"></div>
         <div id="ballTrackEvidence" class="ball-track-evidence"></div>
+        <details id="frameInspector" class="frame-inspector">
+          <summary>Frame Inspector（逐帧检查）</summary>
+          <div id="denseObservationSummary" class="evidence-grid dense-observation-summary"></div>
+          <div class="inspector-toolbar">
+            <button id="previousObservationFrame" type="button" class="secondary">上一帧</button>
+            <strong id="observationFramePosition">Frame（帧）— / —</strong>
+            <button id="nextObservationFrame" type="button" class="secondary">下一帧</button>
+          </div>
+          <input id="observationFrameSlider" class="frame-slider" type="range" min="0" max="0" value="0" aria-label="逐帧检查滑块" />
+          <div class="inspector-layout">
+            <canvas id="observationFrameCanvas"></canvas>
+            <div>
+              <fieldset class="overlay-toggles">
+                <legend>Overlay（叠加层）</legend>
+                <label><input type="checkbox" data-overlay="pose" checked />Pose（人体骨架）</label>
+                <label><input type="checkbox" data-overlay="general" checked />General Ball（通用篮球）</label>
+                <label><input type="checkbox" data-overlay="release" checked />Release Ball（出手篮球）</label>
+                <label><input type="checkbox" data-overlay="selected" checked />Selected Track（选中轨迹）</label>
+                <label><input type="checkbox" data-overlay="trusted" checked />TrustedFlight（可信飞行段）</label>
+                <label><input type="checkbox" data-overlay="epoch" checked />ReleaseEpoch（出手时刻区间）</label>
+              </fieldset>
+              <div id="observationFrameStatus" class="observation-status"></div>
+              <details class="advanced-frame-details">
+                <summary>Advanced details（高级详情）</summary>
+                <pre id="observationFrameRaw" class="raw-details"></pre>
+              </details>
+            </div>
+          </div>
+          <div id="observationTimeline" class="observation-timeline" aria-label="全视频篮球观测时间线"></div>
+          <div class="timeline-legend">
+            <span><i class="timeline-swatch detected"></i>Detected（检测到）</span>
+            <span><i class="timeline-swatch missing"></i>Missing（缺失）</span>
+            <span><i class="timeline-swatch multiple"></i>Multiple（多个候选）</span>
+            <span><i class="timeline-swatch trusted"></i>TrustedFlight（可信飞行段）</span>
+            <span><i class="timeline-swatch epoch"></i>ReleaseEpoch（出手时刻区间）</span>
+          </div>
+        </details>
         <details class="developer-details">
           <summary>Developer details（开发者详情）</summary>
           <p class="section-copy">以下为诊断字段，不代表用户结果或动作评价。</p>

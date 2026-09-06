@@ -4,6 +4,7 @@ import base64
 import math
 import os
 import tempfile
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -15,9 +16,12 @@ from fastapi.staticfiles import StaticFiles
 from ultralytics import YOLO
 
 from backend.measurement import (
+    BallObservationCandidate,
     BallTrackDetection,
     BallTrackEvidence,
     BallTrackFrameEvidence,
+    DenseBallFrameObservation,
+    DenseBallObservationEvidence,
     pose_release_to_measurement,
     release_fusion_to_measurement,
 )
@@ -100,6 +104,7 @@ RELEASE_BALL_WINDOW_RADIUS = 3
 RELEASE_BALL_CONFIDENCE = 0.25
 BALL_TRACK_COLLECTION_PRE_RELEASE_FRAMES = 3
 BALL_TRACK_COLLECTION_POST_RELEASE_SECONDS = 0.5
+DENSE_BALL_OBSERVATION_MAX_FRAMES = 180
 
 
 def get_custom_model() -> YOLO:
@@ -175,8 +180,8 @@ def base_release_ball_evidence(status: str, release_frame_index: int | None = No
     }
 
 
-def encode_jpeg(frame) -> str:
-    ok, buffer = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 86])
+def encode_jpeg(frame, quality: int = 86) -> str:
+    ok, buffer = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
     if not ok:
         raise HTTPException(status_code=500, detail="Failed to encode frame")
     encoded = base64.b64encode(buffer).decode("ascii")
@@ -764,6 +769,218 @@ def release_ball_detections(frame, model: YOLO) -> list[dict[str, Any]]:
                 }
             )
     return detections
+
+
+def _observation_status(candidate_count: int) -> str:
+    if candidate_count == 1:
+        return "DETECTED"
+    if candidate_count > 1:
+        return "MULTIPLE"
+    return "MISSING"
+
+
+def _general_ball_candidate(item: dict[str, Any]) -> BallObservationCandidate:
+    bbox = [round(float(value), 2) for value in item["xyxy"]]
+    return BallObservationCandidate(
+        bbox=bbox,
+        center_x_px=(bbox[0] + bbox[2]) / 2,
+        center_y_px=(bbox[1] + bbox[3]) / 2,
+        confidence=round(float(item["confidence"]), 4),
+        source=item.get("source") or "general_ball",
+    )
+
+
+def _release_ball_candidate(item: dict[str, Any]) -> BallObservationCandidate:
+    bbox = item["bbox"]
+    return BallObservationCandidate(
+        bbox=bbox,
+        center_x_px=(bbox[0] + bbox[2]) / 2,
+        center_y_px=(bbox[1] + bbox[3]) / 2,
+        confidence=item["confidence"],
+        source=item["source"],
+    )
+
+
+def build_dense_ball_observations(
+    video_path: Path,
+    meta: dict[str, Any],
+    keyframes: list[dict[str, Any]] | None = None,
+) -> DenseBallObservationEvidence:
+    """Collect observation evidence; it does not qualify a trajectory or metric."""
+    total = int(meta.get("frame_count") or 0)
+    fps = float(meta.get("fps") or 0)
+    stride = max(1, math.ceil(total / DENSE_BALL_OBSERVATION_MAX_FRAMES))
+    warnings: list[str] = []
+    if stride > 1:
+        warnings.append("dense_scan_stride_applied_for_long_video")
+    poses = {
+        int(item["frame_index"]): item.get("pose")
+        for item in (keyframes or [])
+        if item.get("frame_index") is not None and item.get("pose")
+    }
+    try:
+        release_model, _, release_missing_status = get_release_ball_model()
+    except Exception as exc:
+        release_model, release_missing_status = None, "error"
+        warnings.append(f"release_ball_detector_error:{exc}")
+    if release_model is None:
+        warnings.append(release_missing_status or "release_ball_detector_unavailable")
+
+    frames: list[DenseBallFrameObservation] = []
+    capture = cv2.VideoCapture(str(video_path))
+    try:
+        for frame_index in range(0, total, stride):
+            capture.set(cv2.CAP_PROP_POS_FRAMES, frame_index)
+            ok, frame = capture.read()
+            timestamp_ms = float(capture.get(cv2.CAP_PROP_POS_MSEC) or 0)
+            fallback = frame_index / fps if fps > 0 else None
+            timestamp = timestamp_ms / 1000 if ok and (timestamp_ms > 0 or frame_index == 0) else fallback
+            timestamp_source = "pts" if ok and (timestamp_ms > 0 or frame_index == 0) else "fps_fallback"
+            if not ok:
+                frames.append(
+                    DenseBallFrameObservation(
+                        frame_index=frame_index,
+                        timestamp=timestamp,
+                        timestamp_source=timestamp_source,
+                        image_data_url=None,
+                        general_ball_status="READ_FAILED",
+                        release_ball_status="READ_FAILED",
+                    )
+                )
+                continue
+            try:
+                general = [
+                    _general_ball_candidate(item)
+                    for item in detect_frame(frame)
+                    if item.get("class_name") == "ball"
+                ]
+            except Exception as exc:
+                general = []
+                if not any(item.startswith("general_ball_detector_error:") for item in warnings):
+                    warnings.append(f"general_ball_detector_error:{exc}")
+            try:
+                release = (
+                    [_release_ball_candidate(item) for item in release_ball_detections(frame, release_model)]
+                    if release_model is not None
+                    else []
+                )
+            except Exception as exc:
+                release = []
+                if not any(item.startswith("release_ball_detector_frame_error:") for item in warnings):
+                    warnings.append(f"release_ball_detector_frame_error:{exc}")
+            selected = release[0] if len(release) == 1 else None
+            frames.append(
+                DenseBallFrameObservation(
+                    frame_index=frame_index,
+                    timestamp=timestamp,
+                    timestamp_source=timestamp_source,
+                    image_data_url=encode_jpeg(frame, quality=70),
+                    general_ball_candidates=general,
+                    general_ball_status=_observation_status(len(general)),
+                    release_ball_candidates=release,
+                    release_ball_status=_observation_status(len(release)),
+                    selected_ball_observation=selected,
+                    confidence=selected.confidence if selected else None,
+                    bbox=selected.bbox if selected else None,
+                    center_x_px=selected.center_x_px if selected else None,
+                    center_y_px=selected.center_y_px if selected else None,
+                    pose=poses.get(frame_index),
+                    track_membership=selected is not None,
+                )
+            )
+    finally:
+        capture.release()
+
+    return DenseBallObservationEvidence(
+        status="ok" if frames else "insufficient_data",
+        total_frame_count=total,
+        scanned_frame_count=len(frames),
+        fps=fps or None,
+        scan_stride=stride,
+        general_ball_detected_frame_count=sum(bool(item.general_ball_candidates) for item in frames),
+        general_multiple_frame_count=sum(len(item.general_ball_candidates) > 1 for item in frames),
+        release_ball_detected_frame_count=sum(bool(item.release_ball_candidates) for item in frames),
+        release_multiple_frame_count=sum(len(item.release_ball_candidates) > 1 for item in frames),
+        unique_selected_observation_count=sum(item.selected_ball_observation is not None for item in frames),
+        missing_frame_count=sum(not item.release_ball_candidates for item in frames),
+        frames=frames,
+        warnings=warnings,
+    )
+
+
+def dense_observations_to_ball_track(
+    evidence: DenseBallObservationEvidence,
+    meta: dict[str, Any],
+) -> BallTrackEvidence:
+    frames = [
+        BallTrackFrameEvidence(
+            frame_index=item.frame_index,
+            time_s=item.timestamp,
+            detections=[
+                BallTrackDetection(
+                    bbox=candidate.bbox,
+                    center_x_px=candidate.center_x_px,
+                    center_y_px=candidate.center_y_px,
+                    confidence=candidate.confidence,
+                    source=candidate.source,
+                )
+                for candidate in item.release_ball_candidates
+            ],
+            bbox=item.bbox,
+            center_x_px=item.center_x_px,
+            center_y_px=item.center_y_px,
+            confidence=item.confidence,
+            source=item.selected_ball_observation.source if item.selected_ball_observation else None,
+            timestamp_source=item.timestamp_source,
+            status=("ok" if item.release_ball_status == "DETECTED" else "multiple_detections" if item.release_ball_status == "MULTIPLE" else "no_detection"),
+        )
+        for item in evidence.frames
+    ]
+    return BallTrackEvidence(
+        status=evidence.status,
+        start_frame=frames[0].frame_index if frames else None,
+        end_frame=frames[-1].frame_index if frames else None,
+        fps=evidence.fps,
+        image_width_px=int(meta.get("width") or 0) or None,
+        image_height_px=int(meta.get("height") or 0) or None,
+        requested_frame_count=evidence.scanned_frame_count,
+        observed_frame_count=sum(item.image_data_url is not None for item in evidence.frames),
+        detection_frame_count=evidence.release_ball_detected_frame_count,
+        missing_frame_count=evidence.missing_frame_count,
+        frames=frames,
+        actual_timestamps=[item.timestamp for item in evidence.frames if item.timestamp is not None],
+        warnings=list(evidence.warnings),
+    )
+
+
+def add_measurement_membership(
+    evidence: DenseBallObservationEvidence,
+    measurement: Any,
+) -> DenseBallObservationEvidence:
+    trusted = measurement.trusted_flight
+    epoch = measurement.release_state.release_epoch if measurement.release_state else None
+    return replace(
+        evidence,
+        frames=[
+            replace(
+                item,
+                trusted_flight_membership=bool(
+                    trusted
+                    and trusted.start_frame is not None
+                    and trusted.end_frame is not None
+                    and trusted.start_frame <= item.frame_index <= trusted.end_frame
+                ),
+                release_epoch_membership=bool(
+                    epoch
+                    and item.timestamp is not None
+                    and epoch.lower_time_s is not None
+                    and epoch.upper_time_s is not None
+                    and epoch.lower_time_s <= item.timestamp <= epoch.upper_time_s
+                ),
+            )
+            for item in evidence.frames
+        ],
+    )
 
 
 def best_release_ball_detection(frame) -> dict[str, Any]:
@@ -1416,18 +1633,28 @@ async def analyze_video(file: UploadFile = File(...)) -> dict[str, Any]:
                 release_ball_evidence,
             )
             response["release_fusion"] = release_fusion
-            ball_track_evidence = build_ball_track_evidence(
+            dense_ball_observations = build_dense_ball_observations(
                 temp_path,
                 meta,
-                int(release["frame_index"]) if release else None,
+                frames,
+            )
+            ball_track_evidence = dense_observations_to_ball_track(
+                dense_ball_observations,
+                meta,
             )
             response["ball_track_evidence"] = ball_track_evidence.to_dict()
-            response["release_measurement"] = release_fusion_to_measurement(
+            release_measurement = release_fusion_to_measurement(
                 release_fusion,
                 ball_track_evidence,
+            )
+            response["release_measurement"] = release_measurement.to_dict()
+            response["dense_ball_observations"] = add_measurement_membership(
+                dense_ball_observations,
+                release_measurement,
             ).to_dict()
         else:
             response["ball_track_evidence"] = None
+            response["dense_ball_observations"] = None
             response["release_measurement"] = pose_release_to_measurement(
                 int(release["frame_index"]) if release else None
             ).to_dict()

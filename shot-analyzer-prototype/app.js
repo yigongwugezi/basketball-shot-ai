@@ -16,6 +16,16 @@ const releaseBallEvidence = $("releaseBallEvidence");
 const ballTrackEvidence = $("ballTrackEvidence");
 const releaseFusionEvidence = $("releaseFusionEvidence");
 const rawDeveloperDetails = $("rawDeveloperDetails");
+const frameInspector = $("frameInspector");
+const denseObservationSummary = $("denseObservationSummary");
+const previousObservationFrame = $("previousObservationFrame");
+const nextObservationFrame = $("nextObservationFrame");
+const observationFramePosition = $("observationFramePosition");
+const observationFrameSlider = $("observationFrameSlider");
+const observationFrameCanvas = $("observationFrameCanvas");
+const observationFrameStatus = $("observationFrameStatus");
+const observationFrameRaw = $("observationFrameRaw");
+const observationTimeline = $("observationTimeline");
 const metricsList = $("metricsList");
 const imageModal = $("imageModal");
 const imageModalImg = $("imageModalImg");
@@ -28,6 +38,11 @@ let videoUrl = null;
 let selectedFile = null;
 let activeFrameIndex = 0;
 let renderedFrames = [];
+let denseObservationEvidence = null;
+let observationFrameIndex = 0;
+let observationRenderToken = 0;
+
+const inspectorSkeleton = [[5, 7], [7, 9], [6, 8], [8, 10], [5, 6], [5, 11], [6, 12], [11, 12], [11, 13], [13, 15], [12, 14], [14, 16]];
 
 function statusLabel(state, label) {
   return `<span class="status ${state}">${label}</span>`;
@@ -264,12 +279,139 @@ function renderBallTrackEvidence(evidence, measurement) {
   ballTrackEvidence.innerHTML = `<div class="track-evidence"><div><strong>连续飞行观测</strong>${statusLabel(status.state, status.label)}</div><p>${status.text}</p><div class="track-timeline">${timeline}</div><small>${evidence.requested_frame_count ?? 0} 个采集帧 · ${evidence.detection_frame_count ?? 0} 个检出帧 · ${evidence.missing_frame_count ?? 0} 个缺失帧</small></div>`;
 }
 
+function inspectorToggles() {
+  return Object.fromEntries([...document.querySelectorAll("[data-overlay]")].map((input) => [input.dataset.overlay, input.checked]));
+}
+
+function drawCandidateBoxes(context, candidates, color, label) {
+  context.font = "14px sans-serif";
+  context.lineWidth = 2;
+  candidates.forEach((candidate) => {
+    const [x1, y1, x2, y2] = candidate.bbox || [];
+    if (![x1, y1, x2, y2].every(Number.isFinite)) return;
+    context.strokeStyle = color;
+    context.strokeRect(x1, y1, x2 - x1, y2 - y1);
+    context.fillStyle = color;
+    context.fillText(`${label} ${Number(candidate.confidence || 0).toFixed(2)}`, x1, Math.max(16, y1 - 5));
+  });
+}
+
+function drawInspectorPose(context, pose) {
+  const points = pose?.keypoints || [];
+  context.strokeStyle = "#34d399";
+  context.lineWidth = 2;
+  inspectorSkeleton.forEach(([a, b]) => {
+    if ((points[a]?.confidence || 0) < 0.25 || (points[b]?.confidence || 0) < 0.25) return;
+    context.beginPath();
+    context.moveTo(points[a].x, points[a].y);
+    context.lineTo(points[b].x, points[b].y);
+    context.stroke();
+  });
+}
+
+function frameStatusRow(label, value, state = "neutral") {
+  return `<div><span>${label}</span>${statusLabel(state, value)}</div>`;
+}
+
+function timelineClass(frame) {
+  const general = frame.general_ball_status;
+  const release = frame.release_ball_status;
+  const base = general === "MULTIPLE" || release === "MULTIPLE" ? "multiple" : general === "DETECTED" || release === "DETECTED" ? "detected" : "missing";
+  return `${base} ${frame.trusted_flight_membership ? "trusted" : ""} ${frame.release_epoch_membership ? "epoch" : ""}`;
+}
+
+function renderObservationTimeline() {
+  const frames = denseObservationEvidence?.frames || [];
+  observationTimeline.innerHTML = frames.map((frame, index) => `<button type="button" class="${timelineClass(frame)} ${index === observationFrameIndex ? "active" : ""}" data-observation-index="${index}" title="第 ${frame.frame_index + 1} 帧 · General Ball（通用篮球）${frame.general_ball_status} · Release Ball（出手篮球）${frame.release_ball_status}"></button>`).join("");
+  observationTimeline.querySelectorAll("[data-observation-index]").forEach((button) => button.addEventListener("click", () => selectObservationFrame(Number(button.dataset.observationIndex))));
+}
+
+async function renderObservationFrame() {
+  const frames = denseObservationEvidence?.frames || [];
+  const frame = frames[observationFrameIndex];
+  if (!frame) return;
+  const token = ++observationRenderToken;
+  observationFrameSlider.value = String(observationFrameIndex);
+  observationFramePosition.textContent = `Frame（帧）${frame.frame_index + 1} / ${denseObservationEvidence.total_frame_count} · ${formatNumber(frame.timestamp, 3, "秒")}`;
+  previousObservationFrame.disabled = observationFrameIndex <= 0;
+  nextObservationFrame.disabled = observationFrameIndex >= frames.length - 1;
+  const generalState = frame.general_ball_status === "DETECTED" ? "ok" : "warn";
+  const releaseState = frame.release_ball_status === "DETECTED" ? "ok" : "warn";
+  observationFrameStatus.innerHTML = [
+    frameStatusRow("General Ball（通用篮球）", frame.general_ball_status, generalState),
+    frameStatusRow("Release Ball（出手篮球）", frame.release_ball_status, releaseState),
+    frameStatusRow("Selected observation（选中观测）", frame.selected_ball_observation ? "YES（是）" : "NO（否）", frame.selected_ball_observation ? "ok" : "neutral"),
+    frameStatusRow("Track membership（轨迹成员）", frame.track_membership ? "YES（是）" : "NO（否）", frame.track_membership ? "ok" : "neutral"),
+    frameStatusRow("Human-ball state（人球状态）", frame.human_ball_state?.status || "UNAVAILABLE（不可用）", "neutral"),
+    frameStatusRow("TrustedFlight（可信飞行段）", frame.trusted_flight_membership ? "YES（是）" : "NO（否）", frame.trusted_flight_membership ? "ok" : "neutral"),
+    frameStatusRow("ReleaseEpoch（出手时刻区间）", frame.release_epoch_membership ? "YES（是）" : "NO（否）", frame.release_epoch_membership ? "ok" : "neutral"),
+  ].join("");
+  observationFrameRaw.textContent = JSON.stringify({ confidence: frame.confidence, bbox: frame.bbox, center_x_px: frame.center_x_px, center_y_px: frame.center_y_px, general_ball_candidates: frame.general_ball_candidates, release_ball_candidates: frame.release_ball_candidates, timestamp_source: frame.timestamp_source }, null, 2);
+  renderObservationTimeline();
+  const image = new Image();
+  image.onload = () => {
+    if (token !== observationRenderToken) return;
+    observationFrameCanvas.width = image.naturalWidth;
+    observationFrameCanvas.height = image.naturalHeight;
+    const context = observationFrameCanvas.getContext("2d");
+    context.drawImage(image, 0, 0);
+    const toggles = inspectorToggles();
+    if (toggles.pose) drawInspectorPose(context, frame.pose);
+    if (toggles.general) drawCandidateBoxes(context, frame.general_ball_candidates || [], "#38bdf8", "General（通用）");
+    if (toggles.release) drawCandidateBoxes(context, frame.release_ball_candidates || [], "#22c55e", "Release（出手）");
+    if (toggles.selected && frame.selected_ball_observation) {
+      context.fillStyle = "#facc15";
+      context.beginPath();
+      context.arc(frame.center_x_px, frame.center_y_px, 6, 0, Math.PI * 2);
+      context.fill();
+    }
+    if (toggles.trusted && frame.trusted_flight_membership) {
+      context.strokeStyle = "#f97316";
+      context.lineWidth = 8;
+      context.strokeRect(4, 4, observationFrameCanvas.width - 8, observationFrameCanvas.height - 8);
+    }
+    if (toggles.epoch && frame.release_epoch_membership) {
+      context.strokeStyle = "#a855f7";
+      context.lineWidth = 5;
+      context.strokeRect(12, 12, observationFrameCanvas.width - 24, observationFrameCanvas.height - 24);
+    }
+  };
+  image.src = frame.image_data_url;
+}
+
+function selectObservationFrame(index) {
+  const frames = denseObservationEvidence?.frames || [];
+  observationFrameIndex = Math.min(Math.max(index, 0), Math.max(frames.length - 1, 0));
+  renderObservationFrame();
+}
+
+function setupFrameInspector(evidence) {
+  denseObservationEvidence = evidence;
+  observationFrameIndex = 0;
+  if (!evidence?.frames?.length) {
+    frameInspector.hidden = true;
+    return;
+  }
+  frameInspector.hidden = false;
+  denseObservationSummary.innerHTML = [
+    ["Total frames（总帧数）", evidence.total_frame_count],
+    ["Scanned frames（扫描帧数）", evidence.scanned_frame_count],
+    ["General Ball（通用篮球）检出帧", evidence.general_ball_detected_frame_count],
+    ["Release Ball（出手篮球）检出帧", evidence.release_ball_detected_frame_count],
+    ["Unique selected（唯一选中观测）", evidence.unique_selected_observation_count],
+    ["Missing（缺失帧）", evidence.missing_frame_count],
+  ].map(([label, value]) => `<div><span>${label}</span><strong>${value ?? "—"}</strong></div>`).join("");
+  observationFrameSlider.max = String(evidence.frames.length - 1);
+  observationFrameSlider.value = "0";
+  renderObservationFrame();
+}
+
 function renderDeveloperDetails(report) {
   const evidence = report.release_ball_evidence;
   if (evidence) {
     releaseBallEvidence.innerHTML = `<div class="developer-grid"><div><span>Detector type（检测器类型）</span><strong>${evidence.detector_type || "release_ball_yolo"}</strong></div><div><span>Status（状态）</span><strong>${evidence.status || "unknown"}</strong></div><div><span>Window radius（窗口半径）</span><strong>${evidence.window_radius ?? "—"}</strong></div><div><span>Release frame index（出手帧索引）</span><strong>${evidence.release_frame_index ?? "—"}</strong></div></div>`;
   } else releaseBallEvidence.innerHTML = "";
-  rawDeveloperDetails.textContent = JSON.stringify({ release_measurement: report.release_measurement, release_fusion: report.release_fusion, release_ball_evidence: report.release_ball_evidence, ball_track_evidence: report.ball_track_evidence }, null, 2);
+  rawDeveloperDetails.textContent = JSON.stringify({ release_measurement: report.release_measurement, release_fusion: report.release_fusion, release_ball_evidence: report.release_ball_evidence, ball_track_evidence: report.ball_track_evidence, dense_ball_observation_summary: report.dense_ball_observations ? { ...report.dense_ball_observations, frames: `[${report.dense_ball_observations.frames?.length || 0} frame observations（逐帧观测）]` } : null }, null, 2);
 }
 
 function waitForMetadata(video) {
@@ -340,6 +482,7 @@ analyzeButton.addEventListener("click", async () => {
     renderMetrics(report.metrics);
     renderMeasurementEvidence(report.release_measurement);
     renderBallTrackEvidence(report.ball_track_evidence, report.release_measurement);
+    setupFrameInspector(report.dense_ball_observations);
     renderDeveloperDetails(report);
     setPipeline(5);
   } catch (error) {
@@ -369,6 +512,8 @@ resetButton.addEventListener("click", () => {
   ballTrackEvidence.innerHTML = "";
   releaseFusionEvidence.innerHTML = "";
   rawDeveloperDetails.textContent = "";
+  denseObservationEvidence = null;
+  frameInspector.hidden = true;
   renderedFrames = [];
   activeFrameIndex = 0;
   closeImageModal();
@@ -379,6 +524,11 @@ resetButton.addEventListener("click", () => {
 imageModalClose.addEventListener("click", closeImageModal);
 imageModal.addEventListener("click", (event) => { if (event.target === imageModal) closeImageModal(); });
 document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeImageModal(); });
+previousObservationFrame.addEventListener("click", () => selectObservationFrame(observationFrameIndex - 1));
+nextObservationFrame.addEventListener("click", () => selectObservationFrame(observationFrameIndex + 1));
+observationFrameSlider.addEventListener("input", () => selectObservationFrame(Number(observationFrameSlider.value)));
+document.querySelectorAll("[data-overlay]").forEach((input) => input.addEventListener("change", renderObservationFrame));
 
 setPipeline(0);
 renderWaitingState();
+frameInspector.hidden = true;

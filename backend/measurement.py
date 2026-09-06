@@ -87,6 +87,59 @@ class BallTrackEvidence:
 
 
 @dataclass(frozen=True, slots=True)
+class BallObservationCandidate:
+    bbox: list[float]
+    center_x_px: float
+    center_y_px: float
+    confidence: float
+    source: str
+    class_name: str = "ball"
+
+
+@dataclass(frozen=True, slots=True)
+class DenseBallFrameObservation:
+    frame_index: int
+    timestamp: float | None
+    timestamp_source: str | None
+    image_data_url: str | None
+    general_ball_candidates: list[BallObservationCandidate] = field(default_factory=list)
+    general_ball_status: str = "MISSING"
+    release_ball_candidates: list[BallObservationCandidate] = field(default_factory=list)
+    release_ball_status: str = "MISSING"
+    selected_ball_observation: BallObservationCandidate | None = None
+    confidence: float | None = None
+    bbox: list[float] | None = None
+    center_x_px: float | None = None
+    center_y_px: float | None = None
+    human_ball_state: dict[str, Any] | None = None
+    pose: dict[str, Any] | None = None
+    track_membership: bool = False
+    trusted_flight_membership: bool = False
+    release_epoch_membership: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class DenseBallObservationEvidence:
+    status: str
+    total_frame_count: int
+    scanned_frame_count: int
+    fps: float | None = None
+    scan_stride: int = 1
+    general_ball_detected_frame_count: int = 0
+    general_multiple_frame_count: int = 0
+    release_ball_detected_frame_count: int = 0
+    release_multiple_frame_count: int = 0
+    unique_selected_observation_count: int = 0
+    missing_frame_count: int = 0
+    frames: list[DenseBallFrameObservation] = field(default_factory=list)
+    reason: str | None = None
+    warnings: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True, slots=True)
 class TrustedFlightSegment:
     status: MeasurementStatus
     start_frame: int | None = None

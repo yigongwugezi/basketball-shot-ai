@@ -10,6 +10,7 @@ from backend.measurement import (
     BallTrackDetection,
     BallTrackEvidence,
     BallTrackFrameEvidence,
+    DenseBallObservationEvidence,
 )
 from backend.near_side_metric_flight import MetricFlightResult, ReleaseEpochInterval
 
@@ -53,6 +54,11 @@ class AnalyzeApiTest(unittest.TestCase):
             missing_frame_count=7,
             actual_timestamps=[1.3, 1.3333],
         )
+        dense_evidence = DenseBallObservationEvidence(
+            status="ok",
+            total_frame_count=90,
+            scanned_frame_count=90,
+        )
 
         with (
             patch.object(main, "video_metadata", return_value={"fps": 30, "frame_count": 90}),
@@ -68,7 +74,8 @@ class AnalyzeApiTest(unittest.TestCase):
             patch.object(main, "summarize_metrics_v2", return_value=[]),
             patch.object(main, "release_ball_detector_enabled", return_value=detector_enabled),
             patch.object(main, "build_release_ball_evidence", return_value=evidence),
-            patch.object(main, "build_ball_track_evidence", return_value=track_evidence),
+            patch.object(main, "build_dense_ball_observations", return_value=dense_evidence),
+            patch.object(main, "dense_observations_to_ball_track", return_value=track_evidence),
             (
                 patch(
                     "backend.near_side_metric_flight.estimate_near_side_metric_flight",
@@ -109,6 +116,7 @@ class AnalyzeApiTest(unittest.TestCase):
         self.assertEqual(measurement["evidence"]["fps"], 30)
         self.assertEqual(measurement["evidence"]["missing_observations"], 7)
         self.assertEqual(report["ball_track_evidence"]["detection_frame_count"], 12)
+        self.assertEqual(report["dense_ball_observations"]["scanned_frame_count"], 90)
 
     def test_insufficient_and_unreliable_statuses_survive_api_serialization(self) -> None:
         for evidence, expected_status in (
@@ -126,6 +134,7 @@ class AnalyzeApiTest(unittest.TestCase):
 
         self.assertIn("ball_track_evidence", report)
         self.assertIsNone(report["ball_track_evidence"])
+        self.assertIsNone(report["dense_ball_observations"])
         self.assertNotIn("release_ball_evidence", report)
         self.assertNotIn("release_fusion", report)
         measurement = report["release_measurement"]
