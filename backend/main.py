@@ -613,7 +613,11 @@ def candidate_frame_indices(video_path: Path, meta: dict[str, Any]) -> dict[str,
     sampled: list[dict[str, Any]] = []
     for i in range(sample_count):
         idx = round(max_index * i / max(sample_count - 1, 1))
-        frame = read_frame(video_path, idx)
+        try:
+            frame = read_frame(video_path, idx)
+        except HTTPException:
+            # Container frame counts can include a final frame that is not seekable.
+            continue
         pose = detect_pose(frame)
         if not pose:
             continue
@@ -682,27 +686,28 @@ def draw_pose(frame, pose: dict[str, Any] | None):
 def detect_frame(frame) -> list[dict[str, Any]]:
     detections: list[dict[str, Any]] = []
 
-    custom_results = get_custom_model().predict(
-        frame,
-        imgsz=640,
-        conf=0.12,
-        verbose=False,
-        device="cpu",
-    )
-    if custom_results and custom_results[0].boxes is not None:
-        for box in custom_results[0].boxes:
-            class_id = int(box.cls[0].item())
-            class_name = CLASS_NAMES[class_id] if class_id < len(CLASS_NAMES) else str(class_id)
-            xyxy = [float(v) for v in box.xyxy[0].tolist()]
-            detections.append(
-                {
-                    "class_id": class_id,
-                    "class_name": class_name,
-                    "confidence": float(box.conf[0].item()),
-                    "xyxy": xyxy,
-                    "source": "custom",
-                }
-            )
+    if MODEL_PATH.exists():
+        custom_results = get_custom_model().predict(
+            frame,
+            imgsz=640,
+            conf=0.12,
+            verbose=False,
+            device="cpu",
+        )
+        if custom_results and custom_results[0].boxes is not None:
+            for box in custom_results[0].boxes:
+                class_id = int(box.cls[0].item())
+                class_name = CLASS_NAMES[class_id] if class_id < len(CLASS_NAMES) else str(class_id)
+                xyxy = [float(v) for v in box.xyxy[0].tolist()]
+                detections.append(
+                    {
+                        "class_id": class_id,
+                        "class_name": class_name,
+                        "confidence": float(box.conf[0].item()),
+                        "xyxy": xyxy,
+                        "source": "custom",
+                    }
+                )
 
     coco_results = get_coco_model().predict(
         frame,

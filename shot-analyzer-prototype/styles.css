@@ -370,6 +370,47 @@ video {
   background: #f59e0b;
 }
 
+.ball-track-tick.trusted {
+  outline: 2px solid #f97316;
+  outline-offset: 1px;
+}
+
+.ball-track-tick.release-epoch {
+  box-shadow: 0 0 0 3px #8b5cf6;
+}
+
+.release-measurement-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.release-measurement-value {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.release-measurement-value span,
+.release-measurement-value strong,
+.release-measurement-value small {
+  display: block;
+}
+
+.release-measurement-value span,
+.release-measurement-value small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.release-measurement-value strong {
+  margin: 6px 0 4px;
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
 .release-fusion-card {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -590,6 +631,7 @@ video {
 
   .release-ball-card-head,
   .release-ball-grid,
+  .release-measurement-grid,
   .release-fusion-grid {
     grid-template-columns: 1fr;
   }

@@ -320,7 +320,7 @@ function renderReleaseBallEvidence(evidence) {
   `;
 }
 
-function renderBallTrackEvidence(evidence) {
+function renderBallTrackEvidence(evidence, releaseMeasurement) {
   if (!ballTrackEvidence) return;
   if (!evidence) {
     clearBallTrackEvidence();
@@ -328,12 +328,21 @@ function renderBallTrackEvidence(evidence) {
   }
 
   const frames = Array.isArray(evidence.frames) ? evidence.frames : [];
+  const trusted = releaseMeasurement?.trusted_flight;
+  const releaseEpoch = releaseMeasurement?.release_state?.release_epoch;
   const state = evidence.status === "ok" ? "ok" : "warn";
   const timeline = frames
-    .map(
-      (frame) =>
-        `<span class="ball-track-tick ${frame.status || "no_detection"}" title="frame ${frame.frame_index}: ${frame.status || "no_detection"}"></span>`,
-    )
+    .map((frame) => {
+      const isTrusted =
+        trusted &&
+        frame.frame_index >= trusted.start_frame &&
+        frame.frame_index <= trusted.end_frame;
+      const isReleaseEpoch =
+        releaseEpoch &&
+        frame.time_s >= releaseEpoch.lower_time_s &&
+        frame.time_s <= releaseEpoch.upper_time_s;
+      return `<span class="ball-track-tick ${frame.status || "no_detection"} ${isTrusted ? "trusted" : ""} ${isReleaseEpoch ? "release-epoch" : ""}" title="frame ${frame.frame_index}: ${frame.status || "no_detection"}${isTrusted ? " · TrustedFlight" : ""}"></span>`;
+    })
     .join("");
 
   ballTrackEvidence.hidden = false;
@@ -342,7 +351,7 @@ function renderBallTrackEvidence(evidence) {
       <div class="release-ball-card-head">
         <div>
           <strong>Ball Tracking Evidence</strong>
-          <small>连续帧采集与 detector observation，仅供工程诊断，不代表可信 flight。</small>
+          <small>圆点只对应实际 detector observation；橙色描边为 TrustedFlight，紫色为 ReleaseEpoch interval。</small>
         </div>
         ${statusLabel(state, evidence.status === "ok" ? "已采集" : "不可用")}
       </div>
@@ -354,6 +363,16 @@ function renderBallTrackEvidence(evidence) {
       </div>
     </div>
   `;
+}
+
+function formatMetric(value, digits, unit) {
+  return Number.isFinite(Number(value)) ? `${Number(value).toFixed(digits)} ${unit}` : "Unavailable";
+}
+
+function formatMetricInterval(interval, digits, unit) {
+  return Array.isArray(interval) && interval.length === 2
+    ? `${Number(interval[0]).toFixed(digits)}–${Number(interval[1]).toFixed(digits)} ${unit}`
+    : "Unavailable";
 }
 
 function renderReleaseMeasurement(releaseMeasurement, releaseFusion) {
@@ -372,6 +391,12 @@ function renderReleaseMeasurement(releaseMeasurement, releaseFusion) {
   const agreementLevel = measurement.agreement_level || "-";
   const reason = measurement.reason || "未提供释放测量说明";
   const quality = measurement.measurement_quality || {};
+  const releaseState = measurement.release_state || null;
+  const trustedFlight = measurement.trusted_flight || null;
+  const qualification = releaseState?.qualification || "UNAVAILABLE";
+  const qualified = qualification === "HIGH" || qualification === "MEDIUM";
+  const uncertainty = releaseState?.uncertainty || {};
+  const epoch = releaseState?.release_epoch || null;
   const qualityNotes = [...(quality.issues || []), ...(quality.warnings || [])].filter(
     (note) => typeof note === "string",
   );
@@ -379,10 +404,18 @@ function renderReleaseMeasurement(releaseMeasurement, releaseFusion) {
   let state = "danger";
   let label = "风险";
   let message = "当前释放测量存在质量风险，请谨慎解读相关指标。";
-  if (isMeasurement && status === "AVAILABLE") {
-    state = "ok";
-    label = "可用";
-    message = "已提供当前可用的释放帧与来源信息。ReleaseState 尚未经过资格确认。";
+  if (isMeasurement && qualified) {
+    state = qualification === "HIGH" ? "ok" : "warn";
+    label = qualification;
+    message = "已从实际连续球观测生成 V2 near-side release measurement。";
+  } else if (isMeasurement && releaseState?.qualification === "UNQUALIFIED") {
+    state = "warn";
+    label = "UNQUALIFIED";
+    message = releaseState.reason || "当前轨迹输出稳定性未通过 V2 availability gate，metric 数值已隐藏。";
+  } else if (isMeasurement && status === "AVAILABLE") {
+    state = "warn";
+    label = "无 Metric";
+    message = "释放帧可用，但连续球轨迹不足以生成合格的 V2 metric measurement。";
   } else if (isMeasurement && status === "INSUFFICIENT_DATA") {
     state = "warn";
     label = "证据不足";
@@ -399,6 +432,17 @@ function renderReleaseMeasurement(releaseMeasurement, releaseFusion) {
   const qualitySummary = qualityNotes.length
     ? `包含 ${qualityNotes.length} 项质量提示。`
     : "无额外质量提示。";
+  const releaseTime = qualified ? releaseState.release_time ?? measurement.release_time : null;
+  const speed = qualified ? releaseState.speed_mps : null;
+  const elevation = qualified ? releaseState.elevation_angle_deg : null;
+  const support = trustedFlight?.temporal_span_ms != null
+    ? `${(trustedFlight.temporal_span_ms / 1000).toFixed(2)} s / ${trustedFlight.point_count ?? 0} observations`
+    : "Unavailable";
+  const epochInterval = epoch
+    ? `${Number(epoch.lower_time_s).toFixed(3)}–${Number(epoch.upper_time_s).toFixed(3)} s (representative ${Number(epoch.representative_time_s).toFixed(3)} s)`
+    : "Unavailable";
+  const metricReason = releaseState?.reason || reason;
+  const riskCount = Array.isArray(measurement.risk_flags) ? measurement.risk_flags.length : 0;
 
   releaseFusionEvidence.hidden = false;
   releaseFusionEvidence.innerHTML = `
@@ -410,17 +454,77 @@ function renderReleaseMeasurement(releaseMeasurement, releaseFusion) {
         </div>
         ${statusLabel(state, label)}
       </div>
+      <div class="release-measurement-grid">
+        <div class="release-measurement-value"><span>Release Time</span><strong>${formatMetric(releaseTime, 2, "s")}</strong><small>representative epoch</small></div>
+        <div class="release-measurement-value"><span>Release Speed</span><strong>${formatMetric(speed, 1, "m/s")}</strong><small>${qualified ? qualification : "UNQUALIFIED"}</small></div>
+        <div class="release-measurement-value"><span>Release Angle</span><strong>${formatMetric(elevation, 1, "°")}</strong><small>${qualified ? qualification : "UNQUALIFIED"}</small></div>
+        <div class="release-measurement-value"><span>Flight Support</span><strong>${support}</strong><small>actual unique observations</small></div>
+        <div class="release-measurement-value"><span>Measurement Quality</span><strong>${qualification}</strong><small>V2 engineering gate</small></div>
+      </div>
       <div class="release-fusion-grid">
-        <div class="release-fusion-item"><span>status</span><strong>${status}</strong></div>
-        <div class="release-fusion-item"><span>source</span><strong>${source}</strong></div>
-        <div class="release-fusion-item"><span>agreement_level</span><strong>${agreementLevel}</strong></div>
         <div class="release-fusion-item"><span>release_frame</span><strong>${releaseFrame}</strong></div>
-        <div class="release-fusion-item"><span>frame_delta</span><strong>${frameDelta}</strong></div>
-        <div class="release-fusion-item release-fusion-item-wide"><span>reason</span><strong>${reason}</strong></div>
-        <div class="release-fusion-item release-fusion-item-wide"><span>质量说明</span><strong>${qualitySummary}</strong></div>
+        <div class="release-fusion-item"><span>source</span><strong>${source}</strong></div>
+        <div class="release-fusion-item"><span>agreement</span><strong>${agreementLevel} / Δ ${frameDelta}</strong></div>
+        <div class="release-fusion-item release-fusion-item-wide"><span>ReleaseEpoch interval</span><strong>${epochInterval}</strong></div>
+        <div class="release-fusion-item release-fusion-item-wide"><span>Speed 95% interval</span><strong>${formatMetricInterval(uncertainty.speed_interval_mps, 2, "m/s")}</strong></div>
+        <div class="release-fusion-item release-fusion-item-wide"><span>Angle 95% interval</span><strong>${formatMetricInterval(uncertainty.elevation_angle_interval_deg, 1, "°")}</strong></div>
+        <div class="release-fusion-item release-fusion-item-wide"><span>说明</span><strong>${metricReason}</strong></div>
+        <div class="release-fusion-item release-fusion-item-wide"><span>质量与风险</span><strong>${qualitySummary} ${riskCount ? `另有 ${riskCount} 项 release 风险标记。` : ""}</strong></div>
       </div>
     </div>
   `;
+}
+
+async function addBallTrajectoryOverlay(frames, evidence, releaseMeasurement) {
+  const releaseFrame = frames.find((frame) => frame.key === "release");
+  const evidenceFrames = Array.isArray(evidence?.frames) ? evidence.frames : [];
+  if (!releaseFrame || !evidenceFrames.length) return;
+  const observations = evidenceFrames
+    .filter((frame) => Array.isArray(frame.detections) && frame.detections.length === 1)
+    .map((frame) => ({ ...frame, detection: frame.detections[0] }))
+    .filter((frame) => Number.isFinite(frame.detection.center_x_px) && Number.isFinite(frame.detection.center_y_px));
+  if (!observations.length) return;
+
+  const image = new Image();
+  await new Promise((resolve, reject) => {
+    image.onload = resolve;
+    image.onerror = reject;
+    image.src = releaseFrame.dataUrl;
+  });
+  const canvas = document.createElement("canvas");
+  canvas.width = image.naturalWidth;
+  canvas.height = image.naturalHeight;
+  const context = canvas.getContext("2d");
+  context.drawImage(image, 0, 0);
+  const trusted = releaseMeasurement?.trusted_flight;
+  const isTrusted = (frame) =>
+    trusted && frame.frame_index >= trusted.start_frame && frame.frame_index <= trusted.end_frame;
+
+  for (let index = 1; index < observations.length; index += 1) {
+    const previous = observations[index - 1];
+    const current = observations[index];
+    if (current.frame_index !== previous.frame_index + 1) continue;
+    context.strokeStyle = isTrusted(previous) && isTrusted(current) ? "#f97316" : "#38bdf8";
+    context.lineWidth = isTrusted(current) ? 4 : 2;
+    context.beginPath();
+    context.moveTo(previous.detection.center_x_px, previous.detection.center_y_px);
+    context.lineTo(current.detection.center_x_px, current.detection.center_y_px);
+    context.stroke();
+  }
+  observations.forEach((frame) => {
+    context.fillStyle = isTrusted(frame) ? "#f97316" : "#38bdf8";
+    context.beginPath();
+    context.arc(frame.detection.center_x_px, frame.detection.center_y_px, isTrusted(frame) ? 5 : 3, 0, Math.PI * 2);
+    context.fill();
+  });
+  context.fillStyle = "rgba(15, 23, 42, 0.82)";
+  context.fillRect(8, 8, 280, 48);
+  context.font = "15px sans-serif";
+  context.fillStyle = "#38bdf8";
+  context.fillText("● actual observation", 18, 29);
+  context.fillStyle = "#f97316";
+  context.fillText("● TrustedFlight", 18, 49);
+  releaseFrame.visualDataUrl = canvas.toDataURL("image/jpeg", 0.9);
 }
 
 function setActiveFrame(index) {
@@ -453,8 +557,8 @@ function renderFrames(frames) {
 
   framesGrid.innerHTML = `
     <div class="frame-viewer">
-      <button class="main-frame" type="button" data-full-frame="${active.dataUrl}" aria-label="查看${active.label}关键帧大图">
-        <img src="${active.dataUrl}" alt="${active.label}关键帧" />
+      <button class="main-frame" type="button" data-full-frame="${active.visualDataUrl || active.dataUrl}" aria-label="查看${active.label}关键帧大图">
+        <img src="${active.visualDataUrl || active.dataUrl}" alt="${active.label}关键帧" />
       </button>
       <div class="main-frame-info">
         <div>
@@ -481,7 +585,7 @@ function renderFrames(frames) {
   `;
 
   framesGrid.querySelector("[data-full-frame]")?.addEventListener("click", () => {
-    openImageModal(active.dataUrl);
+    openImageModal(active.visualDataUrl || active.dataUrl);
   });
 
   framesGrid.querySelectorAll("[data-frame-index]").forEach((button) => {
@@ -556,9 +660,10 @@ analyzeButton.addEventListener("click", async () => {
     renderQuality(report.quality);
     activeFrameIndex = report.frames.findIndex((frame) => frame.key === "release");
     if (activeFrameIndex < 0) activeFrameIndex = 0;
+    await addBallTrajectoryOverlay(report.frames, report.ball_track_evidence, report.release_measurement);
     renderFrames(report.frames);
     renderReleaseBallEvidence(report.release_ball_evidence);
-    renderBallTrackEvidence(report.ball_track_evidence);
+    renderBallTrackEvidence(report.ball_track_evidence, report.release_measurement);
     renderReleaseMeasurement(report.release_measurement, report.release_fusion);
     setPipeline(4);
     renderMetrics(report.metrics);

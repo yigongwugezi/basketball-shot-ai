@@ -1,11 +1,17 @@
 import sys
 import types
 import unittest
+from contextlib import nullcontext
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
-from backend.measurement import BallTrackEvidence
+from backend.measurement import (
+    BallTrackDetection,
+    BallTrackEvidence,
+    BallTrackFrameEvidence,
+)
+from backend.near_side_metric_flight import MetricFlightResult, ReleaseEpochInterval
 
 
 if "cv2" not in sys.modules:
@@ -19,7 +25,13 @@ from backend import main
 
 
 class AnalyzeApiTest(unittest.TestCase):
-    def _response(self, evidence: dict, detector_enabled: bool = True) -> dict:
+    def _response(
+        self,
+        evidence: dict,
+        detector_enabled: bool = True,
+        track_evidence: BallTrackEvidence | None = None,
+        metric_result: MetricFlightResult | None = None,
+    ) -> dict:
         frame_indices = {
             key: {
                 "frame_index": index,
@@ -30,7 +42,7 @@ class AnalyzeApiTest(unittest.TestCase):
             for index, key in enumerate(main.FRAME_KEYS)
         }
         frame_indices["release"]["frame_index"] = 42
-        track_evidence = BallTrackEvidence(
+        track_evidence = track_evidence or BallTrackEvidence(
             status="ok",
             start_frame=39,
             end_frame=57,
@@ -57,6 +69,14 @@ class AnalyzeApiTest(unittest.TestCase):
             patch.object(main, "release_ball_detector_enabled", return_value=detector_enabled),
             patch.object(main, "build_release_ball_evidence", return_value=evidence),
             patch.object(main, "build_ball_track_evidence", return_value=track_evidence),
+            (
+                patch(
+                    "backend.near_side_metric_flight.estimate_near_side_metric_flight",
+                    return_value=metric_result,
+                )
+                if metric_result
+                else nullcontext()
+            ),
         ):
             response = TestClient(main.app).post(
                 "/api/analyze",
@@ -147,6 +167,78 @@ class AnalyzeApiTest(unittest.TestCase):
         self.assertEqual(len(evidence.frames[1].detections), 2)
         self.assertEqual(evidence.frames[2].bbox, [2, 4, 6, 8])
         self.assertIn("collection_truncated_at_video_end", evidence.warnings)
+
+    def test_v2_release_measurement_is_serialized_by_analysis_api(self) -> None:
+        detection = BallTrackDetection(
+            bbox=[10, 20, 30, 40],
+            center_x_px=20,
+            center_y_px=30,
+            confidence=0.9,
+            source="release_ball_yolo",
+        )
+        track = BallTrackEvidence(
+            status="ok",
+            fps=30,
+            frames=[
+                BallTrackFrameEvidence(
+                    frame_index=43,
+                    time_s=1.433,
+                    detections=[detection],
+                    status="ok",
+                )
+            ],
+            requested_frame_count=16,
+            observed_frame_count=16,
+            detection_frame_count=14,
+            missing_frame_count=2,
+        )
+        metric = MetricFlightResult(
+            available=True,
+            qualified=True,
+            qualification="HIGH",
+            trusted_start_frame=43,
+            trusted_end_frame=56,
+            trusted_start_time_s=1.433,
+            trusted_end_time_s=1.866,
+            observation_count=14,
+            temporal_span_s=0.433,
+            release_epoch=ReleaseEpochInterval(
+                lower_time_s=1.40,
+                upper_time_s=1.433,
+                representative_time_s=1.4165,
+                lower_frame=42,
+                upper_frame=43,
+                reason="test interval",
+            ),
+            speed_mps=7.9,
+            elevation_angle_deg=51.2,
+            speed_interval_mps=(7.6, 8.2),
+            elevation_interval_deg=(49.8, 52.6),
+            reasons=["qualified test track"],
+            quality_flags=["near_side_pseudo_metric"],
+            uncertainty_sources=["release_epoch_interval"],
+            timestamp_source="pts",
+        )
+
+        report = self._response(
+            {"status": "ok", "best_frame": {"frame_index": 43}},
+            track_evidence=track,
+            metric_result=metric,
+        )
+        measurement = report["release_measurement"]
+        self.assertEqual(measurement["trusted_flight"]["point_count"], 14)
+        self.assertEqual(measurement["release_state"]["qualification"], "HIGH")
+        self.assertEqual(measurement["release_state"]["speed_mps"], 7.9)
+        self.assertEqual(measurement["release_state"]["elevation_angle_deg"], 51.2)
+        self.assertEqual(
+            measurement["release_state"]["release_epoch"]["representative_time_s"],
+            1.4165,
+        )
+        self.assertEqual(
+            measurement["release_state"]["uncertainty"]["speed_interval_mps"],
+            [7.6, 8.2],
+        )
+        self.assertIn("release_fusion", report)
 
 
 if __name__ == "__main__":
