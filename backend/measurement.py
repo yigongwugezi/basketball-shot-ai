@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from enum import Enum
 from typing import Any
 
@@ -37,6 +37,9 @@ class MeasurementEvidence:
     holdout_prediction_error_cm: float | None = None
     release_epoch_status: str | None = None
     release_epoch_uncertainty_ms: float | None = None
+    timestamp_source: str | None = None
+    metric_output_qualification: str | None = None
+    metric_uncertainty_sources: list[str] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,6 +61,7 @@ class BallTrackFrameEvidence:
     center_y_px: float | None = None
     confidence: float | None = None
     source: str | None = None
+    timestamp_source: str | None = None
     status: str = "no_detection"
 
 
@@ -97,6 +101,20 @@ class ReleaseStateUncertainty:
     position_std_cm: tuple[float, float, float] | None = None
     velocity_std_mps: tuple[float, float, float] | None = None
     state_anchor_time_std_ms: float | None = None
+    speed_interval_mps: tuple[float, float] | None = None
+    elevation_angle_interval_deg: tuple[float, float] | None = None
+    release_epoch_interval_ms: tuple[float, float] | None = None
+    sources: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True, slots=True)
+class ReleaseEpochInterval:
+    lower_time_s: float | None = None
+    upper_time_s: float | None = None
+    representative_time_s: float | None = None
+    lower_frame: int | None = None
+    upper_frame: int | None = None
+    reason: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -104,12 +122,15 @@ class ReleaseStateEstimate:
     status: MeasurementStatus
     state_anchor_frame: int | None = None
     state_anchor_time: float | None = None
-    position_m: tuple[float, float, float] | None = None
-    velocity_mps: tuple[float, float, float] | None = None
+    position_m: tuple[float | None, float | None, float | None] | None = None
+    velocity_mps: tuple[float | None, float | None, float | None] | None = None
     speed_mps: float | None = None
     elevation_angle_deg: float | None = None
     azimuth_angle_deg: float | None = None
     uncertainty: ReleaseStateUncertainty | None = None
+    release_epoch: ReleaseEpochInterval | None = None
+    release_time: float | None = None
+    qualification: str | None = None
     reason: str | None = None
 
 
@@ -157,7 +178,7 @@ def release_fusion_to_measurement(
     }.get(release_fusion.get("status"), MeasurementStatus.UNRELIABLE)
     risk_flags = list(release_fusion.get("risk_flags") or [])
 
-    return ReleaseMeasurementResult(
+    result = ReleaseMeasurementResult(
         status=status,
         release_frame=release_fusion.get("pose_release_frame_index"),
         source=release_fusion.get("final_source"),
@@ -210,6 +231,96 @@ def release_fusion_to_measurement(
             if status is MeasurementStatus.AVAILABLE
             else [],
         ),
+    )
+    if not ball_track_evidence or not ball_track_evidence.frames:
+        return result
+
+    # Imported here to keep the stable contract independent from the estimator.
+    from backend.near_side_metric_flight import estimate_near_side_metric_flight
+
+    metric = estimate_near_side_metric_flight(
+        ball_track_evidence, result.release_frame
+    )
+    if not metric.available:
+        return result
+    epoch = metric.release_epoch
+    release_epoch = ReleaseEpochInterval(
+        lower_time_s=epoch.lower_time_s if epoch else None,
+        upper_time_s=epoch.upper_time_s if epoch else None,
+        representative_time_s=epoch.representative_time_s if epoch else None,
+        lower_frame=epoch.lower_frame if epoch else None,
+        upper_frame=epoch.upper_frame if epoch else None,
+        reason=epoch.reason if epoch else None,
+    )
+    trusted_flight = TrustedFlightSegment(
+        status=MeasurementStatus.AVAILABLE,
+        start_frame=metric.trusted_start_frame,
+        end_frame=metric.trusted_end_frame,
+        point_count=metric.observation_count,
+        temporal_span_ms=(
+            metric.temporal_span_s * 1000 if metric.temporal_span_s is not None else None
+        ),
+        fps=ball_track_evidence.fps,
+        reason=metric.reasons[0] if metric.reasons else None,
+        quality_flags=metric.quality_flags,
+    )
+    release_state = ReleaseStateEstimate(
+        status=(
+            MeasurementStatus.AVAILABLE
+            if metric.qualified
+            else MeasurementStatus.UNRELIABLE
+        ),
+        state_anchor_frame=metric.trusted_start_frame,
+        state_anchor_time=metric.trusted_start_time_s,
+        # Absolute position and out-of-plane velocity remain unqualified.
+        velocity_mps=None,
+        speed_mps=metric.speed_mps,
+        elevation_angle_deg=metric.elevation_angle_deg,
+        uncertainty=ReleaseStateUncertainty(
+            speed_interval_mps=metric.speed_interval_mps,
+            elevation_angle_interval_deg=metric.elevation_interval_deg,
+            release_epoch_interval_ms=(
+                (
+                    epoch.lower_time_s * 1000,
+                    epoch.upper_time_s * 1000,
+                )
+                if epoch
+                else None
+            ),
+            sources=metric.uncertainty_sources,
+        ),
+        release_epoch=release_epoch,
+        release_time=(
+            epoch.representative_time_s if metric.qualified and epoch else None
+        ),
+        qualification=metric.qualification,
+        reason="; ".join(metric.reasons),
+    )
+    evidence = replace(
+        result.evidence,
+        trusted_window_point_count=metric.observation_count,
+        trusted_window_temporal_span_ms=(
+            metric.temporal_span_s * 1000 if metric.temporal_span_s is not None else None
+        ),
+        release_epoch_status="INTERVAL",
+        release_epoch_uncertainty_ms=(
+            (epoch.upper_time_s - epoch.lower_time_s) * 500 if epoch else None
+        ),
+        timestamp_source=metric.timestamp_source,
+        metric_output_qualification=metric.qualification,
+        metric_uncertainty_sources=metric.uncertainty_sources,
+    )
+    quality = replace(
+        result.measurement_quality,
+        warnings=list(result.measurement_quality.warnings) + metric.quality_flags,
+    )
+    return replace(
+        result,
+        release_time=release_state.release_time,
+        evidence=evidence,
+        measurement_quality=quality,
+        trusted_flight=trusted_flight,
+        release_state=release_state,
     )
 
 

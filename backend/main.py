@@ -212,6 +212,24 @@ def read_frame(video_path: Path, frame_index: int):
     return frame
 
 
+def frame_timestamp(
+    video_path: Path, frame_index: int, fps: float
+) -> tuple[float | None, str]:
+    """Read container PTS when available, otherwise make the fallback explicit."""
+    fallback = frame_index / fps if fps > 0 else None
+    try:
+        capture = cv2.VideoCapture(str(video_path))
+        capture.set(cv2.CAP_PROP_POS_FRAMES, frame_index)
+        ok, _ = capture.read()
+        timestamp_ms = float(capture.get(cv2.CAP_PROP_POS_MSEC) or 0)
+        capture.release()
+        if ok and math.isfinite(timestamp_ms) and (timestamp_ms > 0 or frame_index == 0):
+            return timestamp_ms / 1000, "pts"
+    except Exception:
+        pass
+    return fallback, "fps_fallback"
+
+
 def angle(a: tuple[float, float], b: tuple[float, float], c: tuple[float, float]) -> float:
     bax, bay = a[0] - b[0], a[1] - b[1]
     bcx, bcy = c[0] - b[0], c[1] - b[1]
@@ -817,7 +835,9 @@ def build_ball_track_evidence(
     observed_frame_count = 0
     detection_frame_count = 0
     for frame_index in range(start, end + 1):
-        time_s = frame_index / fps if fps else None
+        time_s, timestamp_source = frame_timestamp(video_path, frame_index, fps)
+        if timestamp_source == "fps_fallback" and "timestamp_fallback_fps" not in warnings:
+            warnings.append("timestamp_fallback_fps")
         try:
             frame = read_frame(video_path, frame_index)
         except Exception:
@@ -825,6 +845,7 @@ def build_ball_track_evidence(
                 BallTrackFrameEvidence(
                     frame_index=frame_index,
                     time_s=time_s,
+                    timestamp_source=timestamp_source,
                     status="read_failed",
                 )
             )
@@ -840,6 +861,7 @@ def build_ball_track_evidence(
                 BallTrackFrameEvidence(
                     frame_index=frame_index,
                     time_s=time_s,
+                    timestamp_source=timestamp_source,
                     status="error",
                 )
             )
@@ -867,6 +889,7 @@ def build_ball_track_evidence(
                     center_y_px=detection.center_y_px,
                     confidence=detection.confidence,
                     source=detection.source,
+                    timestamp_source=timestamp_source,
                     status="ok",
                 )
             )
@@ -877,6 +900,7 @@ def build_ball_track_evidence(
                     frame_index=frame_index,
                     time_s=time_s,
                     detections=detections,
+                    timestamp_source=timestamp_source,
                     status="multiple_detections" if detections else "no_detection",
                 )
             )
